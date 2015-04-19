@@ -102,6 +102,8 @@ unsigned elf_hash(const char* o0) {
 // Return true for a good load
 bool ElfBinaryFile::RealLoad(const char* sName)
 {
+	std::cout<<"<---------------RealLoad---------------> \n";
+
 	int i;
 
     if (m_bArchive) {
@@ -119,7 +121,7 @@ bool ElfBinaryFile::RealLoad(const char* sName)
         return false;
     }
     m_lImageSize = ftell(m_fd);
-
+	std::cout<<"file image size :"<<m_lImageSize<<"\n";
     // Allocate memory to hold the file
     m_pImage = new char[m_lImageSize];
     if (m_pImage == 0) {
@@ -127,14 +129,24 @@ bool ElfBinaryFile::RealLoad(const char* sName)
         return false;
     }
     Elf32_Ehdr* pHeader = (Elf32_Ehdr*)m_pImage;    // Save a lot of casts
+// 	 std::cout<<"pHeader -> e_ident "<<pHeader->e_ident[1]<<"\n";
+//	std::cout<<"pHeader -> e_class "<<pHeader->e_class<<"\n";
+//	std::cout<<"pHeader -> endianess "<<pHeader->endianness<<"\n";
+//	std::cout<<"pHeader -> e_version "<<pHeader->e_version<<"\n";	
+//	std::cout<<"pHeader -> e_version "<<pHeader->e_version<<"\n";
 
     // Read the whole file in
     fseek(m_fd, 0, SEEK_SET);
-    size_t size = fread(m_pImage, 1, m_lImageSize, m_fd);
+size_t size = fread(m_pImage, 1, m_lImageSize, m_fd);
     if (size != (size_t)m_lImageSize)
         fprintf(stderr, "WARNING! Only read %ud of %ld bytes of binary file!\n", size, m_lImageSize);
-
-    // Basic checks
+std::cout<<m_pImage<<"\n";
+    
+std::cout<<"pHeader -> e_ident "<<pHeader->e_ident<<"\n";
+        std::cout<<"pHeader -> e_class "<<pHeader->e_class<<"\n";
+        std::cout<<"pHeader -> endianess "<<pHeader->endianness<<"\n";
+        std::cout<<"pHeader -> e_version "<<pHeader->e_version<<"\n";
+// Basic checks
     if (strncmp(m_pImage, "\x7F""ELF", 4) != 0) {
         fprintf(stderr, "Incorrect header: %02X %02X %02X %02X\n",
           pHeader->e_ident[0], pHeader->e_ident[1], pHeader->e_ident[2],
@@ -147,21 +159,28 @@ bool ElfBinaryFile::RealLoad(const char* sName)
     }
     // Needed for elfRead4 to work:
     m_elfEndianness = pHeader->endianness - 1;
-
+	
     // Set up program header pointer (in case needed)
     i = elfRead4(&pHeader->e_phoff);
-    if (i) m_pPhdrs = (Elf32_Phdr*)(m_pImage + i);
-
+	 std::cout<<"pHeader -> phoff "<<std::hex<<pHeader->e_phoff<<"\n";
+	 std::cout<<"i"<<i<<"\n";    
+if (i) m_pPhdrs = (Elf32_Phdr*)(m_pImage + i);
+//	std::cout<<"value e_phoff :"<<pHeader->e_phoff<<"\n";
+//    std::cout<<"e_phoff :"<<&pHeader->e_phoff<<"\n";
+//	std::cout<<"offset "<<i<<"\n";
     // Set up section header pointer
+
     i = elfRead4(&pHeader->e_shoff);
     if (i) m_pShdrs = (Elf32_Shdr*)(m_pImage + i);
+std::cout<<"pHeader -> shoff "<<std::hex<<pHeader->e_shoff<<"\n";
+         std::cout<<"i"<<i<<"\n";
 
     // Set up section header string table pointer
 	// NOTE: it does not appear that endianness affects shorts.. they are always in little endian format
 	// Gerard: I disagree. I need the elfRead on linux/i386
     i = elfRead2(&pHeader->e_shstrndx); // pHeader->e_shstrndx;
     if (i) m_pStrings = m_pImage + elfRead4(&m_pShdrs[i].sh_offset);
-
+    std::cout<<"m_pStrings"<<m_pStrings<<"\n";
     i = 1;              // counter - # sects. Start @ 1, total m_iNumSections
     char* pName;        // Section's name
 
@@ -191,36 +210,53 @@ bool ElfBinaryFile::RealLoad(const char* sName)
 			std::cerr << "name for section " << i << " is outside the image size\n";
 			return false;
 		}
-        m_pSections[i].pSectionName = pName;
+        std::cout<<"<--SECTION INFO "<<i<<"-->\n";
+	m_pSections[i].pSectionName = pName;
+	std::cout<<"NAME : " <<pName<<"\n";
         int off = elfRead4(&pShdr->sh_offset);
+        std::cout<<"OFFSET : " <<off<<"\n";
         if (off) m_pSections[i].uHostAddr = (ADDRESS)(m_pImage + off);
-        m_pSections[i].uNativeAddr = elfRead4(&pShdr->sh_addr);
-        m_pSections[i].uSectionSize = elfRead4(&pShdr->sh_size);
+        std::cout<<"HOSTADDR : " <<m_pSections[i].uHostAddr<<"\n";
+	m_pSections[i].uNativeAddr = elfRead4(&pShdr->sh_addr);
+        std::cout<<"NATIVEADDR : " <<m_pSections[i].uNativeAddr<<"\n";
+	m_pSections[i].uSectionSize = elfRead4(&pShdr->sh_size);
+	std::cout<<"SECTIONSIZE : " <<m_pSections[i].uSectionSize<<"\n";
+
+		if (strncmp(pName, ".rel", 4)) std::cout<<".rel true\n";
 		if (m_pSections[i].uNativeAddr == 0 && strncmp(pName, ".rel", 4)) {
-			int align = elfRead4(&pShdr->sh_addralign);
-			if (align > 1) {
+		std::cout<<"jump to branch\n";
+			
+ 		int align = elfRead4(&pShdr->sh_addralign);
+		std::cout<<"align : "<<align<<"\n";	
+		if (align > 1) {
 				if (arbitaryLoadAddr % align)
 					arbitaryLoadAddr += align - (arbitaryLoadAddr % align);
 			}
 			m_pSections[i].uNativeAddr = arbitaryLoadAddr;
+			std::cout<<"re set NativeAddr: "<< m_pSections[i].uNativeAddr<<"\n";
 			arbitaryLoadAddr += m_pSections[i].uSectionSize;
 		}
         m_pSections[i].uType = elfRead4(&pShdr->sh_type);
-		m_sh_link[i] = elfRead4(&pShdr->sh_link);
+	std::cout<<"TYPE : " <<m_pSections[i].uType<<"\n";	
+	m_sh_link[i] = elfRead4(&pShdr->sh_link);
 		m_sh_info[i] = elfRead4(&pShdr->sh_info);
         m_pSections[i].uSectionEntrySize = elfRead4(&pShdr->sh_entsize);
 		if (m_pSections[i].uNativeAddr + m_pSections[i].uSectionSize > next_extern)
 			first_extern = next_extern = m_pSections[i].uNativeAddr + m_pSections[i].uSectionSize;
         if ((elfRead4(&pShdr->sh_flags) & SHF_WRITE) == 0)
-            m_pSections[i].bReadOnly = true;
+           { m_pSections[i].bReadOnly = true;
+ 	 std::cout<<"READONLY SECTION\n";
+	}
         // Can't use the SHF_ALLOC bit to determine bss section; the bss section has SHF_ALLOC but also SHT_NOBITS.
 		// (But many other sections, such as .comment, also have SHT_NOBITS). So for now, just use the name
 //      if ((elfRead4(&pShdr->sh_flags) & SHF_ALLOC) == 0)
         if (strcmp(pName, ".bss") == 0)
-            m_pSections[i].bBss = true;
+            {m_pSections[i].bBss = true;
+		std::cout<<"BSS SECTION\n";}
         if (elfRead4(&pShdr->sh_flags) & SHF_EXECINSTR) {
             m_pSections[i].bCode = true;
-            bGotCode = true;            // We've got to a code section
+            bGotCode = true;   
+		std::cout<<"EXECUTE SECTION\n";         // We've got to a code section
         }
         // Deciding what is data and what is not is actually quite tricky but important.
 		// For example, it's crucial to flag the .exception_ranges section as data, otherwise there is a "hole" in the
@@ -279,7 +315,7 @@ bool ElfBinaryFile::RealLoad(const char* sName)
 
 	// Apply relocations; important when the input program is not compiled with -fPIC
 	applyRelocations();
-
+	 std::cout<<"<---------------Finish RealLoad---------------> \n";
 	return true;						// Success
 }
 

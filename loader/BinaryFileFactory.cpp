@@ -23,17 +23,22 @@
 #include <iostream>
 
 BinaryFile *BinaryFileFactory::Load( const char *sName )
-{
+{	
+	std::cout<<"binaryfactory::load\n";
 	BinaryFile *pBF = getInstanceFor( sName );
+	std::cout<<"after get instace for, numsections =  "<<pBF->GetNumSections()<<"\n";
 	if( pBF == NULL ) {
 		std::cerr << "unrecognised binary file format.\n";
 		return NULL;
 	}
 	if( pBF->RealLoad( sName ) == 0 ) {
 		fprintf( stderr, "Loading '%s' failed\n", sName );
+		std::cout<<"no realLOAD();\n";
 		delete pBF;
 		return NULL;
 	}
+	 std::cout<<"after realload, numsections =  "<<pBF->GetNumSections()<<"\n";
+
 pBF->getTextLimits();
 	return pBF;
 }

@@ -77,7 +77,9 @@ FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* 
 		case MACHINE_PENTIUM:
 			return new PentiumFrontEnd(pBF, prog, pbff);
 		case MACHINE_SPARC:
+		std::cout<<"i'm here -MACHINE_SPARC\n";
 			return new SparcFrontEnd(pBF, prog, pbff);
+		
 		case MACHINE_PPC:
 			return new PPCFrontEnd(pBF, prog, pbff);
 		case MACHINE_MIPS:
@@ -93,6 +95,7 @@ FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* 
 FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	BinaryFileFactory* pbff = new BinaryFileFactory;
 	if (pbff == NULL) return NULL;
+	std::cout<<"in frontend::load pBF =bff->load\n";
 	BinaryFile *pBF = pbff->Load(fname);
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
@@ -250,8 +253,10 @@ std::vector<ADDRESS> FrontEnd::getEntryPoints()
 
 void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 	if (pname)
-		prog->setName(pname);
-
+		{prog->setName(pname);
+	std::cout<<"pname=="<<pname<<"\n";	
+}
+	else {std::cout<<"pname==null\n";}
 	if (!decodeMain)
 		return;
 	

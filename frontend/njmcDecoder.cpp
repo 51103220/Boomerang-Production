@@ -76,7 +76,7 @@ std::list<Statement*>* NJMCDecoder::instantiate(ADDRESS pc, const char* name, ..
 		actuals[i] = va_arg(args,Exp*);
 	va_end(args);
 
-	if (DEBUG_DECODER) {
+	if (/*DEBUG_DECODER*/true) {
 		// Display a disassembly of this instruction if requested
 		std::cout << std::hex << pc << std::dec << ": " << name << " ";
 		for (std::vector<Exp*>::iterator itd = actuals.begin(); itd != actuals.end(); itd++) {

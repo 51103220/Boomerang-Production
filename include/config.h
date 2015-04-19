@@ -11,7 +11,7 @@
 #define HAVE_LIBDL 1
 
 /* Define to 1 if you have the `expat' library (-lexpat). */
-/* #undef HAVE_LIBEXPAT */
+#define HAVE_LIBEXPAT 1
 
 /* Define to 1 if you have the `gc' library (-lgc). */
 #define HAVE_LIBGC 1

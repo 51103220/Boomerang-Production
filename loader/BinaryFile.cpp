@@ -180,13 +180,17 @@ void BinaryFile::getTextLimits()
 	limitTextLow = 0xFFFFFFFF;
 	limitTextHigh = 0;
 	textDelta = 0;
+	std::cout<<"in binaryfile::gettextlimits, numsections = "<<n<<" \n";
 	for (int i=0; i < n; i++) {
 		SectionInfo* pSect = GetSectionInfo(i);
+
+std::cout<<"Sect->pSectionName "<<i<<" "<<pSect->bCode<<pSect->bData<<pSect->bBss<<" "<<pSect->pSectionName<<"\n";
 		if (pSect->bCode) {
 			// The .plt section is an anomaly. It's code, but we never want to
 			// decode it, and in Sparc ELF files, it's actually in the data
 			// segment (so it can be modified). For now, we make this ugly
 			// exception
+	
 			if (strcmp(".plt", pSect->pSectionName) == 0)
 				continue;
 			if (pSect->uNativeAddr < limitTextLow)

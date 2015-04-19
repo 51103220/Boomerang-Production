@@ -1021,21 +1021,27 @@ void Boomerang::objcDecode(std::map<std::string, ObjcModule> &modules, Prog *pro
 Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 {
 	std::cout << "loading...\n";
+	std::cout<<"fname= "<<fname<<"\n pname = `\n";
+	std::cout <<"wtf im standing here\n";
 	Prog *prog = new Prog();
+	std::cout<<"creating a new Frontend \n";
 	FrontEnd *fe = FrontEnd::Load(fname, prog);
 	if (fe == NULL) {
 		std::cerr << "failed.\n";
 		return NULL;
 	}
+	std::cout<<"finish createing new frontend\n";
+	std::cout<<"set Frontend for prog variable\n";
 	prog->setFrontEnd(fe);
-
+	std::cout<<"set frontend complete\n";
 	// Add symbols from -s switch(es)
 	for (std::map<ADDRESS, std::string>::iterator it = symbols.begin();
 		 it != symbols.end(); it++) {
 		fe->AddSymbol((*it).first, (*it).second.c_str());
 	}
+	std::cout<<"fe->read library catalog\n";
 	fe->readLibraryCatalog();		// Needed before readSymbolFile()
-
+	std::cout<<"fe-readlibarycatalog finish\n";
 	for (unsigned i = 0; i < symbolFiles.size(); i++) {
 		std::cout << "reading symbol file " << symbolFiles[i].c_str() << "\n";
 		prog->readSymbolFile(symbolFiles[i].c_str());
@@ -1043,8 +1049,10 @@ Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 
 	std::map<std::string, ObjcModule> &objcmodules = fe->getBinaryFile()->getObjcModules();
 	if (objcmodules.size())
-		objcDecode(objcmodules, prog);
-
+		{
+		std::cout<<"decode objcmodules";
+		objcDecode(objcmodules, prog);}
+	std::cout<<"entrypoint size "<<entrypoints.size()<<"\n";
 	// Entry points from -e (and -E) switch(es)
 	for (unsigned i = 0; i < entrypoints.size(); i++) {
 		std::cout<< "decoding specified entrypoint " << std::hex << entrypoints[i] << "\n";
@@ -1055,7 +1063,7 @@ Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 		if (decodeMain)
 			std::cout << "decoding entry point...\n";
 		fe->decode(prog, decodeMain, pname);
-
+		std::cout<<"decoing entrypoint finish\n";
 		if (!noDecodeChildren) {
 			// this causes any undecoded userprocs to be decoded
 			std::cout << "decoding anything undecoded...\n";
@@ -1065,7 +1073,7 @@ Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 
 	std::cout << "finishing decode...\n";
 	prog->finishDecode();
-
+	std::cout<<"finishing decode finish\n";
 	Boomerang::get()->alert_end_decode();
 
 	std::cout << "found " << std::dec << prog->getNumUserProcs() << " procs\n";

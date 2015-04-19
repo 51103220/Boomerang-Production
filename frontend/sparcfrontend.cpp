@@ -1494,6 +1494,8 @@ extern "C" {
  * RETURNS:		  <N/A>
  *============================================================================*/
 SparcFrontEnd::SparcFrontEnd(BinaryFile *pBF, Prog* prog, BinaryFileFactory* pbff) : FrontEnd(pBF, prog, pbff) {
+	std::cout<<"constructer SPARCFRONTEND\n";
+	std::cout<<"create new sparcdecoder\n";
 	decoder = new SparcDecoder(prog);
 	nop_inst.numBytes = 0;			// So won't disturb coverage
 	nop_inst.type = NOP;

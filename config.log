@@ -452,173 +452,28 @@ configure:3629: $? = 0
 configure:3640: result: yes
 configure:3662: checking expat.h usability
 configure:3674: gcc -c -g -O2 -Wall  conftest.c >&5
-conftest.c:60:19: fatal error: expat.h: No such file or directory
- #include <expat.h>
-                   ^
-compilation terminated.
-configure:3680: $? = 1
-configure: failed program was:
-| /* confdefs.h.  */
-| 
-| #define PACKAGE_NAME ""
-| #define PACKAGE_TARNAME ""
-| #define PACKAGE_VERSION ""
-| #define PACKAGE_STRING ""
-| #define PACKAGE_BUGREPORT ""
-| #ifdef __cplusplus
-| extern "C" void exit (int) throw ();
-| #endif
-| #define HOST_GNU_LD 1
-| #define HOST_OSX 0
-| #define HOST_OSX_10_2 0
-| #define HAVE_LIBSTDC__ 1
-| #define STDC_HEADERS 1
-| #define HAVE_SYS_TYPES_H 1
-| #define HAVE_SYS_STAT_H 1
-| #define HAVE_STDLIB_H 1
-| #define HAVE_STRING_H 1
-| #define HAVE_MEMORY_H 1
-| #define HAVE_STRINGS_H 1
-| #define HAVE_INTTYPES_H 1
-| #define HAVE_STDINT_H 1
-| #define HAVE_UNISTD_H 1
-| /* end confdefs.h.  */
-| #include <stdio.h>
-| #if HAVE_SYS_TYPES_H
-| # include <sys/types.h>
-| #endif
-| #if HAVE_SYS_STAT_H
-| # include <sys/stat.h>
-| #endif
-| #if STDC_HEADERS
-| # include <stdlib.h>
-| # include <stddef.h>
-| #else
-| # if HAVE_STDLIB_H
-| #  include <stdlib.h>
-| # endif
-| #endif
-| #if HAVE_STRING_H
-| # if !STDC_HEADERS && HAVE_MEMORY_H
-| #  include <memory.h>
-| # endif
-| # include <string.h>
-| #endif
-| #if HAVE_STRINGS_H
-| # include <strings.h>
-| #endif
-| #if HAVE_INTTYPES_H
-| # include <inttypes.h>
-| #else
-| # if HAVE_STDINT_H
-| #  include <stdint.h>
-| # endif
-| #endif
-| #if HAVE_UNISTD_H
-| # include <unistd.h>
-| #endif
-| #include <expat.h>
-configure:3703: result: no
+configure:3680: $? = 0
+configure:3684: test -z 
+			 || test ! -s conftest.err
+configure:3687: $? = 0
+configure:3690: test -s conftest.o
+configure:3693: $? = 0
+configure:3703: result: yes
 configure:3707: checking expat.h presence
 configure:3717: gcc -E  conftest.c
-conftest.c:26:19: fatal error: expat.h: No such file or directory
- #include <expat.h>
-                   ^
-compilation terminated.
-configure:3723: $? = 1
-configure: failed program was:
-| /* confdefs.h.  */
-| 
-| #define PACKAGE_NAME ""
-| #define PACKAGE_TARNAME ""
-| #define PACKAGE_VERSION ""
-| #define PACKAGE_STRING ""
-| #define PACKAGE_BUGREPORT ""
-| #ifdef __cplusplus
-| extern "C" void exit (int) throw ();
-| #endif
-| #define HOST_GNU_LD 1
-| #define HOST_OSX 0
-| #define HOST_OSX_10_2 0
-| #define HAVE_LIBSTDC__ 1
-| #define STDC_HEADERS 1
-| #define HAVE_SYS_TYPES_H 1
-| #define HAVE_SYS_STAT_H 1
-| #define HAVE_STDLIB_H 1
-| #define HAVE_STRING_H 1
-| #define HAVE_MEMORY_H 1
-| #define HAVE_STRINGS_H 1
-| #define HAVE_INTTYPES_H 1
-| #define HAVE_STDINT_H 1
-| #define HAVE_UNISTD_H 1
-| /* end confdefs.h.  */
-| #include <expat.h>
-configure:3743: result: no
+configure:3723: $? = 0
+configure:3743: result: yes
 configure:3778: checking for expat.h
-configure:3785: result: no
-configure:3792: checking for include/expat.h
-configure:3807: result: no
-configure:3814: checking for expat.h
-configure:3846: result: :
-configure:3904: WARNING: 
-configure:3906: WARNING: Header file expat.h not found: eXpat not installed...
-configure:3908: WARNING: or you need to copy expat.h to Boomerang's include/ dir
-configure:3910: WARNING: 
+configure:3785: result: yes
 configure:3921: checking for XML_ExpatVersion in -lexpat
 configure:3951: gcc -o conftest -g -O2 -Wall   conftest.c -lexpat  -lstdc++  >&5
-/usr/bin/ld: cannot find -lexpat
-collect2: error: ld returned 1 exit status
-configure:3957: $? = 1
-configure: failed program was:
-| /* confdefs.h.  */
-| 
-| #define PACKAGE_NAME ""
-| #define PACKAGE_TARNAME ""
-| #define PACKAGE_VERSION ""
-| #define PACKAGE_STRING ""
-| #define PACKAGE_BUGREPORT ""
-| #ifdef __cplusplus
-| extern "C" void exit (int) throw ();
-| #endif
-| #define HOST_GNU_LD 1
-| #define HOST_OSX 0
-| #define HOST_OSX_10_2 0
-| #define HAVE_LIBSTDC__ 1
-| #define STDC_HEADERS 1
-| #define HAVE_SYS_TYPES_H 1
-| #define HAVE_SYS_STAT_H 1
-| #define HAVE_STDLIB_H 1
-| #define HAVE_STRING_H 1
-| #define HAVE_MEMORY_H 1
-| #define HAVE_STRINGS_H 1
-| #define HAVE_INTTYPES_H 1
-| #define HAVE_STDINT_H 1
-| #define HAVE_UNISTD_H 1
-| /* end confdefs.h.  */
-| 
-| /* Override any gcc2 internal prototype to avoid an error.  */
-| #ifdef __cplusplus
-| extern "C"
-| #endif
-| /* We use char because int might match the return type of a gcc2
-|    builtin and then its argument prototype would still apply.  */
-| char XML_ExpatVersion ();
-| int
-| main ()
-| {
-| XML_ExpatVersion ();
-|   ;
-|   return 0;
-| }
-configure:3983: result: no
-configure:3993: checking for lib/libexpat.a
-configure:4008: result: no
-configure:4015: checking for libexpat.a
-configure:4047: result: :
-configure:4060: WARNING: 
-configure:4062: WARNING: eXpat library not found: expat not installed... or you
-configure:4064: WARNING: need to copy libexpat.a (etc) to Boomerang's lib/ dir
-configure:4066: WARNING: 
+configure:3957: $? = 0
+configure:3961: test -z 
+			 || test ! -s conftest.err
+configure:3964: $? = 0
+configure:3967: test -s conftest
+configure:3970: $? = 0
+configure:3983: result: yes
 configure:4085: checking gc.h usability
 configure:4097: gcc -c -g -O2 -Wall  conftest.c >&5
 configure:4103: $? = 0
@@ -635,7 +490,7 @@ configure:4166: result: yes
 configure:4201: checking for gc.h
 configure:4208: result: yes
 configure:4344: checking for GC_malloc in -lgc
-configure:4374: gcc -o conftest -g -O2 -Wall   conftest.c -lgc  -lstdc++  >&5
+configure:4374: gcc -o conftest -g -O2 -Wall   conftest.c -lgc  -lexpat -lstdc++  >&5
 configure:4380: $? = 0
 configure:4384: test -z 
 			 || test ! -s conftest.err
@@ -659,7 +514,7 @@ configure:4589: result: yes
 configure:4624: checking for dlfcn.h
 configure:4631: result: yes
 configure:4721: checking for dlopen in -ldl
-configure:4751: gcc -o conftest -g -O2 -Wall   conftest.c -ldl  -lgc -lstdc++  >&5
+configure:4751: gcc -o conftest -g -O2 -Wall   conftest.c -ldl  -lgc -lexpat -lstdc++  >&5
 configure:4757: $? = 0
 configure:4761: test -z 
 			 || test ! -s conftest.err
@@ -671,7 +526,7 @@ configure:4888: checking how to run the C++ preprocessor
 configure:4919: g++ -E -I$(top_srcdir)/include  conftest.cc
 configure:4925: $? = 0
 configure:4957: g++ -E -I$(top_srcdir)/include  conftest.cc
-conftest.cc:28:28: fatal error: ac_nonexistent.h: No such file or directory
+conftest.cc:29:28: fatal error: ac_nonexistent.h: No such file or directory
  #include <ac_nonexistent.h>
                             ^
 compilation terminated.
@@ -701,6 +556,7 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
@@ -709,7 +565,7 @@ configure:5002: result: g++ -E
 configure:5026: g++ -E -I$(top_srcdir)/include  conftest.cc
 configure:5032: $? = 0
 configure:5064: g++ -E -I$(top_srcdir)/include  conftest.cc
-conftest.cc:28:28: fatal error: ac_nonexistent.h: No such file or directory
+conftest.cc:29:28: fatal error: ac_nonexistent.h: No such file or directory
  #include <ac_nonexistent.h>
                             ^
 compilation terminated.
@@ -739,13 +595,14 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:5124: checking cppunit/TestSuite.h usability
 configure:5136: g++ -c -g -O2 -Wall -I$(top_srcdir)/include  conftest.cc >&5
-conftest.cc:62:31: fatal error: cppunit/TestSuite.h: No such file or directory
+conftest.cc:63:31: fatal error: cppunit/TestSuite.h: No such file or directory
  #include <cppunit/TestSuite.h>
                                ^
 compilation terminated.
@@ -775,6 +632,7 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
@@ -816,7 +674,7 @@ configure: failed program was:
 configure:5165: result: no
 configure:5169: checking cppunit/TestSuite.h presence
 configure:5179: g++ -E -I$(top_srcdir)/include  conftest.cc
-conftest.cc:28:31: fatal error: cppunit/TestSuite.h: No such file or directory
+conftest.cc:29:31: fatal error: cppunit/TestSuite.h: No such file or directory
  #include <cppunit/TestSuite.h>
                                ^
 compilation terminated.
@@ -846,6 +704,7 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
@@ -861,7 +720,7 @@ configure:5321:
 configure:5323: Header directories for cppunit not found; needed only for unit testing.
 configure:5325: 
 configure:5336: checking for _ZN7CppUnit8TestCase3runEv in -lcppunit
-configure:5366: g++ -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.cc -lcppunit  -ldl -lgc -lstdc++  >&5
+configure:5366: g++ -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.cc -lcppunit  -ldl -lgc -lexpat -lstdc++  >&5
 /usr/bin/ld: cannot find -lcppunit
 collect2: error: ld returned 1 exit status
 configure:5372: $? = 1
@@ -890,6 +749,7 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
@@ -926,10 +786,10 @@ configure:5542: test -s conftest.o
 configure:5545: $? = 0
 configure:5569: gcc -c -g -O2 -Wall -I$(top_srcdir)/include  conftest.c >&5
 conftest.c: In function 'main':
-conftest.c:35:2: error: unknown type name 'not'
+conftest.c:36:2: error: unknown type name 'not'
   not big endian
   ^
-conftest.c:35:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'endian'
+conftest.c:36:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'endian'
   not big endian
           ^
 configure:5575: $? = 1
@@ -958,6 +818,7 @@ configure: failed program was:
 | #define HAVE_INTTYPES_H 1
 | #define HAVE_STDINT_H 1
 | #define HAVE_UNISTD_H 1
+| #define HAVE_LIBEXPAT 1
 | #define HAVE_LIBGC 1
 | #define HAVE_LIBDL 1
 | /* end confdefs.h.  */
@@ -985,7 +846,7 @@ configure:5770: test -s conftest.o
 configure:5773: $? = 0
 configure:5784: result: yes
 configure:5787: checking size of char
-configure:6106: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:6106: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:6109: $? = 0
 configure:6111: ./conftest
 configure:6114: $? = 0
@@ -1000,7 +861,7 @@ configure:6184: test -s conftest.o
 configure:6187: $? = 0
 configure:6198: result: yes
 configure:6201: checking size of short
-configure:6520: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:6520: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:6523: $? = 0
 configure:6525: ./conftest
 configure:6528: $? = 0
@@ -1015,7 +876,7 @@ configure:6598: test -s conftest.o
 configure:6601: $? = 0
 configure:6612: result: yes
 configure:6615: checking size of int
-configure:6934: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:6934: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:6937: $? = 0
 configure:6939: ./conftest
 configure:6942: $? = 0
@@ -1030,7 +891,7 @@ configure:7012: test -s conftest.o
 configure:7015: $? = 0
 configure:7026: result: yes
 configure:7029: checking size of long
-configure:7348: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:7348: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:7351: $? = 0
 configure:7353: ./conftest
 configure:7356: $? = 0
@@ -1045,7 +906,7 @@ configure:7426: test -s conftest.o
 configure:7429: $? = 0
 configure:7440: result: yes
 configure:7443: checking size of long long
-configure:7762: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:7762: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:7765: $? = 0
 configure:7767: ./conftest
 configure:7770: $? = 0
@@ -1060,7 +921,7 @@ configure:7840: test -s conftest.o
 configure:7843: $? = 0
 configure:7854: result: yes
 configure:7857: checking size of float
-configure:8176: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:8176: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:8179: $? = 0
 configure:8181: ./conftest
 configure:8184: $? = 0
@@ -1075,7 +936,7 @@ configure:8254: test -s conftest.o
 configure:8257: $? = 0
 configure:8268: result: yes
 configure:8271: checking size of double
-configure:8590: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:8590: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:8593: $? = 0
 configure:8595: ./conftest
 configure:8598: $? = 0
@@ -1090,7 +951,7 @@ configure:8668: test -s conftest.o
 configure:8671: $? = 0
 configure:8682: result: yes
 configure:8685: checking size of int *
-configure:9004: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lstdc++  >&5
+configure:9004: gcc -o conftest -g -O2 -Wall -I$(top_srcdir)/include   conftest.c -ldl -lgc -lexpat -lstdc++  >&5
 configure:9007: $? = 0
 configure:9009: ./conftest
 configure:9012: $? = 0
@@ -1130,7 +991,7 @@ config.status:694: creating frontend/Makefile
 config.status:694: creating transform/Makefile
 config.status:694: creating frontend/mltk.sh
 config.status:801: creating include/config.h
-config.status:931: include/config.h is unchanged
+config.status:933: include/config.h is unchanged
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -1165,12 +1026,10 @@ ac_cv_env_target_alias_set=
 ac_cv_env_target_alias_value=
 ac_cv_exeext=
 ac_cv_file_include_cppunit_TestSuite_h=no
-ac_cv_file_include_expat_h=no
 ac_cv_file_lib_libcppunit_a=no
-ac_cv_file_lib_libexpat_a=no
 ac_cv_header_cppunit_TestSuite_h=no
 ac_cv_header_dlfcn_h=yes
-ac_cv_header_expat_h=no
+ac_cv_header_expat_h=yes
 ac_cv_header_gc_h=yes
 ac_cv_header_inttypes_h=yes
 ac_cv_header_memory_h=yes
@@ -1186,14 +1045,12 @@ ac_cv_host=i686-pc-linux-gnu
 ac_cv_host_alias=i686-pc-linux-gnu
 ac_cv_lib_cppunit__ZN7CppUnit8TestCase3runEv=no
 ac_cv_lib_dl_dlopen=yes
-ac_cv_lib_expat_XML_ExpatVersion=no
+ac_cv_lib_expat_XML_ExpatVersion=yes
 ac_cv_lib_gc_GC_malloc=yes
 ac_cv_lib_stdcpp_main=yes
 ac_cv_objext=o
 ac_cv_path_CPPUNIT_HDR_PATH=:
 ac_cv_path_CPPUNIT_PATH=:
-ac_cv_path_EXPAT_HDR_PATH=:
-ac_cv_path_EXPAT_PATH=:
 ac_cv_path_FLEXPP=/usr/bin/flex++
 ac_cv_path_HOST_CC=/usr/bin/gcc
 ac_cv_path_M4=/usr/bin/m4
@@ -1249,8 +1106,8 @@ ECHO_T=''
 EGREP='grep -E'
 EXEEXT=''
 EXPAT_HDR_PATH2=''
-EXPAT_HDR_PATH=':'
-EXPAT_PATH=':'
+EXPAT_HDR_PATH=''
+EXPAT_PATH=''
 FLEXPP='/usr/bin/flex++'
 FLEXPP='/usr/bin/flex++'
 GC_HDR_PATH2=''
@@ -1267,7 +1124,7 @@ HOST_WINDOWS='no'
 LDFLAGS=''
 LIBDIR='./lib'
 LIBOBJS=''
-LIBS='-ldl -lgc -lstdc++ '
+LIBS='-ldl -lgc -lexpat -lstdc++ '
 LTLIBOBJS=''
 M4='/usr/bin/m4'
 M4='/usr/bin/m4'
@@ -1324,6 +1181,7 @@ target_vendor='pc'
 
 #define HAVE_INTTYPES_H 1
 #define HAVE_LIBDL 1
+#define HAVE_LIBEXPAT 1
 #define HAVE_LIBGC 1
 #define HAVE_LIBSTDC__ 1
 #define HAVE_MEMORY_H 1
