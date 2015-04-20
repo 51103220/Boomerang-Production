@@ -96,7 +96,9 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	BinaryFileFactory* pbff = new BinaryFileFactory;
 	if (pbff == NULL) return NULL;
 	std::cout<<"in frontend::load pBF =bff->load\n";
+	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
+
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
 }

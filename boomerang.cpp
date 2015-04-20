@@ -79,7 +79,7 @@ Boomerang::Boomerang() : logger(NULL), vFlag(false), printRtl(false),
 	loadBeforeDecompile(false), saveBeforeDecompile(false),
 	noProve(false), noChangeSignatures(false), conTypeAnalysis(false), dfaTypeAnalysis(true),
 	propMaxDepth(3), generateCallGraph(false), generateSymbols(false), noGlobals(false), assumeABI(false),
-	experimental(false), minsToStopAfter(0)
+	experimental(false), minsToStopAfter(0),decompileAssembly(false) //donbinhvn :default for ass_file is false
 {
 	progPath = "./";
 	outputPath = "./output/";
@@ -150,6 +150,7 @@ void Boomerang::help() {
 	std::cout << "  -s <addr> <name> : Define a symbol\n";
 	std::cout << "  -sf <filename>   : Read a symbol/signature file\n";
 	std::cout << "Decoding/decompilation options\n";
+	std::cout << "  -as              : Decompile assembly file \n";//donbinhvn: for help
 	std::cout << "  -e <addr>        : Decode the procedure beginning at addr, and callees\n";
 	std::cout << "  -E <addr>        : Decode the procedure at addr, no callees\n";
 	std::cout << "                     Use -e and -E repeatedly for multiple entry points\n";
@@ -929,6 +930,9 @@ int Boomerang::commandLine(int argc, const char **argv)
 					progPath += "\\";
 				break;
 			case 'a':
+				if(argv[i][2] == 's')
+					decompileAssembly = true;
+				else
 				assumeABI = true;
 				break;
 			case 'l':
@@ -1025,6 +1029,7 @@ Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 	std::cout <<"wtf im standing here\n";
 	Prog *prog = new Prog();
 	std::cout<<"creating a new Frontend \n";
+	//donbinhvn: doan nay se sua lai de khong load file binary len nua
 	FrontEnd *fe = FrontEnd::Load(fname, prog);
 	if (fe == NULL) {
 		std::cerr << "failed.\n";
@@ -1062,6 +1067,7 @@ Prog *Boomerang::loadAndDecode(const char *fname, const char *pname)
 	if (entrypoints.size() == 0) {		// no -e or -E given
 		if (decodeMain)
 			std::cout << "decoding entry point...\n";
+		//donbinhvn: chu yeu la can xu ly thang nay
 		fe->decode(prog, decodeMain, pname);
 		std::cout<<"decoing entrypoint finish\n";
 		if (!noDecodeChildren) {

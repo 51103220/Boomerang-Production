@@ -25,6 +25,7 @@
 BinaryFile *BinaryFileFactory::Load( const char *sName )
 {	
 	std::cout<<"binaryfactory::load\n";
+ 	// neu doc file binary thi phai sua lai cho nay de default la ELF file luon
 	BinaryFile *pBF = getInstanceFor( sName );
 	std::cout<<"after get instace for, numsections =  "<<pBF->GetNumSections()<<"\n";
 	if( pBF == NULL ) {
@@ -51,12 +52,16 @@ pBF->getTextLimits();
 typedef BinaryFile* (*constructFcn)();
 
 BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
+
 	FILE *f;
 	unsigned char buf[64];
 	std::string libName;
 	BinaryFile *res = NULL;
-
+// donbinhvn: mac dinh neu doc file assembly thi kieu file la ELF
+ 
 	f = fopen (sName, "rb");
+	//donbinhvn: khoi phai doc vao file
+#if !ASS_FILE
 	if( f == NULL ) {
 		fprintf(stderr, "Unable to open binary file: %s\n", sName );
 		return NULL;
@@ -124,6 +129,10 @@ BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
 	libName += ".so";
 #endif
 #endif
+#else//donbinhvn gan mac dinh cho string libname
+	libname=str::string("lib/libElfBinaryFile.so");
+#endif
+
 	dlHandle = dlopen(libName.c_str(), RTLD_LAZY);
 	if (dlHandle == NULL) {
 		fprintf( stderr, "Could not open dynamic loader library %s\n", libName.c_str());
@@ -159,6 +168,7 @@ BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
 #ifndef _WIN32
 		fprintf( stderr, "dlerror returns %s\n", dlerror());
 #endif
+		
 		fclose(f);
 		return NULL;
 	}

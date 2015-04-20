@@ -295,6 +295,7 @@ virtual void		alert_decompile_debug_point(UserProc *p, const char *description);
 		bool		assumeABI;			///< Assume ABI compliance
 		bool		experimental;		///< Activate experimental code. Caution!
 		int			minsToStopAfter;
+		bool 		decompileAssembly; //donbinhvn: if input is assembly
 };
 
 #define VERBOSE				(Boomerang::get()->vFlag)
@@ -309,6 +310,7 @@ virtual void		alert_decompile_debug_point(UserProc *p, const char *description);
 #define DUMP_XML			(Boomerang::get()->dumpXML)
 #define DEBUG_SWITCH		(Boomerang::get()->debugSwitch)
 #define EXPERIMENTAL		(Boomerang::get()->experimental)
+#define ASS_FILE			(Boomerang::get()->decompileAssembly) //donbinhvn: for reference
 
 
 
