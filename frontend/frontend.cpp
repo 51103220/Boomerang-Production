@@ -382,8 +382,9 @@ DecodeResult& FrontEnd::decodeInstruction(ADDRESS pc) {
 		invalid.valid = false;
 		return invalid;
 	}
-	
+
 	 //donbinhvn for test only
+		DecodeResult test = decoder->decodeAssembly(pc,"NOP");
 	return decoder->decodeInstruction(pc, pBF->getTextDelta());
 }
 

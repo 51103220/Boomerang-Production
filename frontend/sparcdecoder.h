@@ -61,7 +61,8 @@ private:
 	Exp*	dis_RegImm(ADDRESS pc);
 	Exp*	dis_RegLhs(unsigned r);
 	Exp*	dis_RegRhs(unsigned r);
-
+	Exp*	dis_Register(std::string str);
+	Exp*	dis_Number(std::string str);
 	void	unused(int x);
 	RTL*	createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, const char* name);
 	bool	isFuncPrologue(ADDRESS hostPC);

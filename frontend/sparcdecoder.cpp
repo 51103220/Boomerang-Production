@@ -47,7 +47,10 @@
 #include "rtl.h"
 #include "BinaryFile.h"		// For SymbolByAddress()
 #include "boomerang.h"
-
+#include <algorithm>
+ //#include <boost/lexical_cast.hpp>
+#include <string>
+//#include <iostream>
 #define DIS_ROI		(dis_RegImm(roi))
 #define DIS_ADDR	(dis_Eaddr(addr))
 #define DIS_RD		(dis_RegLhs(rd))
@@ -189,12 +192,13 @@ RTL* SparcDecoder::createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, con
 	}	
 	return res;
 }
+
 DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string inst)
 {
   static DecodeResult result;
   result.reset();
   std::list<Statement*>* stmts = NULL;
-  
+  std::transform(inst.begin(), inst.end(), inst.begin(), toupper);
   std::string input[4];
   std::stringstream ssin(inst);
   std::string temp;
@@ -202,11 +206,18 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string inst)
   while(ssin>> temp)
         {
           input[i]=temp;  
+          std::cout<<temp<<"\n";
           }
+ if(input[1]=="NOP")
+    {result.type = NOP;
+              instantiate(pc,"NOP");}
+
+  
   
 result.rtl = new RTL(pc, stmts);
   return result;
 }
+
 
 /*==============================================================================
  * FUNCTION:	   SparcDecoder::decodeInstruction
@@ -2941,7 +2952,24 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
 
 	return expr;
 }
-
+Exp*  dis_Register(std::string str){
+if(str=="%g0") return Location::regOf(0);
+if(str=="%g1") return Location::regOf(1);
+if(str=="%g2") return Location::regOf(2);
+if(str=="%g3") return Location::regOf(3);
+if(str=="%g4") return Location::regOf(4);
+if(str=="%g5") return Location::regOf(5);
+if(str=="%g6") return Location::regOf(6);
+if(str=="%g7") return Location::regOf(7);
+if(str=="%sp") return Location::regOf(14);
+if(str=="%fp") return Location::regOf(30);
+  
+}
+Exp*  dis_Number(std::string str){
+  int num = std::stoi(str);
+  Exp* expr = new Const((int)num);
+  return expr;
+}
 /*==============================================================================
  * FUNCTION:	  isFuncPrologue()
  * OVERVIEW:	  Check to see if the instructions at the given offset match any callee prologue, i.e. does it look
