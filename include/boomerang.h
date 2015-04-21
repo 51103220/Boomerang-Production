@@ -143,6 +143,7 @@ static	char*		getVersionStr();
 		const std::string& getOutputPath() { return outputPath; }
 
 		Prog		*loadAndDecode(const char *fname, const char *pname = NULL);
+		Prog 		*loadAndDecodeAssembly(const char *fname, const char *pname = NULL);
 		int			decompile(const char *fname, const char *pname = NULL);
 		/// Add a Watcher to the set of Watchers for this Boomerang object.
 		void		addWatcher(Watcher *watcher) { watchers.insert(watcher); }

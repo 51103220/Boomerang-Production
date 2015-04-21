@@ -1014,6 +1014,23 @@ void Boomerang::objcDecode(std::map<std::string, ObjcModule> &modules, Prog *pro
 		LOG << "\n";
 }
 
+/**donbinhvn: we should declare a new loadanddecode function aslongas it returns a Prog-type variable
+ * Loads the assembly and decodes it.
+ *
+ * \param fname The name of the file to load.
+ * \param pname How the Prog will be named.
+ *
+ * \returns A Prog object.
+ */
+Prog *Boomerang::loadAndDecodeAssembly(const char *fname, const char *pname)
+{
+	Prog *prog = new Prog();
+		
+	
+
+
+	return prog;
+}
 /**
  * Loads the executable file and decodes it.
  *
@@ -1160,6 +1177,9 @@ int Boomerang::decompile(const char *fname, const char *pname)
 	} else
 #endif
 	{
+		if(ASS_FILE)
+		prog = loadAndDecodeAssembly(fname,pname);
+		else
 		prog = loadAndDecode(fname, pname);
 		if (prog == NULL)
 			return 1;

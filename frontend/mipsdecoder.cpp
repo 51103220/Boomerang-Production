@@ -96,6 +96,12 @@ std::list<Statement*>* stmts = NULL;
 
 ADDRESS nextPC = NO_ADDRESS;
 
+
 }
 
+DecodeResult& MIPSDecoder::decodeAssembly (ADDRESS pc, std::string instr)
+{
+DecodeResult res;
+return res;
+}
 

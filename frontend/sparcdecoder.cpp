@@ -38,7 +38,7 @@
 #if defined(_MSC_VER) && _MSC_VER <= 1100
 #include "signature.h"
 #endif
-
+#include <sstream> // donbinhvn:: for string split
 #include "decoder.h"
 #include "exp.h"
 #include "prog.h"
@@ -189,7 +189,24 @@ RTL* SparcDecoder::createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, con
 	}	
 	return res;
 }
-
+DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string inst)
+{
+  static DecodeResult result;
+  result.reset();
+  std::list<Statement*>* stmts = NULL;
+  
+  std::string input[4];
+  std::stringstream ssin(inst);
+  std::string temp;
+  int i = 0 ;
+  while(ssin>> temp)
+        {
+          input[i]=temp;  
+          }
+  
+result.rtl = new RTL(pc, stmts);
+  return result;
+}
 
 /*==============================================================================
  * FUNCTION:	   SparcDecoder::decodeInstruction
@@ -207,7 +224,7 @@ RTL* SparcDecoder::createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, con
 DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) { 
 	static DecodeResult result;
 	ADDRESS hostPC = pc+delta;
-
+  std::cout<<"be tac tai decodeInstruction\n";
 	// Clear the result structure;
 	result.reset();
 

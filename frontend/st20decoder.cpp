@@ -681,4 +681,8 @@ int ST20Decoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
 
 
-
+DecodeResult& ST20Decoder::decodeAssembly (ADDRESS pc, std::string instr)
+{
+DecodeResult res;
+return res;
+}

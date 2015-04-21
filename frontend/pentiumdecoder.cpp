@@ -61968,7 +61968,11 @@ PentiumDecoder::PentiumDecoder(Prog* prog) : NJMCDecoder(prog)
 // For now...
 int PentiumDecoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
-
+DecodeResult& PentiumDecoder::decodeAssembly (ADDRESS pc, std::string instr)
+{
+DecodeResult res;
+return res;
+}
 /*==============================================================================
  * FUNCTION:	   genBSFR
  * OVERVIEW:	   Generate statements for the BSF and BSR series (Bit Scan Forward/Reverse)
