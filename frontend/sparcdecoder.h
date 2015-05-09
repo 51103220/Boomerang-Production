@@ -67,6 +67,7 @@ private:
 	RTL*	createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, const char* name);
 	bool	isFuncPrologue(ADDRESS hostPC);
 	DWord	getDword(ADDRESS lc);
+	std::string	stripstr(std::string str);
 
 };
 

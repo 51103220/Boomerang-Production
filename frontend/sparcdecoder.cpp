@@ -1,7 +1,7 @@
 #define sign_extend(N,SIZE) (((int)((N) << (sizeof(unsigned)*8-(SIZE)))) >> (sizeof(unsigned)*8-(SIZE)))
 #include <assert.h>
 
-#line 0 "frontend/machine/sparc/decoder.m"
+#line 1 "machine/sparc/decoder.m"
 /*
  * Copyright (C) 1996-2001, The University of Queensland
  *
@@ -17,7 +17,7 @@
  *			   SparcDecoder class.
  *============================================================================*/
 
-/* $Revision: 1.44 $	// 1.20.2.2
+/* $Revision: 1.24 $	// 1.20.2.2
  *
  * 26 Apr 02 - Mike: Mods for boomerang
  * 19 May 02 - Mike: Added many (int) casts: variables from toolkit are unsgnd
@@ -38,7 +38,7 @@
 #if defined(_MSC_VER) && _MSC_VER <= 1100
 #include "signature.h"
 #endif
-#include <sstream> // donbinhvn:: for string split
+
 #include "decoder.h"
 #include "exp.h"
 #include "prog.h"
@@ -47,10 +47,10 @@
 #include "rtl.h"
 #include "BinaryFile.h"		// For SymbolByAddress()
 #include "boomerang.h"
-#include <algorithm>
+ #include <algorithm>
  //#include <boost/lexical_cast.hpp>
 #include <string>
-//#include <iostream>
+
 #define DIS_ROI		(dis_RegImm(roi))
 #define DIS_ADDR	(dis_Eaddr(addr))
 #define DIS_RD		(dis_RegLhs(rd))
@@ -193,31 +193,6 @@ RTL* SparcDecoder::createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, con
 	return res;
 }
 
-DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string inst)
-{
-  static DecodeResult result;
-  result.reset();
-  std::list<Statement*>* stmts = NULL;
-  std::transform(inst.begin(), inst.end(), inst.begin(), toupper);
-  std::string input[4];
-  std::stringstream ssin(inst);
-  std::string temp;
-  int i = 0 ;
-  while(ssin>> temp)
-        {
-          input[i]=temp;  
-          std::cout<<temp<<"\n";
-          }
- if(input[1]=="NOP")
-    {result.type = NOP;
-              instantiate(pc,"NOP");}
-
-  
-  
-result.rtl = new RTL(pc, stmts);
-  return result;
-}
-
 
 /*==============================================================================
  * FUNCTION:	   SparcDecoder::decodeInstruction
@@ -235,7 +210,7 @@ result.rtl = new RTL(pc, stmts);
 DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) { 
 	static DecodeResult result;
 	ADDRESS hostPC = pc+delta;
-  std::cout<<"be tac tai decodeInstruction\n";
+
 	// Clear the result structure;
 	result.reset();
 
@@ -246,109 +221,109 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 
 
 
-#line 212 "frontend/machine/sparc/decoder.m"
+#line 214 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
-#line 212 "frontend/machine/sparc/decoder.m"
+#line 214 "machine/sparc/decoder.m"
     hostPC
     ;
-  const char *MATCH_name;
-  static const char *MATCH_name_cond_0[] = {
+  char *MATCH_name;
+  char *MATCH_name_cond_0[] = {
     "BPN", "BPE", "BPLE", "BPL", "BPLEU", "BPCS", "BPNEG", "BPVS", "BPA,a", 
     "BPNE", "BPG", "BPGE", "BPGU", "BPCC", "BPPOS", "BPVC", 
   };
-  static const char *MATCH_name_cond_1[] = {
+  char *MATCH_name_cond_1[] = {
     "BPN,a", "BPE,a", "BPLE,a", "BPL,a", "BPLEU,a", "BPCS,a", "BPNEG,a", 
     "BPVS,a", "BA", "BPNE,a", "BPG,a", "BPGE,a", "BPGU,a", "BPCC,a", 
     "BPPOS,a", "BPVC,a", 
   };
-  static const char *MATCH_name_cond_2[] = {
+  char *MATCH_name_cond_2[] = {
     "BN", "BE", "BLE", "BL", "BLEU", "BCS", "BNEG", "BVS", "BA,a", "BNE", 
     "BG", "BGE", "BGU", "BCC", "BPOS", "BVC", 
   };
-  static const char *MATCH_name_cond_3[] = {
+  char *MATCH_name_cond_3[] = {
     "BN,a", "BE,a", "BLE,a", "BL,a", "BLEU,a", "BCS,a", "BNEG,a", "BVS,a", 
     "FBA", "BNE,a", "BG,a", "BGE,a", "BGU,a", "BCC,a", "BPOS,a", "BVC,a", 
   };
-  static const char *MATCH_name_cond_5[] = {
+  char *MATCH_name_cond_5[] = {
     "FBN", "FBNE", "FBLG", "FBUL", "FBL", "FBUG", "FBG", "FBU", "FBA,a", 
     "FBE", "FBUE", "FBGE", "FBUGE", "FBLE", "FBULE", "FBO", 
   };
-  static const char *MATCH_name_cond_6[] = {
+  char *MATCH_name_cond_6[] = {
     "FBN,a", "FBNE,a", "FBLG,a", "FBUL,a", "FBL,a", "FBUG,a", "FBG,a", 
     "FBU,a", "CBA", "FBE,a", "FBUE,a", "FBGE,a", "FBUGE,a", "FBLE,a", 
     "FBULE,a", "FBO,a", 
   };
-  static const char *MATCH_name_cond_7[] = {
+  char *MATCH_name_cond_7[] = {
     "CBN", "CB123", "CB12", "CB13", "CB1", "CB23", "CB2", "CB3", "CBA,a", 
     "CB0", "CB03", "CB02", "CB023", "CB01", "CB013", "CB012", 
   };
-  static const char *MATCH_name_cond_8[] = {
+  char *MATCH_name_cond_8[] = {
     "CBN,a", "CB123,a", "CB12,a", "CB13,a", "CB1,a", "CB23,a", "CB2,a", 
     "CB3,a", "TA", "CB0,a", "CB03,a", "CB02,a", "CB023,a", "CB01,a", 
     "CB013,a", "CB012,a", 
   };
-  static const char *MATCH_name_op3_46[] = {
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, "RDPSR", "RDWIM", 
+  char *MATCH_name_op3_46[] = {
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, "RDPSR", "RDWIM", 
     "RDTBR", 
   };
-  static const char *MATCH_name_opf_51[] = {
-    (const char *)0, "FMOVs", (const char *)0, (const char *)0, (const char *)0, "FNEGs", (const char *)0, 
-    (const char *)0, (const char *)0, "FABSs", (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, "FSQRTs", "FSQRTd", "FSQRTq", 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, "FADDs", "FADDd", "FADDq", (const char *)0, 
+  char *MATCH_name_opf_51[] = {
+    (char *)0, "FMOVs", (char *)0, (char *)0, (char *)0, "FNEGs", (char *)0, 
+    (char *)0, (char *)0, "FABSs", (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, "FSQRTs", "FSQRTd", "FSQRTq", 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, "FADDs", "FADDd", "FADDq", (char *)0, 
     "FSUBs", "FSUBd", "FSUBq", (char *)0, "FMULs", "FMULd", "FMULq", 
-    (const char *)0, "FDIVs", "FDIVd", "FDIVq", (const char *)0, "FCMPs", "FCMPd", 
-    "FCMPq", (const char *)0, "FCMPEs", "FCMPEd", "FCMPEq", (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, (const char *)0, 
-    (const char *)0, (const char *)0, (const char *)0, (const char *)0, "FiTOs", (const char *)0, "FdTOs", 
-    "FqTOs", "FiTOd", "FsTOd", (const char *)0, "FqTOd", "FiTOq", "FsTOq", "FdTOq", 
-    (const char *)0, (const char *)0, "FsTOi", "FdTOi", "FqTOi", 
+    (char *)0, "FDIVs", "FDIVd", "FDIVq", (char *)0, "FCMPs", "FCMPd", 
+    "FCMPq", (char *)0, "FCMPEs", "FCMPEd", "FCMPEq", (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, "FiTOs", (char *)0, "FdTOs", 
+    "FqTOs", "FiTOd", "FsTOd", (char *)0, "FqTOd", "FiTOq", "FsTOq", "FdTOq", 
+    (char *)0, (char *)0, "FsTOi", "FdTOi", "FqTOi", 
   };
-  static const char *MATCH_name_cond_53[] = {
-    "TN", "TE", "TLE", "TL", "TLEU", "TCS", "TNEG", "TVS", (const char *)0, "TNE", 
+  char *MATCH_name_cond_53[] = {
+    "TN", "TE", "TLE", "TL", "TLEU", "TCS", "TNEG", "TVS", (char *)0, "TNE", 
     "TG", "TGE", "TGU", "TCC", "TPOS", "TVC", 
   };
-  static const char *MATCH_name_i_66[] = {"LDA", "LDF", };
-  static const char *MATCH_name_i_67[] = {"LDUBA", "LDFSR", };
-  static const char *MATCH_name_i_68[] = {"LDUHA", "LDDF", };
-  static const char *MATCH_name_i_69[] = {"LDDA", "STF", };
-  static const char *MATCH_name_i_70[] = {"STA", "STFSR", };
-  static const char *MATCH_name_i_71[] = {"STBA", "STDFQ", };
-  static const char *MATCH_name_i_72[] = {"STHA", "STDF", };
-  static const char *MATCH_name_i_73[] = {"STDA", "LDCSR", };
-  static const char *MATCH_name_i_74[] = {"LDSBA", "STCSR", };
-  static const char *MATCH_name_i_75[] = {"LDSHA", "STDCQ", };
+  char *MATCH_name_i_66[] = {"LDA", "LDF", };
+  char *MATCH_name_i_67[] = {"LDUBA", "LDFSR", };
+  char *MATCH_name_i_68[] = {"LDUHA", "LDDF", };
+  char *MATCH_name_i_69[] = {"LDDA", "STF", };
+  char *MATCH_name_i_70[] = {"STA", "STFSR", };
+  char *MATCH_name_i_71[] = {"STBA", "STDFQ", };
+  char *MATCH_name_i_72[] = {"STHA", "STDF", };
+  char *MATCH_name_i_73[] = {"STDA", "LDCSR", };
+  char *MATCH_name_i_74[] = {"LDSBA", "STCSR", };
+  char *MATCH_name_i_75[] = {"LDSHA", "STDCQ", };
   unsigned MATCH_w_32_0;
   { 
     MATCH_w_32_0 = getDword(MATCH_p); 
@@ -362,7 +337,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned n = (MATCH_w_32_0 & 0x3fffff) /* imm22 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 629 "frontend/machine/sparc/decoder.m"
+#line 631 "machine/sparc/decoder.m"
                    
 
                   		unused(n);
@@ -403,7 +378,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                       addressToPC(MATCH_p);
                     nextPC = 4 + MATCH_p; 
                     
-#line 400 "frontend/machine/sparc/decoder.m"
+#line 402 "machine/sparc/decoder.m"
                     			/* Can see bpa xcc,tgt in 32 bit code */
 
                     		unused(cc01);				// Does not matter because is unconditional
@@ -434,7 +409,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                     MATCH_name = MATCH_name_cond_0[(MATCH_w_32_0 >> 25 & 0xf) 
                           /* cond at 0 */]; 
                     { 
-                      const char *name = MATCH_name;
+                      char *name = MATCH_name;
                       unsigned cc01 = 
                         (MATCH_w_32_0 >> 20 & 0x3) /* cc01 at 0 */;
                       unsigned tgt = 
@@ -443,7 +418,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         addressToPC(MATCH_p);
                       nextPC = 4 + MATCH_p; 
                       
-#line 411 "frontend/machine/sparc/decoder.m"
+#line 413 "machine/sparc/decoder.m"
                       
 
                       		if (cc01 != 0) {		/* If 64 bit cc used, can't handle */
@@ -560,10 +535,10 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */ == 0) { 
                   MATCH_name = "NOP"; 
                   { 
-                    const char *name = MATCH_name;
+                    char *name = MATCH_name;
                     nextPC = 4 + MATCH_p; 
                     
-#line 481 "frontend/machine/sparc/decoder.m"
+#line 483 "machine/sparc/decoder.m"
                     
 
                     		result.type = NOP;
@@ -648,7 +623,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                           30) + addressToPC(MATCH_p);
             nextPC = 4 + MATCH_p; 
             
-#line 215 "frontend/machine/sparc/decoder.m"
+#line 217 "machine/sparc/decoder.m"
             
 
             		/*
@@ -773,11 +748,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 if ((MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */ == 0) { 
                   MATCH_name = "RDY"; 
                   { 
-                    const char *name = MATCH_name;
+                    char *name = MATCH_name;
                     unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                     nextPC = 4 + MATCH_p; 
                     
-#line 533 "frontend/machine/sparc/decoder.m"
+#line 535 "machine/sparc/decoder.m"
                      
 
                     		stmts = instantiate(pc,	 name, DIS_RD);
@@ -798,11 +773,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
                       /* op3 at 0 */]; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 536 "frontend/machine/sparc/decoder.m"
+#line 538 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -819,11 +794,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
                       /* op3 at 0 */]; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 539 "frontend/machine/sparc/decoder.m"
+#line 541 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -840,11 +815,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
                       /* op3 at 0 */]; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 542 "frontend/machine/sparc/decoder.m"
+#line 544 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -864,12 +839,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 else { 
                   MATCH_name = "WRY"; 
                   { 
-                    const char *name = MATCH_name;
+                    char *name = MATCH_name;
                     unsigned roi = addressToPC(MATCH_p);
                     unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                     nextPC = 4 + MATCH_p; 
                     
-#line 545 "frontend/machine/sparc/decoder.m"
+#line 547 "machine/sparc/decoder.m"
                      
 
                     		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -887,12 +862,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
               case 49: 
                 MATCH_name = "WRPSR"; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned roi = addressToPC(MATCH_p);
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 548 "frontend/machine/sparc/decoder.m"
+#line 550 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -908,12 +883,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
               case 50: 
                 MATCH_name = "WRWIM"; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned roi = addressToPC(MATCH_p);
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 551 "frontend/machine/sparc/decoder.m"
+#line 553 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -929,12 +904,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
               case 51: 
                 MATCH_name = "WRTBR"; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned roi = addressToPC(MATCH_p);
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 554 "frontend/machine/sparc/decoder.m"
+#line 556 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -948,10 +923,10 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                 
                 break;
               case 52: 
-                if ((80 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
-                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 196) || 
-                  (212 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
-                  (MATCH_w_32_0 >> 5 & 0x1ff)) /* opf at 0 */ < 512) 
+                if (80 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 196 || 
+                  212 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 512) 
                   goto MATCH_label_d3;  /*opt-block+*/
                 else 
                   switch((MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */) {
@@ -972,13 +947,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 560 "frontend/machine/sparc/decoder.m"
+#line 562 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS2S, DIS_FDS);
@@ -996,13 +971,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdd = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 611 "frontend/machine/sparc/decoder.m"
+#line 613 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDD);
@@ -1020,13 +995,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdq = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 614 "frontend/machine/sparc/decoder.m"
+#line 616 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDQ);
@@ -1050,7 +1025,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs1s = 
@@ -1058,7 +1033,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 563 "frontend/machine/sparc/decoder.m"
+#line 565 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1S, DIS_FS2S, DIS_FDS);
@@ -1076,7 +1051,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdd = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
                         unsigned fs1d = 
@@ -1084,7 +1059,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 566 "frontend/machine/sparc/decoder.m"
+#line 568 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1D, DIS_FS2D, DIS_FDD);
@@ -1102,7 +1077,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdq = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
                         unsigned fs1q = 
@@ -1110,7 +1085,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 569 "frontend/machine/sparc/decoder.m"
+#line 571 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1Q, DIS_FS2Q, DIS_FDQ);
@@ -1128,13 +1103,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 581 "frontend/machine/sparc/decoder.m"
+#line 583 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDS);
@@ -1154,13 +1129,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 597 "frontend/machine/sparc/decoder.m"
+#line 599 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
@@ -1178,13 +1153,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 602 "frontend/machine/sparc/decoder.m"
+#line 604 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
@@ -1202,13 +1177,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdd = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 584 "frontend/machine/sparc/decoder.m"
+#line 586 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
@@ -1224,13 +1199,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdd = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 594 "frontend/machine/sparc/decoder.m"
+#line 596 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
@@ -1246,13 +1221,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdd = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 607 "frontend/machine/sparc/decoder.m"
+#line 609 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDD);
@@ -1272,13 +1247,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdq = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 589 "frontend/machine/sparc/decoder.m"
+#line 591 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
@@ -1294,13 +1269,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdq = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 599 "frontend/machine/sparc/decoder.m"
+#line 601 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
@@ -1316,13 +1291,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fdq = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 604 "frontend/machine/sparc/decoder.m"
+#line 606 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDQ);
@@ -1338,13 +1313,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 587 "frontend/machine/sparc/decoder.m"
+#line 589 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
@@ -1362,13 +1337,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fds = 
                           (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 592 "frontend/machine/sparc/decoder.m"
+#line 594 "machine/sparc/decoder.m"
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
@@ -1385,10 +1360,10 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   } /* (MATCH_w_32_0 >> 5 & 0x1ff) -- opf at 0 --*/ 
                 break;
               case 53: 
-                if ((0 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
-                  (MATCH_w_32_0 >> 5 & 0x1ff)) /* opf at 0 */ < 81 || 
-                  (88 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
-                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 512)) 
+                if (0 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 81 || 
+                  88 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 512) 
                   goto MATCH_label_d3;  /*opt-block+*/
                 else 
                   switch((MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */) {
@@ -1399,13 +1374,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fs1s = 
                           (MATCH_w_32_0 >> 14 & 0x1f) /* fs1s at 0 */;
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 572 "frontend/machine/sparc/decoder.m"
+#line 574 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1S, DIS_FS2S);
@@ -1423,13 +1398,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fs1d = 
                           (MATCH_w_32_0 >> 14 & 0x1f) /* fs1d at 0 */;
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 575 "frontend/machine/sparc/decoder.m"
+#line 577 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1D, DIS_FS2D);
@@ -1447,13 +1422,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
                             /* opf at 0 */]; 
                       { 
-                        const char *name = MATCH_name;
+                        char *name = MATCH_name;
                         unsigned fs1q = 
                           (MATCH_w_32_0 >> 14 & 0x1f) /* fs1q at 0 */;
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
-#line 578 "frontend/machine/sparc/decoder.m"
+#line 580 "machine/sparc/decoder.m"
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1Q, DIS_FS2Q);
@@ -1488,7 +1463,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                       /* simm13 at 0 */ == 8) { 
                                 nextPC = 4 + MATCH_p; 
                                 
-#line 262 "frontend/machine/sparc/decoder.m"
+#line 264 "machine/sparc/decoder.m"
                                 
 
                                 		/*
@@ -1522,7 +1497,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                       /* simm13 at 0 */ == 8) { 
                                 nextPC = 4 + MATCH_p; 
                                 
-#line 252 "frontend/machine/sparc/decoder.m"
+#line 254 "machine/sparc/decoder.m"
                                 
 
                                 		/*
@@ -1573,11 +1548,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
               case 57: 
                 MATCH_name = "RETURN"; 
                 { 
-                  const char *name = MATCH_name;
+                  char *name = MATCH_name;
                   unsigned addr = addressToPC(MATCH_p);
                   nextPC = 4 + MATCH_p; 
                   
-#line 620 "frontend/machine/sparc/decoder.m"
+#line 622 "machine/sparc/decoder.m"
                    
 
                   		stmts = instantiate(pc, name, DIS_ADDR);
@@ -1620,7 +1595,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 471 "frontend/machine/sparc/decoder.m"
+#line 473 "machine/sparc/decoder.m"
                   
 
                   		// Decided to treat SAVE as an ordinary instruction
@@ -1646,7 +1621,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
-#line 477 "frontend/machine/sparc/decoder.m"
+#line 479 "machine/sparc/decoder.m"
                   
 
                   		// Decided to treat RESTORE as an ordinary instruction
@@ -1977,14 +1952,14 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
   
   MATCH_label_d0: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned cc01 = (MATCH_w_32_0 >> 20 & 0x3) /* cc01 at 0 */;
       unsigned tgt = 
         4 * sign_extend((MATCH_w_32_0 & 0x7ffff) /* disp19 at 0 */, 19) + 
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 316 "frontend/machine/sparc/decoder.m"
+#line 318 "machine/sparc/decoder.m"
        
 
       		/*
@@ -2077,13 +2052,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d1: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned tgt = 
         4 * sign_extend((MATCH_w_32_0 & 0x3fffff) /* disp22 at 0 */, 22) + 
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 358 "frontend/machine/sparc/decoder.m"
+#line 360 "machine/sparc/decoder.m"
        
 
       		/*
@@ -2176,13 +2151,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d2: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned tgt = 
         4 * sign_extend((MATCH_w_32_0 & 0x3fffff) /* disp22 at 0 */, 22) + 
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 272 "frontend/machine/sparc/decoder.m"
+#line 274 "machine/sparc/decoder.m"
        
 
       		/*
@@ -2282,7 +2257,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned n = MATCH_w_32_0 /* inst at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 634 "frontend/machine/sparc/decoder.m"
+#line 636 "machine/sparc/decoder.m"
        
 
       		// What does this mean?
@@ -2307,7 +2282,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 485 "frontend/machine/sparc/decoder.m"
+#line 487 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 "sethi", dis_Num(imm22), DIS_RD);
@@ -2322,13 +2297,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d5: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       unsigned roi = addressToPC(MATCH_p);
       unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 557 "frontend/machine/sparc/decoder.m"
+#line 559 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI, DIS_RD);
@@ -2347,7 +2322,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 448 "frontend/machine/sparc/decoder.m"
+#line 450 "machine/sparc/decoder.m"
       
 
       		/*
@@ -2405,7 +2380,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 233 "frontend/machine/sparc/decoder.m"
+#line 235 "machine/sparc/decoder.m"
       
 
       		/*
@@ -2452,11 +2427,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d8: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 626 "frontend/machine/sparc/decoder.m"
+#line 628 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2471,12 +2446,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d9: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 488 "frontend/machine/sparc/decoder.m"
+#line 490 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_RD);
@@ -2491,12 +2466,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d10: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 501 "frontend/machine/sparc/decoder.m"
+#line 503 "machine/sparc/decoder.m"
        
 
       		// Note: RD is on the "right hand side" only for stores
@@ -2513,13 +2488,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d11: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned asi = (MATCH_w_32_0 >> 5 & 0xff) /* asi at 0 */;
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 497 "frontend/machine/sparc/decoder.m"
+#line 499 "machine/sparc/decoder.m"
        
 
       		unused(asi);			// Note: this could be serious!
@@ -2536,13 +2511,13 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d12: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned asi = (MATCH_w_32_0 >> 5 & 0xff) /* asi at 0 */;
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 511 "frontend/machine/sparc/decoder.m"
+#line 513 "machine/sparc/decoder.m"
        
 
       		unused(asi);			// Note: this could be serious!
@@ -2559,12 +2534,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d13: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 491 "frontend/machine/sparc/decoder.m"
+#line 493 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_FDS);
@@ -2579,11 +2554,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d14: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 515 "frontend/machine/sparc/decoder.m"
+#line 517 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2598,12 +2573,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d15: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 494 "frontend/machine/sparc/decoder.m"
+#line 496 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_FDD);
@@ -2618,12 +2593,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d16: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 505 "frontend/machine/sparc/decoder.m"
+#line 507 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_FDS, DIS_ADDR);
@@ -2638,11 +2613,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d17: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 521 "frontend/machine/sparc/decoder.m"
+#line 523 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2657,11 +2632,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d18: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 527 "frontend/machine/sparc/decoder.m"
+#line 529 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2676,12 +2651,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d19: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
       nextPC = 4 + MATCH_p; 
       
-#line 508 "frontend/machine/sparc/decoder.m"
+#line 510 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_FDD, DIS_ADDR);
@@ -2696,11 +2671,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d20: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 518 "frontend/machine/sparc/decoder.m"
+#line 520 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2715,11 +2690,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d21: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 524 "frontend/machine/sparc/decoder.m"
+#line 526 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2734,11 +2709,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     
   MATCH_label_d22: (void)0; /*placeholder for label*/ 
     { 
-      const char *name = MATCH_name;
+      char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
-#line 530 "frontend/machine/sparc/decoder.m"
+#line 532 "machine/sparc/decoder.m"
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2755,7 +2730,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
   
 }
 
-#line 645 "frontend/machine/sparc/decoder.m"
+#line 647 "machine/sparc/decoder.m"
 
 	result.numBytes = nextPC - hostPC;
 	if (result.valid && result.rtl == 0)	// Don't override higher level res
@@ -2808,11 +2783,11 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
 
 
 
-#line 694 "frontend/machine/sparc/decoder.m"
+#line 696 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
-#line 694 "frontend/machine/sparc/decoder.m"
+#line 696 "machine/sparc/decoder.m"
     pc
     ;
   unsigned MATCH_w_32_0;
@@ -2822,7 +2797,7 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
       int /* [~4096..4095] */ i = 
         sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
       
-#line 696 "frontend/machine/sparc/decoder.m"
+#line 698 "machine/sparc/decoder.m"
       
 
       		Exp* expr = new Const(i);
@@ -2836,7 +2811,7 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
     else { 
       unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
       
-#line 698 "frontend/machine/sparc/decoder.m"
+#line 700 "machine/sparc/decoder.m"
       
 
       		return dis_RegRhs(rs2);
@@ -2852,7 +2827,7 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
   
 }
 
-#line 702 "frontend/machine/sparc/decoder.m"
+#line 704 "machine/sparc/decoder.m"
 }
 
 /*==============================================================================
@@ -2869,11 +2844,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
 
 
 
-#line 715 "frontend/machine/sparc/decoder.m"
+#line 717 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
-#line 715 "frontend/machine/sparc/decoder.m"
+#line 717 "machine/sparc/decoder.m"
     pc
     ;
   unsigned MATCH_w_32_0;
@@ -2884,7 +2859,7 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
         int /* [~4096..4095] */ i = 
           sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
         
-#line 722 "frontend/machine/sparc/decoder.m"
+#line 724 "machine/sparc/decoder.m"
         
 
         		expr = new Const((int)i);
@@ -2898,7 +2873,7 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
           sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         
-#line 725 "frontend/machine/sparc/decoder.m"
+#line 727 "machine/sparc/decoder.m"
         
 
         		expr = new Binary(opPlus,
@@ -2915,7 +2890,7 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
       if ((MATCH_w_32_0 & 0x1f) /* rs2 at 0 */ == 0) { 
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         
-#line 716 "frontend/machine/sparc/decoder.m"
+#line 718 "machine/sparc/decoder.m"
         
 
         		expr = Location::regOf(rs1);
@@ -2928,7 +2903,7 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
         
-#line 719 "frontend/machine/sparc/decoder.m"
+#line 721 "machine/sparc/decoder.m"
         
 
         		expr = new Binary(opPlus,
@@ -2948,28 +2923,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
   
 }
 
-#line 730 "frontend/machine/sparc/decoder.m"
+#line 732 "machine/sparc/decoder.m"
 
 	return expr;
 }
-Exp*  dis_Register(std::string str){
-if(str=="%g0") return Location::regOf(0);
-if(str=="%g1") return Location::regOf(1);
-if(str=="%g2") return Location::regOf(2);
-if(str=="%g3") return Location::regOf(3);
-if(str=="%g4") return Location::regOf(4);
-if(str=="%g5") return Location::regOf(5);
-if(str=="%g6") return Location::regOf(6);
-if(str=="%g7") return Location::regOf(7);
-if(str=="%sp") return Location::regOf(14);
-if(str=="%fp") return Location::regOf(30);
-  
-}
-Exp*  dis_Number(std::string str){
-  int num = std::stoi(str);
-  Exp* expr = new Const((int)num);
-  return expr;
-}
+
 /*==============================================================================
  * FUNCTION:	  isFuncPrologue()
  * OVERVIEW:	  Check to see if the instructions at the given offset match any callee prologue, i.e. does it look
@@ -2979,6 +2937,21 @@ Exp*  dis_Number(std::string str){
  *============================================================================*/
 bool SparcDecoder::isFuncPrologue(ADDRESS hostPC)
 {
+#if 0		// Can't do this without patterns. It was a bit of a hack anyway
+	int hiVal, loVal, reg, locals;
+	if ((InstructionPatterns::new_reg_win(prog.csrSrc,hostPC, locals)) != NULL)
+			return true;
+	if ((InstructionPatterns::new_reg_win_large(prog.csrSrc, hostPC,
+		hiVal, loVal, reg)) != NULL)
+			return true;
+	if ((InstructionPatterns::same_reg_win(prog.csrSrc, hostPC, locals))
+		!= NULL)
+			return true;
+	if ((InstructionPatterns::same_reg_win_large(prog.csrSrc, hostPC,
+		hiVal, loVal, reg)) != NULL)
+			return true;
+#endif
+
 	return false;
 }
 
@@ -2991,11 +2964,11 @@ bool SparcDecoder::isFuncPrologue(ADDRESS hostPC)
 bool SparcDecoder::isRestore(ADDRESS hostPC) {
 
 
-#line 767 "frontend/machine/sparc/decoder.m"
+#line 769 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
-#line 767 "frontend/machine/sparc/decoder.m"
+#line 769 "machine/sparc/decoder.m"
     hostPC
     ;
   unsigned MATCH_w_32_0;
@@ -3009,7 +2982,7 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
       unsigned b = addressToPC(MATCH_p);
       unsigned c = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       
-#line 769 "frontend/machine/sparc/decoder.m"
+#line 771 "machine/sparc/decoder.m"
       
 
       			unused(a);		// Suppress warning messages
@@ -3031,7 +3004,7 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
   
   MATCH_label_a0: (void)0; /*placeholder for label*/ 
     
-#line 773 "frontend/machine/sparc/decoder.m"
+#line 775 "machine/sparc/decoder.m"
     
     			return false;
 
@@ -3043,7 +3016,7 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
   
 }
 
-#line 777 "frontend/machine/sparc/decoder.m"
+#line 779 "machine/sparc/decoder.m"
 }
 
  /**********************************
@@ -3069,17 +3042,59 @@ DWord SparcDecoder::getDword(ADDRESS lc)
  * RETURNS:		   N/A
  *============================================================================*/
 SparcDecoder::SparcDecoder(Prog* prog) : NJMCDecoder(prog)
-	{
-	std::cout<<"constructor of sparcdecoder\n";
+{
 	std::string file = Boomerang::get()->getProgPath() + "frontend/machine/sparc/sparc.ssl";
-	std::cout<<file<<"\n";
 	RTLDict.readSSLFile(file.c_str());
-	std::cout<<"finish sparcdecoder constructor\n";
 }
 
 // For now...
 int SparcDecoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
 
+DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string inst)
+{
+  static DecodeResult result;
+  result.reset();
+  std::list<Statement*>* stmts = NULL;
+  std::transform(inst.begin(), inst.end(), inst.begin(), toupper);
+  std::string input[4];
+ 
+  std::string temp;
+  int i = 0 ;
+ 
+ if(input[0]=="NOP")
+    {result.type = NOP;
+              instantiate(pc,"NOP");}
 
+  
+  
+result.rtl = new RTL(pc, stmts);
+  return result;
+}
+std::string SparcDecoder::stripstr(std::string str){
+  bool rem;
+  while(true) {
+    rem = false;
+    if(str[0]==' ' )
+      {str = str.substr(1, str.length()-1);
+        rem = true;}
+    if(str[str.length()-1]==' ')
+    {
+      str = str.substr(0, str.length()-1);
+      rem =true;
+    }
+     if(str[0]==',')
+      {str = str.substr(1, str.length()-1);
+        rem = true;}
+    if(str[str.length()-1]==',')
+    {
+      str = str.substr(0, str.length()-1);
+      rem =true;
+    }
+    if(!rem) break;
+    
+    }
+
+  return str;
+}
 

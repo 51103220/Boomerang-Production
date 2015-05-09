@@ -31,8 +31,8 @@ if [ $# -lt 4 ]; then
 fi
 
 # These 3 tools are configured (see configure.in)
-TKML=
-HEAP="@SMLload="
+TKML="/usr/share/smlnj/bin/.run-sml"
+HEAP="@SMLload=/usr/share/smlnj/bin/.heap/"
 UNGENERATE=
 
 
@@ -82,6 +82,7 @@ shift
 CMD="${CMD} d \"${MATCHER}\";"
 
 # Run the toolkit
+echo "${TKML} ${HEAP}";
 eval "${TKML} ${HEAP}" <<EOF
 	${CMD}
 EOF

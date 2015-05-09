@@ -24,7 +24,6 @@ MACH_OBJS = $(patsubst %, %decoder.o, $(MACHS))
 MACH_SRC  = $(patsubst %, %decoder.cpp, $(MACHS))
 MACH_FE_SRC=$(patsubst %, %frontend.cpp, $(MACHS))
 MACH_FE_OBJ=$(patsubst %, %frontend.o, $(MACHS))
-
 CC = gcc
 CXX = g++
 CFLAGS = -g -O2 -Wall
@@ -39,7 +38,6 @@ all: #testFront
 
 # HOST_GNU_LD is true if the linker on this host machine is GNU
 HOST_GNU_LD = yes
-
 BOOMDIR="$(PWD)/.."
 BOOMSET=-DBOOMDIR=\"$(BOOMDIR)\"
 LIBDIR=$(BOOMDIR)/lib
@@ -61,7 +59,7 @@ $(FRONTEND_LIB): $(LIB_OBJS)
 $(MACH_LIBS): ../lib/libfront%.so : %decoder.o %frontend.o
 	$(CC) -shared -o $@ $^ $(RUNPATH) -L$(top_srcdir)/lib
 
-# Dependencies
+# Dependencies1
 frontend.o: frontend.cpp ../include/frontend.h ../include/decoder.h
 FrontendTest.o: FrontendTest.h
 FrontSparcTest.o: FrontSparcTest.h
@@ -79,7 +77,7 @@ $(MACH_SRC): %decoder.cpp : machine/%/core.spec \
                                    machine/%/dis.spec \
                                    machine/%/decoder.m
 	./mltk.sh -o $@ $^ 2> mltk.err
-
+@echo 'Building target: $@ . First dependency is:$<'
 # The library objs require -fPIC
 $(LIB_OBJS):
 	$(CC) -c -o $@ -I$(top_srcdir)/include -I. -fPIC $(EXTRAS) $<
