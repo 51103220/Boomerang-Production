@@ -115,6 +115,7 @@ virtual				~NJMCDecoder() {};
 		 */
 virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta) = 0;
 virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr) = 0;
+virtual DecodeResult& SparcDecodeInstruction (std::string line) = 0;
 		/*
 		 * Disassembles the machine instruction at pc and returns the number of bytes disassembled.
 		 * Assembler output goes to global _assembly

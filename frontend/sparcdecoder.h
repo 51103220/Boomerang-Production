@@ -40,7 +40,7 @@ public:
 	 * the instruction.
 	 */
 virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta);
-
+virtual DecodeResult& SparcDecodeInstruction (std::string line);
 	/*
 	 * Disassembles the machine instruction at pc and returns the number of
 	 * bytes disassembled. Assembler output goes to global _assembly

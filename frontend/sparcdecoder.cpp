@@ -2763,7 +2763,68 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 
 	return result;
 }
+Exp* dis_Register(std::string str){
+  if(str=="%SP") return Location::regOf(14);
+  if(str=="%fp") return Location::regOf(30);
+  if(str=="%g0") return Location::regOf(0);
+  if(str=="%g1") return Location::regOf(1);
+  if(str=="%g2") return Location::regOf(2);
+  if(str=="%g3") return Location::regOf(3);
+  if(str=="%g4") return Location::regOf(4);
+  if(str=="%g5") return Location::regOf(5);
+  if(str=="%g6") return Location::regOf(6);
+  if(str=="%g7") return Location::regOf(7);
 
+  if(str=="%o0") return Location::regOf(8);
+  if(str=="%o1") return Location::regOf(9);
+  if(str=="%o2") return Location::regOf(10);
+  if(str=="%o3") return Location::regOf(11);
+  if(str=="%o4") return Location::regOf(12);
+  if(str=="%o5") return Location::regOf(13);
+  if(str=="%o6") return Location::regOf(14);
+  if(str=="%o7") return Location::regOf(15);
+  /*if(str=="%l0") return Location::regOf(16;
+  if(str=="%l1") return Location::regOf(17);
+  if(str=="%l2") return Location::regOf(18);
+  if(str=="%l3") return Location::regOf(19);
+  if(str=="%l4") return Location::regOf(20);
+  if(str=="%l5") return Location::regOf(21);
+  if(str=="%l6") return Location::regOf(22);
+  if(str=="%l7") return Location::regOf(23);*/
+  return NULL;  
+}
+Exp* dis_RegImm(int i){
+  Exp* expr = new Const(i);
+
+    return expr;
+
+}
+DecodeResult& FrontEnd::SparcDecodeInstruction(std::string line) {
+  using namespace std;
+  static DecodeResult result;
+  result.reset();
+  std::list<Statement*>* stmts = NULL;
+  std::string sentence = line;
+  std::transform(sentence.begin(), sentence.end(),sentence.begin(), ::toupper);
+    sentence.erase(std::remove(sentence.begin(), sentence.end(), ','), sentence.end());
+    std::istringstream iss(sentence);
+    vector<std::string> tokens;
+    copy(istream_iterator<std::string>(iss),
+         istream_iterator<std::string>(),
+       back_inserter(tokens));
+
+    if(tokens.at(0) == "SAVE"){
+      Exp* op1 = dis_Register(tokens.at(1));
+      Exp* op3 =  dis_Register(tokens.at(3));
+      Exp* op2 =  dis_RegImm(std::atoi((tokens.at(2)).c_str()));
+      
+      stmts = instantiate(NO_ADDRESS, "SAVE", op1, op2, op3);
+      
+              
+    }
+  
+  return result;
+}
 
 /***********************************************************************
  * These are functions used to decode instruction operands into
