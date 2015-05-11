@@ -40,7 +40,7 @@ public:
 	 * the instruction.
 	 */
 virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta);
-virtual DecodeResult& SparcDecodeInstruction (std::string line);
+
 	/*
 	 * Disassembles the machine instruction at pc and returns the number of
 	 * bytes disassembled. Assembler output goes to global _assembly
@@ -62,7 +62,7 @@ private:
 	Exp*	dis_RegLhs(unsigned r);
 	Exp*	dis_RegRhs(unsigned r);
 	Exp*	dis_Register(std::string str);
-	Exp*	dis_Number(std::string str);
+	Exp*	dis_Number(int i);
 	void	unused(int x);
 	RTL*	createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, const char* name);
 	bool	isFuncPrologue(ADDRESS hostPC);
