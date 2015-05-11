@@ -638,7 +638,8 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
             		 */
 
             		CallStatement* newCall = new CallStatement;
-
+                //std::cout<<"call stmt\n";
+                //std::cout<<"addr "<<addr<<"\n";
             
 
             		// Set the destination
@@ -2473,6 +2474,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     { 
       char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
+     // std::cout<<"addresstoPC"<<addr<<"\n";
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
@@ -2745,33 +2747,41 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 }
 Exp* SparcDecoder::dis_Register(std::string str){
   if(str=="%SP") return Location::regOf(14);
-  if(str=="%fp") return Location::regOf(30);
-  if(str=="%g0") return Location::regOf(0);
-  if(str=="%g1") return Location::regOf(1);
-  if(str=="%g2") return Location::regOf(2);
-  if(str=="%g3") return Location::regOf(3);
-  if(str=="%g4") return Location::regOf(4);
-  if(str=="%g5") return Location::regOf(5);
-  if(str=="%g6") return Location::regOf(6);
-  if(str=="%g7") return Location::regOf(7);
+  if(str=="%FP") return Location::regOf(30);
+  if(str=="%G0") return Location::regOf(0);
+  if(str=="%G1") return Location::regOf(1);
+  if(str=="%G2") return Location::regOf(2);
+  if(str=="%G3") return Location::regOf(3);
+  if(str=="%G4") return Location::regOf(4);
+  if(str=="%G5") return Location::regOf(5);
+  if(str=="%G6") return Location::regOf(6);
+  if(str=="%G7") return Location::regOf(7);
 
-  if(str=="%o0") return Location::regOf(8);
-  if(str=="%o1") return Location::regOf(9);
-  if(str=="%o2") return Location::regOf(10);
-  if(str=="%o3") return Location::regOf(11);
-  if(str=="%o4") return Location::regOf(12);
-  if(str=="%o5") return Location::regOf(13);
-  if(str=="%o6") return Location::regOf(14);
-  if(str=="%o7") return Location::regOf(15);
-  /*if(str=="%l0") return Location::regOf(16;
-  if(str=="%l1") return Location::regOf(17);
-  if(str=="%l2") return Location::regOf(18);
-  if(str=="%l3") return Location::regOf(19);
-  if(str=="%l4") return Location::regOf(20);
-  if(str=="%l5") return Location::regOf(21);
-  if(str=="%l6") return Location::regOf(22);
-  if(str=="%l7") return Location::regOf(23);*/
-  return NULL;  
+  if(str=="%O0") return Location::regOf(8);
+  if(str=="%O1") return Location::regOf(9);
+  if(str=="%O2") return Location::regOf(10);
+  if(str=="%O3") return Location::regOf(11);
+  if(str=="%O4") return Location::regOf(12);
+  if(str=="%O5") return Location::regOf(13);
+  if(str=="%O6") return Location::regOf(14);
+  if(str=="%O7") return Location::regOf(15);
+  if(str=="%L0") return Location::regOf(16);
+  if(str=="%L1") return Location::regOf(17);
+  if(str=="%L2") return Location::regOf(18);
+  if(str=="%L3") return Location::regOf(19);
+  if(str=="%L4") return Location::regOf(20);
+  if(str=="%L5") return Location::regOf(21);
+  if(str=="%L6") return Location::regOf(22);
+  if(str=="%L7") return Location::regOf(23);
+  if(str=="%I0") return Location::regOf(24);
+  if(str=="%I1") return Location::regOf(25);
+  if(str=="%I2") return Location::regOf(26);
+  if(str=="%I3") return Location::regOf(27);
+  if(str=="%I4") return Location::regOf(28);
+  if(str=="%I5") return Location::regOf(29);
+  if(str=="%I6") return Location::regOf(30);
+  if(str=="%I7") return Location::regOf(31);
+  return NULL;
 }
 Exp* SparcDecoder::dis_Number(int i){
   Exp* expr = new Const(i);
@@ -2915,7 +2925,7 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         
 #line 727 "machine/sparc/decoder.m"
-        
+       //td::cout<<"herecome "<<rs1<<" - "<<i<<"\n";
 
         		expr = new Binary(opPlus,
 
@@ -3107,15 +3117,60 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
          istream_iterator<std::string>(),
        back_inserter(tokens));
 
-    if(tokens.at(0) == "SAVE"){
+
+  if(tokens.at(0) == "SAVE"){
       Exp* op1 = dis_Register(tokens.at(1));
       Exp* op3 =  dis_Register(tokens.at(3));
       Exp* op2 =  dis_Number(std::atoi((tokens.at(2)).c_str()));
       
-      stmts = instantiate(NO_ADDRESS, "SAVE", op1, op2, op3);
+     stmts = instantiate(pc, "SAVE", op1, op2, op3);
       
               
     }
+    else if(tokens.at(0)=="ST"){
+      std::cout<<tokens.at(1)<<"\n"<<tokens.at(2).substr(1,3)<<"\n"<<tokens.at(2).substr(4,tokens.at(2).length()-5)<<"\n";
+      Exp* op1 = dis_Register(tokens.at(1));
+     Exp* expr = new Binary(opPlus,dis_Register(tokens.at(2).substr(1,3)),new Const(std::atoi((tokens.at(2).substr(4,tokens.at(2).length()-5)).c_str())));
+  
+      stmts = instantiate(pc, "ST", op1, expr);
+    }
+    else if(tokens.at(0)=="NOP")
+      {
+        result.type = NOP;
+          stmts = instantiate(pc, "NOP");
+  }
+    else if(tokens.at(0)=="LD"){
+    //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
+      Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
+      Exp* op2 = dis_Register(tokens.at(2));
+      stmts = instantiate(pc, "LD", expr,op2);
+    }
+        else if(tokens.at(0)=="RESTORE"){
+    //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
+     // Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
+     // Exp* op2 = dis_Register(tokens.at(2));
+      stmts = instantiate(pc, "RESTORE", new Const(0), new Const(0), Location::regOf(0));
+    }
+    else if (tokens.at(0)=="ADD")
+    {
+      Exp* op1 = dis_Register(tokens.at(1));
+      Exp* op3 =  dis_Register(tokens.at(3));
+      Exp* op2 =  dis_Number(std::atoi((tokens.at(2)).c_str()));
+      stmts = instantiate(pc, "ADD", op1, op2, op3);
+    }
+    else if (tokens.at(0)=="OR")
+    {
+      Exp* op2 = dis_Register(tokens.at(2));
+      Exp* op3 =  dis_Register(tokens.at(3));
+      Exp* op1 =  dis_Number(std::atoi((tokens.at(1)).c_str()));
+      stmts = instantiate(pc, "OR", op1, op2, op3);
+    }
+    else if (tokens.at(0)=="MOV")
+    {result.valid = false;
+    stmts = NULL;}
+    //result.numBytes = nextPC - hostPC;
+  if (result.valid && result.rtl == 0)  // Don't override higher level res
+    result.rtl = new RTL(pc, stmts);
   
   return result;
 }

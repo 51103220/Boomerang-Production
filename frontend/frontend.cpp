@@ -384,7 +384,7 @@ DecodeResult& FrontEnd::decodeInstruction(ADDRESS pc) {
 	}
 
 	 //donbinhvn for test only
-		DecodeResult test = decoder->decodeAssembly(pc,"save    %sp, -96, %sp");
+		DecodeResult test = decoder->decodeAssembly(pc,"mov	%g1, %i0");
 	return decoder->decodeInstruction(pc, pBF->getTextDelta());
 }
 
