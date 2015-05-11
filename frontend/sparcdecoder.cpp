@@ -2773,7 +2773,7 @@ Exp* SparcDecoder::dis_Register(std::string str){
   if(str=="%l7") return Location::regOf(23);*/
   return NULL;  
 }
-Exp* dis_Number(int i){
+Exp* SparcDecoder::dis_Number(int i){
   Exp* expr = new Const(i);
 
     return expr;
@@ -3110,7 +3110,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
     if(tokens.at(0) == "SAVE"){
       Exp* op1 = dis_Register(tokens.at(1));
       Exp* op3 =  dis_Register(tokens.at(3));
-      Exp* op2 =  dis_RegImm(std::atoi((tokens.at(2)).c_str()));
+      Exp* op2 =  dis_Number(std::atoi((tokens.at(2)).c_str()));
       
       stmts = instantiate(NO_ADDRESS, "SAVE", op1, op2, op3);
       
