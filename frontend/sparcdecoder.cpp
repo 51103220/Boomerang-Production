@@ -3136,6 +3136,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
     }
     else if(tokens.at(0)=="NOP")
       {
+        result.type = NOP;
           stmts = instantiate(pc, "NOP");
   }
     else if(tokens.at(0)=="LD"){
@@ -3144,6 +3145,29 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       Exp* op2 = dis_Register(tokens.at(2));
       stmts = instantiate(pc, "LD", expr,op2);
     }
+        else if(tokens.at(0)=="RESTORE"){
+    //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
+     // Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
+     // Exp* op2 = dis_Register(tokens.at(2));
+      stmts = instantiate(pc, "RESTORE", new Const(0), new Const(0), Location::regOf(0));
+    }
+    else if (tokens.at(0)=="ADD")
+    {
+      Exp* op1 = dis_Register(tokens.at(1));
+      Exp* op3 =  dis_Register(tokens.at(3));
+      Exp* op2 =  dis_Number(std::atoi((tokens.at(2)).c_str()));
+      stmts = instantiate(pc, "ADD", op1, op2, op3);
+    }
+    else if (tokens.at(0)=="OR")
+    {
+      Exp* op2 = dis_Register(tokens.at(2));
+      Exp* op3 =  dis_Register(tokens.at(3));
+      Exp* op1 =  dis_Number(std::atoi((tokens.at(1)).c_str()));
+      stmts = instantiate(pc, "OR", op1, op2, op3);
+    }
+    else if (tokens.at(0)=="MOV")
+    {result.valid = false;
+    stmts = NULL;}
     //result.numBytes = nextPC - hostPC;
   if (result.valid && result.rtl == 0)  // Don't override higher level res
     result.rtl = new RTL(pc, stmts);

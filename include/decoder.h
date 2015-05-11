@@ -190,11 +190,11 @@ protected:
  * These are the macros that each of the .m files depend upon.
  *============================================================================*/
 #define DEBUG_DECODER (Boomerang::get()->debugDecoder)
-#define SHOW_ASM(output) if (DEBUG_DECODER) \
+#define SHOW_ASM(output) if (true/*DEBUG_DECODER*/) \
 	std::cout << std::hex << pc << std::dec << ": " << output << std::endl;
 #define DEBUG_STMTS \
 	std::list<Statement*>& lst = result.rtl->getList(); \
-	if (DEBUG_DECODER) { \
+	if (/*DEBUG_DECODER*/true) { \
 		std::list<Statement*>::iterator ii; \
 		for (ii = lst.begin(); ii != lst.end(); ii++) \
 			std::cout << "			" << *ii << "\n"; \
