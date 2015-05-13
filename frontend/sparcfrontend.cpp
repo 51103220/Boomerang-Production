@@ -754,6 +754,22 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 	// Initialise the queue of control flow targets that have yet to be decoded.
 	targetQueue.initial(address);
+	const char *vinit[]	= {"save	%sp, -104, %sp", 
+						 "st	%i0, [%fp+68]",
+						 "st	%i1, [%fp+72]",	
+						 "st	%i2, [%fp+76]",
+						 "ld	[%fp-4], %g1",
+						 "add	%g1, 1, %g1",
+						 "ld	[%fp-4], %g1",
+						 "mov	%g1, %i0",
+						 "restore",
+						 "jmp	%o7+8"
+						};
+	std::vector<std::string> assemblySets(vinit,vinit+10) ;
+	int sizeSets = assemblySets.size();
+	std::cerr<<"size = "<< sizeSets << std::endl;
+	int line = 0;
+	std::cerr<<"line = "<< line << std::endl;
 
 	// Get the next address from which to continue decoding and go from
 	// there. Exit the loop if there are no more addresses or they all
@@ -767,7 +783,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 		// is decoded
 		//ADDRESS start = address;
 		DecodeResult inst;
-		while (sequentialDecode) {
+		while (sequentialDecode && line != sizeSets) {
 
 			if (Boomerang::get()->traceDecoder)
 				LOG << "*" << address << "\t";
@@ -780,8 +796,10 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				inst.valid = true;
 				inst.type = DD;			// E.g. decode the delay slot instruction
 			}
-			else
-				inst = decodeInstruction(address);
+			else{
+				if(line<sizeSets)
+					inst = decodeAssemblyInstruction(address,assemblySets.at(line));
+			}
 
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
@@ -790,6 +808,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			// Check for invalid instructions
 			if (!inst.valid) {
 				std::cerr << "Invalid instruction at " << std::hex << address << ": ";
+				std::cerr << "Invalid instruction :"<< assemblySets.at(line) <<std::endl;
 				std::cerr << std::setfill('0') << std::setw(2);
 				int delta = pBF->getTextDelta();
 				for (int j=0; j<inst.numBytes; j++)
@@ -811,10 +830,13 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			GotoStatement*	 stmt_jump = NULL;
 			Statement* last = NULL;
 			std::list<Statement*>& slist = rtl->getList();
+
 			if (slist.size()) {
+				std::cerr<<"after a line -------------"<<std::endl;
 				last = slist.back();
 				stmt_jump = static_cast<GotoStatement*>(last);
 			}
+
 
 #define BRANCH_DS_ERROR 0	// If set, a branch to the delay slot of a delayed
 							// CTI instruction is flagged as an error
@@ -1170,6 +1192,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				if (!cfg->isIncomplete(address))
 					sequentialDecode = false;
 			}
+			line = line + 1;
 
 		}		// while (sequentialDecode)
 
@@ -1178,6 +1201,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 		// Must set sequentialDecode back to true
 		sequentialDecode = true;
+		
 	}	// End huge while loop
 
 

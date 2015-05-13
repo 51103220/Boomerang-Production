@@ -1064,8 +1064,11 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	if (child->size() == 0) {
 		Boomerang::get()->alert_decompiling(this);
 		std::cout << std::setw(indent) << " " << "decompiling " << getName() << "\n";
+		std::cerr<<"AFTER initialise"<<std::endl;
 		initialiseDecompile();					// Sort the CFG, number statements, etc
+		
 		earlyDecompile();
+		std::cerr<<"AFTER initialise"<<std::endl;
 		child = middleDecompile(path, indent);
 		// If there is a switch statement, middleDecompile could contribute some cycles. If so, we need to test for
 		// the recursion logic again
@@ -1123,10 +1126,12 @@ void UserProc::initialiseDecompile() {
 	if (VERBOSE) LOG << "initialise decompile for " << getName() << "\n";
 
 	// Sort by address, so printouts make sense
+
 	cfg->sortByAddress();
 
 	// Initialise statements
 	initStatements();
+
 
 	if (VERBOSE) {
 		LOG << "--- debug print before SSA for " << getName() << " ---\n";

@@ -164,6 +164,7 @@ static	bool		noReturnCallDest(const char *name);
 virtual	int			getInst(int addr);
 
 virtual DecodeResult& decodeInstruction(ADDRESS pc);
+virtual DecodeResult& decodeAssemblyInstruction(ADDRESS pc, std::string line);
 
 virtual void extraProcessCall(CallStatement *call, std::list<RTL*> *BB_rtls) { }
 

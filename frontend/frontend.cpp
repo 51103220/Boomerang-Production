@@ -324,6 +324,7 @@ void FrontEnd::decode(Prog *prog, ADDRESS a) {
 			return;
 		}
 		std::ofstream os;
+		
 		processProc(a, p, os);
 		p->setDecoded();
 
@@ -384,8 +385,28 @@ DecodeResult& FrontEnd::decodeInstruction(ADDRESS pc) {
 	}
 
 	 //donbinhvn for test only
-		DecodeResult test = decoder->decodeAssembly(pc,"mov	%g1, %i0");
+	
 	return decoder->decodeInstruction(pc, pBF->getTextDelta());
+}
+
+DecodeResult& FrontEnd::decodeAssemblyInstruction(ADDRESS pc,std::string line) {
+		if (pBF->GetSectionInfoByAddr(pc) == NULL) {
+			LOG << "ERROR: attempted to decode outside any known segment " << pc << "\n";
+			static DecodeResult invalid;
+			invalid.reset();
+			invalid.valid = false;
+			return invalid;
+		}
+	 //donbinhvn for test only
+		/*DecodeResult test = decoder->decodeAssembly(pc,line);
+		RTL* pRtl = test.rtl;
+		std::ostringstream st;
+		std::cerr<<"before print"<<std::endl;
+		pRtl->print(st);
+		std::cerr<<"after print"<<std::endl;
+		
+		std::cerr<<"TEST RTL "<< st.str().c_str() <<std::endl;*/
+	return decoder->decodeAssembly(pc,line);
 }
 
 /*==============================================================================
@@ -467,6 +488,7 @@ Signature *FrontEnd::getLibSignature(const char *name) {
 bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bool frag /* = false */,
 		bool spec /* = false */) {
 	PBB pBB;					// Pointer to the current basic block
+	std::cerr<<"Entering Processing Proc" << std::endl;
 
 	// just in case you missed it
 	Boomerang::get()->alert_new(pProc);
@@ -498,6 +520,24 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	ADDRESS startAddr = uAddr;
 	ADDRESS lastAddr = uAddr;
 
+	
+	const char *vinit[]	= {"save	%sp, -104, %sp", 
+						 "st	%i0, [%fp+68]",
+						 "st	%i1, [%fp+72]",	
+						 "st	%i2, [%fp+76]",
+						 "ld	[%fp-4], %g1",
+						 "add	%g1, 1, %g1",
+						 "ld	[%fp-4], %g1",
+						 "mov	%g1, %i0",
+						 "restore",
+						 "jmp	%o7+8"
+						};
+	std::vector<std::string> assemblySets(vinit,vinit+10) ;
+	int sizeSets = assemblySets.size();
+	std::cerr<<"size = "<< sizeSets << std::endl;
+	int line = 0;
+	std::cerr<<"line = "<< line << std::endl;
+
 	while ((uAddr = targetQueue.nextAddress(pCfg)) != NO_ADDRESS) {
 		// The list of RTLs for the current basic block
 		std::list<RTL*>* BB_rtls = new std::list<RTL*>();
@@ -507,12 +547,14 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 		DecodeResult inst;
 		while (sequentialDecode) {
 
+
 			// Decode and classify the current source instruction
 			if (Boomerang::get()->traceDecoder)
 				LOG << "*" << uAddr << "\t";
 
 			// Decode the inst at uAddr.
-			inst = decodeInstruction(uAddr);
+			if(line < sizeSets)
+			inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
 
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
@@ -994,6 +1036,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 		// Must set sequentialDecode back to true
 		sequentialDecode = true;
+		line = line +1 ;
 
 	}	// while nextAddress() != NO_ADDRESS
 

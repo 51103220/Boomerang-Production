@@ -3143,13 +3143,17 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
     //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
       Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
       Exp* op2 = dis_Register(tokens.at(2));
+      
       stmts = instantiate(pc, "LD", expr,op2);
+     
     }
         else if(tokens.at(0)=="RESTORE"){
     //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
      // Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
      // Exp* op2 = dis_Register(tokens.at(2));
+      
       stmts = instantiate(pc, "RESTORE", new Const(0), new Const(0), Location::regOf(0));
+
     }
     else if (tokens.at(0)=="ADD")
     {
@@ -3169,9 +3173,9 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
     {result.valid = false;
     stmts = NULL;}
     //result.numBytes = nextPC - hostPC;
-  if (result.valid && result.rtl == 0)  // Don't override higher level res
-    result.rtl = new RTL(pc, stmts);
-  
+      if (result.valid && result.rtl == 0)  // Don't override higher level res
+      result.rtl = new RTL(pc, stmts);
+ 
   return result;
 }
 std::string SparcDecoder::stripstr(std::string str){
