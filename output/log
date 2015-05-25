@@ -1,7 +1,6 @@
 got filename elf-init.c for main
 after removing matching assigns (t[WILDSTR]).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r14{0} - 4 to local table
 in proc main adding addrExp r14{0} to local table
 in proc main adding addrExp r14{0} + 4 to local table
 in proc main adding addrExp r14{0} + 8 to local table
@@ -22,7 +21,6 @@ in proc main adding addrExp r14{0} + 68 to local table
 in proc main adding addrExp r14{0} + 72 to local table
 in proc main adding addrExp r14{0} + 76 to local table
 in proc main adding addrExp r14{0} - 4 to local table
-TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
 in proc main adding addrExp r14{0} - 4 to local table
 TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###

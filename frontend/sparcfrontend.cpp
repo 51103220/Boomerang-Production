@@ -754,6 +754,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 	// Initialise the queue of control flow targets that have yet to be decoded.
 	targetQueue.initial(address);
+
 	const char *vinit[]	= {"save	%sp, -104, %sp", 
 						 "st	%i0, [%fp+68]",
 						 "st	%i1, [%fp+72]",	
@@ -783,7 +784,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 		// is decoded
 		//ADDRESS start = address;
 		DecodeResult inst;
-		while (sequentialDecode && line != sizeSets) {
+		while (sequentialDecode /*&& line != sizeSets*/) {
 
 			if (Boomerang::get()->traceDecoder)
 				LOG << "*" << address << "\t";
@@ -797,8 +798,9 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				inst.type = DD;			// E.g. decode the delay slot instruction
 			}
 			else{
-				if(line<sizeSets)
-					inst = decodeAssemblyInstruction(address,assemblySets.at(line));
+				//if(line<sizeSets)
+					//inst = decodeAssemblyInstruction(address,assemblySets.at(line));
+				inst = decodeInstruction(address);
 			}
 
 			// If invalid and we are speculating, just exit
@@ -832,7 +834,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			std::list<Statement*>& slist = rtl->getList();
 
 			if (slist.size()) {
-				std::cerr<<"after a line -------------"<<std::endl;
+			//	std::cerr<<"after a line -------------"<<std::endl;
 				last = slist.back();
 				stmt_jump = static_cast<GotoStatement*>(last);
 			}
