@@ -3128,7 +3128,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
               
     }
     else if(tokens.at(0)=="ST"){
-      std::cout<<tokens.at(1)<<"\n"<<tokens.at(2).substr(1,3)<<"\n"<<tokens.at(2).substr(4,tokens.at(2).length()-5)<<"\n";
+      //std::cout<<tokens.at(1)<<"\n"<<tokens.at(2).substr(1,3)<<"\n"<<tokens.at(2).substr(4,tokens.at(2).length()-5)<<"\n";
       Exp* op1 = dis_Register(tokens.at(1));
      Exp* expr = new Binary(opPlus,dis_Register(tokens.at(2).substr(1,3)),new Const(std::atoi((tokens.at(2).substr(4,tokens.at(2).length()-5)).c_str())));
   
@@ -3148,6 +3148,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
      
     }
         else if(tokens.at(0)=="RESTORE"){
+          std::cout<<"restore here\n";
     //  std::cout<<tokens.at(2)<<"\n"<<tokens.at(1).substr(1,3)<<"\n"<<tokens.at(1).substr(4,tokens.at(1).length()-5)<<"\n";
      // Exp* expr = new Binary(opPlus,dis_Register(tokens.at(1).substr(1,3)),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
      // Exp* op2 = dis_Register(tokens.at(2));
@@ -3170,6 +3171,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       stmts = instantiate(pc, "OR", op1, op2, op3);
     }
     else if (tokens.at(0)=="MOV")
+<<<<<<< HEAD
     {
       Exp* op2 = dis_Register(tokens.at(1));
       Exp* op3 =  dis_Register(tokens.at(2));
@@ -3190,6 +3192,13 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       SHOW_ASM("retl_");
 
      }
+=======
+    { 
+
+      result.valid = true;
+    stmts = NULL;
+  }
+>>>>>>> 37c27e2ac9a94125cfbc8545477bf19a0b7c3e3a
     //result.numBytes = nextPC - hostPC;
       if (result.valid && result.rtl == 0)  // Don't override higher level res
       result.rtl = new RTL(pc, stmts);

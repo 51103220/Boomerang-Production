@@ -9,8 +9,10 @@ main:
 	st	%i0, [%fp+68]
 	st	%i1, [%fp+72]
 	st	%i2, [%fp+76]
+	mov	776, %g1
+	st	%g1, [%fp-4]
 	ld	[%fp-4], %g1
-	add	%g1, 1, %g1
+	add	%g1, 679, %g1
 	st	%g1, [%fp-4]
 	ld	[%fp-4], %g1
 	mov	%g1, %i0
