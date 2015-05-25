@@ -390,14 +390,7 @@ DecodeResult& FrontEnd::decodeInstruction(ADDRESS pc) {
 }
 
 DecodeResult& FrontEnd::decodeAssemblyInstruction(ADDRESS pc,std::string line) {
-		if (pBF->GetSectionInfoByAddr(pc) == NULL) {
-			LOG << "ERROR: attempted to decode outside any known segment " << pc << "\n";
-			static DecodeResult invalid;
-			invalid.reset();
-			invalid.valid = false;
-			return invalid;
-		}
-	 //donbinhvn for test only
+		 //donbinhvn for test only
 		/*DecodeResult test = decoder->decodeAssembly(pc,line);
 		RTL* pRtl = test.rtl;
 		std::ostringstream st;

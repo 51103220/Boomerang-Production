@@ -1477,7 +1477,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                 		 * Just a ret (leaf; uses %o7 instead of %i7)
 
                                 		 */
-
+                                    
                                 		result.rtl = new RTL(pc, stmts);
 
                                 		result.rtl->appendStmt(new ReturnStatement);
@@ -3170,8 +3170,26 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       stmts = instantiate(pc, "OR", op1, op2, op3);
     }
     else if (tokens.at(0)=="MOV")
-    {result.valid = false;
-    stmts = NULL;}
+    {
+      Exp* op2 = dis_Register(tokens.at(1));
+      Exp* op3 =  dis_Register(tokens.at(2));
+      Exp* op1 =  dis_Number(0);
+      stmts = instantiate(pc, "OR", op1, op2, op3);
+     }
+     else if(tokens.at(0) == "JMP"){
+       /*Exp* op1 = dis_Register(tokens.at(1));
+      Exp* op2 =  dis_Number(8);
+
+      stmts = instantiate(pc, "JMPL",op1, op2);*/
+     
+      result.rtl = new RTL(pc, stmts);
+
+      result.rtl->appendStmt(new ReturnStatement);
+
+      result.type = DD;
+      SHOW_ASM("retl_");
+
+     }
     //result.numBytes = nextPC - hostPC;
       if (result.valid && result.rtl == 0)  // Don't override higher level res
       result.rtl = new RTL(pc, stmts);

@@ -766,8 +766,10 @@ void UserProc::printDFG() {
 // initialise all statements
 void UserProc::initStatements() {
 	BB_IT it;
+	std::cerr<<"GetFirstBB"<<std::endl;
 	BasicBlock::rtlit rit; StatementList::iterator sit;
 	for (PBB bb = cfg->getFirstBB(it); bb; bb = cfg->getNextBB(it)) {
+
 		for (Statement* s = bb->getFirstStmt(rit, sit); s; s = bb->getNextStmt(rit, sit)) {
 			s->setProc(this);
 			s->setBB(bb);

@@ -16,7 +16,7 @@ main:
 	mov	%g1, %i0
 	restore
 	jmp	%o7+8
-	 nop
+	nop
 	.size	main, .-main
 	.ident	"GCC: (crosstool-NG 1.20.0) 4.9.1"
 	.section	.note.GNU-stack,"",@progbits
