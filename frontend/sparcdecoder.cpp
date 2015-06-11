@@ -2745,6 +2745,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 
 	return result;
 }
+/////////////////////////////////// MY CODE HERE ///////////////////////////////////////////////////////////
 Exp* SparcDecoder::dis_Register(std::string str){
   if(str=="%SP") return Location::regOf(14);
   if(str=="%FP") return Location::regOf(30);
@@ -2790,6 +2791,7 @@ Exp* SparcDecoder::dis_Number(int i){
 
 }
 
+/////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////
 
 /***********************************************************************
  * These are functions used to decode instruction operands into
@@ -3101,7 +3103,7 @@ SparcDecoder::SparcDecoder(Prog* prog) : NJMCDecoder(prog)
 // For now...
 int SparcDecoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
-
+/////////////////////////////////// MY CODE HERE ///////////////////////////////////////////////////////////
 DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
 {
   using namespace std;
@@ -3171,9 +3173,14 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       stmts = instantiate(pc, "OR", op1, op2, op3);
     }
     else if (tokens.at(0)=="MOV")
-<<<<<<< HEAD
+
     {
-      Exp* op2 = dis_Register(tokens.at(1));
+      Exp* op2=NULL;
+     // std::cout<<(tokens.at(1)).substr(1,1);
+      if((tokens.at(1)).substr(1,1)=="G")
+          op2 = dis_Register(tokens.at(1));
+      else
+       op2 =  dis_Number(std::atoi((tokens.at(1)).c_str()));
       Exp* op3 =  dis_Register(tokens.at(2));
       Exp* op1 =  dis_Number(0);
       stmts = instantiate(pc, "OR", op1, op2, op3);
@@ -3192,13 +3199,8 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
       SHOW_ASM("retl_");
 
      }
-=======
-    { 
 
-      result.valid = true;
-    stmts = NULL;
-  }
->>>>>>> 37c27e2ac9a94125cfbc8545477bf19a0b7c3e3a
+
     //result.numBytes = nextPC - hostPC;
       if (result.valid && result.rtl == 0)  // Don't override higher level res
       result.rtl = new RTL(pc, stmts);
@@ -3231,4 +3233,4 @@ std::string SparcDecoder::stripstr(std::string str){
 
   return str;
 }
-
+/////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////

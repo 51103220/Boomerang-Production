@@ -129,11 +129,7 @@ bool ElfBinaryFile::RealLoad(const char* sName)
         return false;
     }
     Elf32_Ehdr* pHeader = (Elf32_Ehdr*)m_pImage;    // Save a lot of casts
-// 	 std::cout<<"pHeader -> e_ident "<<pHeader->e_ident[1]<<"\n";
-//	std::cout<<"pHeader -> e_class "<<pHeader->e_class<<"\n";
-//	std::cout<<"pHeader -> endianess "<<pHeader->endianness<<"\n";
-//	std::cout<<"pHeader -> e_version "<<pHeader->e_version<<"\n";	
-//	std::cout<<"pHeader -> e_version "<<pHeader->e_version<<"\n";
+
 
     // Read the whole file in
     fseek(m_fd, 0, SEEK_SET);
