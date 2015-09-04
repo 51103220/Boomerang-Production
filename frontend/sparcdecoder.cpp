@@ -1,7 +1,11 @@
 #define sign_extend(N,SIZE) (((int)((N) << (sizeof(unsigned)*8-(SIZE)))) >> (sizeof(unsigned)*8-(SIZE)))
 #include <assert.h>
 
+<<<<<<< HEAD
 #line 1 "machine/sparc/decoder.m"
+=======
+#line 1 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
 /*
  * Copyright (C) 1996-2001, The University of Queensland
  *
@@ -45,6 +49,7 @@
 #include "proc.h"
 #include "sparcdecoder.h"
 #include "rtl.h"
+<<<<<<< HEAD
 #include "BinaryFile.h"		// For SymbolByAddress()
 #include "boomerang.h"
 #include <algorithm>
@@ -55,6 +60,11 @@
 #include <sstream>
  //#include <boost/lexical_cast.hpp>
 #include <string>
+=======
+#include "sparcassemblydecoder.cpp"
+#include "BinaryFile.h"		// For SymbolByAddress()
+#include "boomerang.h"
+>>>>>>> commit new file sml-nj
 
 #define DIS_ROI		(dis_RegImm(roi))
 #define DIS_ADDR	(dis_Eaddr(addr))
@@ -226,11 +236,19 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 
 
 
+<<<<<<< HEAD
 #line 214 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
 #line 214 "machine/sparc/decoder.m"
+=======
+#line 214 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 214 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
     hostPC
     ;
   char *MATCH_name;
@@ -342,7 +360,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned n = (MATCH_w_32_0 & 0x3fffff) /* imm22 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 631 "machine/sparc/decoder.m"
+=======
+#line 631 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		unused(n);
@@ -383,7 +405,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                       addressToPC(MATCH_p);
                     nextPC = 4 + MATCH_p; 
                     
+<<<<<<< HEAD
 #line 402 "machine/sparc/decoder.m"
+=======
+#line 402 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                     			/* Can see bpa xcc,tgt in 32 bit code */
 
                     		unused(cc01);				// Does not matter because is unconditional
@@ -423,7 +449,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         addressToPC(MATCH_p);
                       nextPC = 4 + MATCH_p; 
                       
+<<<<<<< HEAD
 #line 413 "machine/sparc/decoder.m"
+=======
+#line 413 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                       
 
                       		if (cc01 != 0) {		/* If 64 bit cc used, can't handle */
@@ -543,7 +573,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                     char *name = MATCH_name;
                     nextPC = 4 + MATCH_p; 
                     
+<<<<<<< HEAD
 #line 483 "machine/sparc/decoder.m"
+=======
+#line 483 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                     
 
                     		result.type = NOP;
@@ -628,7 +662,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                           30) + addressToPC(MATCH_p);
             nextPC = 4 + MATCH_p; 
             
+<<<<<<< HEAD
 #line 217 "machine/sparc/decoder.m"
+=======
+#line 217 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
             
 
             		/*
@@ -638,8 +676,12 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
             		 */
 
             		CallStatement* newCall = new CallStatement;
+<<<<<<< HEAD
                 //std::cout<<"call stmt\n";
                 //std::cout<<"addr "<<addr<<"\n";
+=======
+
+>>>>>>> commit new file sml-nj
             
 
             		// Set the destination
@@ -758,7 +800,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                     unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                     nextPC = 4 + MATCH_p; 
                     
+<<<<<<< HEAD
 #line 535 "machine/sparc/decoder.m"
+=======
+#line 535 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                      
 
                     		stmts = instantiate(pc,	 name, DIS_RD);
@@ -783,7 +829,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 538 "machine/sparc/decoder.m"
+=======
+#line 538 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -804,7 +854,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 541 "machine/sparc/decoder.m"
+=======
+#line 541 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -825,7 +879,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 544 "machine/sparc/decoder.m"
+=======
+#line 544 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RD);
@@ -850,7 +908,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                     unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                     nextPC = 4 + MATCH_p; 
                     
+<<<<<<< HEAD
 #line 547 "machine/sparc/decoder.m"
+=======
+#line 547 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                      
 
                     		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -873,7 +935,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 550 "machine/sparc/decoder.m"
+=======
+#line 550 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -894,7 +960,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 553 "machine/sparc/decoder.m"
+=======
+#line 553 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -915,7 +985,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 556 "machine/sparc/decoder.m"
+=======
+#line 556 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI);
@@ -959,7 +1033,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 562 "machine/sparc/decoder.m"
+=======
+#line 562 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS2S, DIS_FDS);
@@ -983,7 +1061,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 613 "machine/sparc/decoder.m"
+=======
+#line 613 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDD);
@@ -1007,7 +1089,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 616 "machine/sparc/decoder.m"
+=======
+#line 616 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDQ);
@@ -1039,7 +1125,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 565 "machine/sparc/decoder.m"
+=======
+#line 565 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1S, DIS_FS2S, DIS_FDS);
@@ -1065,7 +1155,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 568 "machine/sparc/decoder.m"
+=======
+#line 568 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1D, DIS_FS2D, DIS_FDD);
@@ -1091,7 +1185,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 571 "machine/sparc/decoder.m"
+=======
+#line 571 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1Q, DIS_FS2Q, DIS_FDQ);
@@ -1115,7 +1213,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 583 "machine/sparc/decoder.m"
+=======
+#line 583 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDS);
@@ -1141,7 +1243,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 599 "machine/sparc/decoder.m"
+=======
+#line 599 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
@@ -1165,7 +1271,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 604 "machine/sparc/decoder.m"
+=======
+#line 604 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
@@ -1189,7 +1299,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 586 "machine/sparc/decoder.m"
+=======
+#line 586 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
@@ -1211,7 +1325,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 596 "machine/sparc/decoder.m"
+=======
+#line 596 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
@@ -1233,7 +1351,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 609 "machine/sparc/decoder.m"
+=======
+#line 609 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDD);
@@ -1259,7 +1381,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 591 "machine/sparc/decoder.m"
+=======
+#line 591 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
@@ -1281,7 +1407,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 601 "machine/sparc/decoder.m"
+=======
+#line 601 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
@@ -1303,7 +1433,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 606 "machine/sparc/decoder.m"
+=======
+#line 606 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDQ);
@@ -1325,7 +1459,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 589 "machine/sparc/decoder.m"
+=======
+#line 589 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
@@ -1349,7 +1487,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 594 "machine/sparc/decoder.m"
+=======
+#line 594 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                         
 
                         		stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
@@ -1386,7 +1528,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 574 "machine/sparc/decoder.m"
+=======
+#line 574 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1S, DIS_FS2S);
@@ -1410,7 +1556,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 577 "machine/sparc/decoder.m"
+=======
+#line 577 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1D, DIS_FS2D);
@@ -1434,7 +1584,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                         unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
                         nextPC = 4 + MATCH_p; 
                         
+<<<<<<< HEAD
 #line 580 "machine/sparc/decoder.m"
+=======
+#line 580 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                          
 
                         		stmts = instantiate(pc,	 name, DIS_FS1Q, DIS_FS2Q);
@@ -1469,7 +1623,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                       /* simm13 at 0 */ == 8) { 
                                 nextPC = 4 + MATCH_p; 
                                 
+<<<<<<< HEAD
 #line 264 "machine/sparc/decoder.m"
+=======
+#line 264 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                                 
 
                                 		/*
@@ -1477,7 +1635,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                 		 * Just a ret (leaf; uses %o7 instead of %i7)
 
                                 		 */
+<<<<<<< HEAD
                                     
+=======
+
+>>>>>>> commit new file sml-nj
                                 		result.rtl = new RTL(pc, stmts);
 
                                 		result.rtl->appendStmt(new ReturnStatement);
@@ -1503,7 +1665,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                                       /* simm13 at 0 */ == 8) { 
                                 nextPC = 4 + MATCH_p; 
                                 
+<<<<<<< HEAD
 #line 254 "machine/sparc/decoder.m"
+=======
+#line 254 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                                 
 
                                 		/*
@@ -1558,7 +1724,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned addr = addressToPC(MATCH_p);
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 622 "machine/sparc/decoder.m"
+=======
+#line 622 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                    
 
                   		stmts = instantiate(pc, name, DIS_ADDR);
@@ -1601,7 +1771,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 473 "machine/sparc/decoder.m"
+=======
+#line 473 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                   
 
                   		// Decided to treat SAVE as an ordinary instruction
@@ -1627,7 +1801,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
                   unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
                   nextPC = 4 + MATCH_p; 
                   
+<<<<<<< HEAD
 #line 479 "machine/sparc/decoder.m"
+=======
+#line 479 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
                   
 
                   		// Decided to treat RESTORE as an ordinary instruction
@@ -1965,7 +2143,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 318 "machine/sparc/decoder.m"
+=======
+#line 318 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		/*
@@ -2064,7 +2246,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 360 "machine/sparc/decoder.m"
+=======
+#line 360 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		/*
@@ -2163,7 +2349,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
         addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 274 "machine/sparc/decoder.m"
+=======
+#line 274 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		/*
@@ -2263,7 +2453,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned n = MATCH_w_32_0 /* inst at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 636 "machine/sparc/decoder.m"
+=======
+#line 636 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		// What does this mean?
@@ -2288,7 +2482,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 487 "machine/sparc/decoder.m"
+=======
+#line 487 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 "sethi", dis_Num(imm22), DIS_RD);
@@ -2309,7 +2507,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 559 "machine/sparc/decoder.m"
+=======
+#line 559 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_RS1, DIS_ROI, DIS_RD);
@@ -2328,7 +2530,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 450 "machine/sparc/decoder.m"
+=======
+#line 450 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
       
 
       		/*
@@ -2386,7 +2592,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 235 "machine/sparc/decoder.m"
+=======
+#line 235 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
       
 
       		/*
@@ -2437,7 +2647,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 628 "machine/sparc/decoder.m"
+=======
+#line 628 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2457,7 +2671,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 490 "machine/sparc/decoder.m"
+=======
+#line 490 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_RD);
@@ -2474,11 +2692,18 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
     { 
       char *name = MATCH_name;
       unsigned addr = addressToPC(MATCH_p);
+<<<<<<< HEAD
      // std::cout<<"addresstoPC"<<addr<<"\n";
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
 #line 503 "machine/sparc/decoder.m"
+=======
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 503 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		// Note: RD is on the "right hand side" only for stores
@@ -2501,7 +2726,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 499 "machine/sparc/decoder.m"
+=======
+#line 499 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		unused(asi);			// Note: this could be serious!
@@ -2524,7 +2753,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 513 "machine/sparc/decoder.m"
+=======
+#line 513 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		unused(asi);			// Note: this could be serious!
@@ -2546,7 +2779,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 493 "machine/sparc/decoder.m"
+=======
+#line 493 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_FDS);
@@ -2565,7 +2802,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 517 "machine/sparc/decoder.m"
+=======
+#line 517 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2585,7 +2826,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 496 "machine/sparc/decoder.m"
+=======
+#line 496 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR, DIS_FDD);
@@ -2605,7 +2850,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 507 "machine/sparc/decoder.m"
+=======
+#line 507 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_FDS, DIS_ADDR);
@@ -2624,7 +2873,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 523 "machine/sparc/decoder.m"
+=======
+#line 523 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2643,7 +2896,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 529 "machine/sparc/decoder.m"
+=======
+#line 529 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2663,7 +2920,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 510 "machine/sparc/decoder.m"
+=======
+#line 510 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_FDD, DIS_ADDR);
@@ -2682,7 +2943,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 520 "machine/sparc/decoder.m"
+=======
+#line 520 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2701,7 +2966,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 526 "machine/sparc/decoder.m"
+=======
+#line 526 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2720,7 +2989,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
       unsigned addr = addressToPC(MATCH_p);
       nextPC = 4 + MATCH_p; 
       
+<<<<<<< HEAD
 #line 532 "machine/sparc/decoder.m"
+=======
+#line 532 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
        
 
       		stmts = instantiate(pc,	 name, DIS_ADDR);
@@ -2737,7 +3010,11 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
   
 }
 
+<<<<<<< HEAD
 #line 647 "machine/sparc/decoder.m"
+=======
+#line 647 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
 
 	result.numBytes = nextPC - hostPC;
 	if (result.valid && result.rtl == 0)	// Don't override higher level res
@@ -2745,6 +3022,7 @@ DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) {
 
 	return result;
 }
+<<<<<<< HEAD
 /////////////////////////////////// MY CODE HERE ///////////////////////////////////////////////////////////
 Exp* SparcDecoder::dis_Register(std::string str){
   if(str=="%SP") return Location::regOf(14);
@@ -2792,6 +3070,9 @@ Exp* SparcDecoder::dis_Number(int i){
 }
 
 /////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////
+=======
+
+>>>>>>> commit new file sml-nj
 
 /***********************************************************************
  * These are functions used to decode instruction operands into
@@ -2836,11 +3117,19 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
 
 
 
+<<<<<<< HEAD
 #line 696 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
 #line 696 "machine/sparc/decoder.m"
+=======
+#line 696 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 696 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
     pc
     ;
   unsigned MATCH_w_32_0;
@@ -2850,7 +3139,11 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
       int /* [~4096..4095] */ i = 
         sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
       
+<<<<<<< HEAD
 #line 698 "machine/sparc/decoder.m"
+=======
+#line 698 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
       
 
       		Exp* expr = new Const(i);
@@ -2864,7 +3157,11 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
     else { 
       unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
       
+<<<<<<< HEAD
 #line 700 "machine/sparc/decoder.m"
+=======
+#line 700 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
       
 
       		return dis_RegRhs(rs2);
@@ -2880,7 +3177,11 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
   
 }
 
+<<<<<<< HEAD
 #line 704 "machine/sparc/decoder.m"
+=======
+#line 704 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
 }
 
 /*==============================================================================
@@ -2897,11 +3198,19 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
 
 
 
+<<<<<<< HEAD
 #line 717 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
 #line 717 "machine/sparc/decoder.m"
+=======
+#line 717 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 717 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
     pc
     ;
   unsigned MATCH_w_32_0;
@@ -2912,7 +3221,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
         int /* [~4096..4095] */ i = 
           sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
         
+<<<<<<< HEAD
 #line 724 "machine/sparc/decoder.m"
+=======
+#line 724 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
         
 
         		expr = new Const((int)i);
@@ -2926,8 +3239,13 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
           sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         
+<<<<<<< HEAD
 #line 727 "machine/sparc/decoder.m"
        //td::cout<<"herecome "<<rs1<<" - "<<i<<"\n";
+=======
+#line 727 "../frontend/machine/sparc/decoder.m"
+        
+>>>>>>> commit new file sml-nj
 
         		expr = new Binary(opPlus,
 
@@ -2943,7 +3261,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
       if ((MATCH_w_32_0 & 0x1f) /* rs2 at 0 */ == 0) { 
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         
+<<<<<<< HEAD
 #line 718 "machine/sparc/decoder.m"
+=======
+#line 718 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
         
 
         		expr = Location::regOf(rs1);
@@ -2956,7 +3278,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
         unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
         unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
         
+<<<<<<< HEAD
 #line 721 "machine/sparc/decoder.m"
+=======
+#line 721 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
         
 
         		expr = new Binary(opPlus,
@@ -2976,7 +3302,11 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
   
 }
 
+<<<<<<< HEAD
 #line 732 "machine/sparc/decoder.m"
+=======
+#line 732 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
 
 	return expr;
 }
@@ -3017,11 +3347,19 @@ bool SparcDecoder::isFuncPrologue(ADDRESS hostPC)
 bool SparcDecoder::isRestore(ADDRESS hostPC) {
 
 
+<<<<<<< HEAD
 #line 769 "machine/sparc/decoder.m"
 { 
   dword MATCH_p = 
     
 #line 769 "machine/sparc/decoder.m"
+=======
+#line 769 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 769 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
     hostPC
     ;
   unsigned MATCH_w_32_0;
@@ -3035,7 +3373,11 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
       unsigned b = addressToPC(MATCH_p);
       unsigned c = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
       
+<<<<<<< HEAD
 #line 771 "machine/sparc/decoder.m"
+=======
+#line 771 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
       
 
       			unused(a);		// Suppress warning messages
@@ -3057,7 +3399,11 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
   
   MATCH_label_a0: (void)0; /*placeholder for label*/ 
     
+<<<<<<< HEAD
 #line 775 "machine/sparc/decoder.m"
+=======
+#line 775 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
     
     			return false;
 
@@ -3069,7 +3415,11 @@ bool SparcDecoder::isRestore(ADDRESS hostPC) {
   
 }
 
+<<<<<<< HEAD
 #line 779 "machine/sparc/decoder.m"
+=======
+#line 779 "../frontend/machine/sparc/decoder.m"
+>>>>>>> commit new file sml-nj
 }
 
  /**********************************
@@ -3103,6 +3453,7 @@ SparcDecoder::SparcDecoder(Prog* prog) : NJMCDecoder(prog)
 // For now...
 int SparcDecoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
+<<<<<<< HEAD
 /////////////////////////////////// MY CODE HERE ///////////////////////////////////////////////////////////
 DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
 {
@@ -3234,3 +3585,8 @@ std::string SparcDecoder::stripstr(std::string str){
   return str;
 }
 /////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////
+=======
+
+
+
+>>>>>>> commit new file sml-nj

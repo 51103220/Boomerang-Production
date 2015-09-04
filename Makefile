@@ -67,8 +67,13 @@ TKML =
 # The same for these, empty if not found
 MAKEDEPEND=
 BISONPP=
+<<<<<<< HEAD
 FLEXPP=/usr/bin/flex++
 M4=/usr/bin/m4
+=======
+FLEXPP=
+M4=
+>>>>>>> commit new file sml-nj
 
 ####################################
 # Detection of OS specific settings
@@ -150,7 +155,11 @@ loaders: lib
 #
 
 # Front end
+<<<<<<< HEAD
 MACHS     = sparc pentium ppc st20 mips
+=======
+MACHS     = pentium ppc st20 mips
+>>>>>>> commit new file sml-nj
 MACH_LIBS = $(patsubst %, lib/libfront%.so, $(MACHS))
 MACH_OBJS = $(patsubst %, frontend/%decoder.o, $(MACHS))
 MACH_SRC  = $(patsubst %, frontend/%decoder.cpp, $(MACHS))
@@ -180,7 +189,11 @@ remote:
         transform/transformation-parser.cpp transform/transformation-scanner.cpp \
         transform/transformation-parser.h transform/transformation-scanner.h
 # Also touch the decoders, since the user won't have the NJMC toolkit
+<<<<<<< HEAD
 	touch frontend/pentiumdecoder.cpp frontend/sparcdecoder.cpp frontend/ppcdecoder.cpp frontend/st20decoder.cpp frontend/mipsdecoder.cpp
+=======
+	touch frontend/pentiumdecoder.cpp frontend/ppcdecoder.cpp frontend/st20decoder.cpp frontend/mipsdecoder.cpp frontend/sparcdecoder.cpp frontend/sparcassemblydecoder.cpp
+>>>>>>> commit new file sml-nj
 
 #######################
 # Lots of object files
@@ -196,9 +209,16 @@ DB_OBJS = db/basicblock.o db/proc.o db/sslscanner.o db/cfg.o db/prog.o db/table.
 	c/ansi-c-scanner.o boomerang.o log.o db/visitor.o db/dataflow.o db/xmlprogparser.o 
 TRANSFORM_OBJS = transform/rdi.o transform/transformer.o transform/generic.o transform/transformation-parser.o \
 	transform/transformation-scanner.o
+<<<<<<< HEAD
 FRONT_OBJS = frontend/frontend.o frontend/njmcDecoder.o frontend/sparcdecoder.o frontend/pentiumdecoder.o \
 	frontend/sparcfrontend.o frontend/pentiumfrontend.o frontend/ppcdecoder.o frontend/ppcfrontend.o \
 	frontend/st20decoder.o frontend/st20frontend.o frontend/mipsdecoder.o frontend/mipsfrontend.o
+=======
+FRONT_OBJS = frontend/frontend.o frontend/njmcDecoder.o frontend/pentiumdecoder.o \
+	frontend/sparcfrontend.o frontend/pentiumfrontend.o frontend/ppcdecoder.o frontend/ppcfrontend.o \
+	frontend/st20decoder.o frontend/st20frontend.o frontend/mipsdecoder.o frontend/mipsfrontend.o \
+	frontend/sparcdecoder.o #frontend/abcxyzdecoder.o
+>>>>>>> commit new file sml-nj
 CODEGEN = codegen/chllcode.o codegen/syntax.o
 TYPEOBJS = type/constraint.o type/type.o type/dfa.o
 LOADER_OBJS = loader/BinaryFileFactory.o
@@ -600,7 +620,7 @@ frontend/sparcdecoder.o: include/decoder.h include/types.h include/rtl.h include
 frontend/sparcdecoder.o: include/type.h include/memo.h include/exphelp.h include/register.h include/prog.h
 frontend/sparcdecoder.o: include/BinaryFile.h include/frontend.h include/sigenum.h include/cluster.h include/proc.h
 frontend/sparcdecoder.o: include/cfg.h include/basicblock.h include/managed.h include/dataflow.h include/hllcode.h
-frontend/sparcdecoder.o: include/statement.h frontend/sparcdecoder.h include/boomerang.h
+frontend/sparcdecoder.o: include/statement.h frontend/sparcdecoder.h include/boomerang.h frontend/sparcassemblydecoder.cpp
 frontend/sparcfrontend.o: include/exp.h include/operator.h include/types.h include/type.h include/memo.h
 frontend/sparcfrontend.o: include/exphelp.h include/register.h include/rtl.h include/cfg.h include/basicblock.h
 frontend/sparcfrontend.o: include/managed.h include/dataflow.h include/proc.h include/hllcode.h include/statement.h
