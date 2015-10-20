@@ -243,7 +243,9 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 		proto = true;
 		UserProc* up = (UserProc*)*it;
 		HLLCode *code = Boomerang::get()->getHLLCode(up);
-		code->AddPrototype(up);					// May be the wrong signature if up has ellipsis
+	
+		code->AddPrototype(up);
+							// May be the wrong signature if up has ellipsis
 		if (cluster == NULL || cluster == m_rootCluster)
 			code->print(os);
 	}
@@ -1274,7 +1276,6 @@ void Prog::decodeEverythingUndecoded() {
 
 void Prog::decompile() {
 	assert(m_procs.size());
-
 	if (VERBOSE) 
 		LOG << (int)m_procs.size() << " procedures\n";
 

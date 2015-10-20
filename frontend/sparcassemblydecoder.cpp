@@ -129,7 +129,7 @@ DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line)
 {
   using namespace std;
   static DecodeResult result;
-  //print "for "
+  //print "for "  
   result.reset();
   std::list<Statement*>* stmts = NULL;
   std::string sentence = line;
