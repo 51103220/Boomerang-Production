@@ -73,13 +73,13 @@ FrontEnd::FrontEnd(BinaryFile *pBF, Prog* prog, BinaryFileFactory* pbff) : pBF(p
 
 // Static function to instantiate an appropriate concrete front end
 FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* pbff) {
+	if(ASS_FILE)
+		return new SparcFrontEnd(pBF, prog, pbff);//donbinhvn: this line is such a trick, we will try so check type of assembly insts later
 	switch(pBF->GetMachine()) {
 		case MACHINE_PENTIUM:
 			return new PentiumFrontEnd(pBF, prog, pbff);
 		case MACHINE_SPARC:
-		std::cout<<"i'm here -MACHINE_SPARC\n";
 			return new SparcFrontEnd(pBF, prog, pbff);
-		
 		case MACHINE_PPC:
 			return new PPCFrontEnd(pBF, prog, pbff);
 		case MACHINE_MIPS:
@@ -98,7 +98,8 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	std::cout<<"in frontend::load pBF =bff->load\n";
 	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
-
+	//BinaryFile *pBF = NULL;
+	std::cout<<"Load ok\n";
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
 }
@@ -258,14 +259,18 @@ void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 		{prog->setName(pname);
 	std::cout<<"pname=="<<pname<<"\n";	
 }
-	else {std::cout<<"pname==null\n";}
+	else {std::cout<<"pname==null1\n";}
 	if (!decodeMain)
 		return;
 	
 	Boomerang::get()->alert_start_decode(pBF->getLimitTextLow(), pBF->getLimitTextHigh() - pBF->getLimitTextLow());
 
 	bool gotMain;
-	ADDRESS a = getMainEntryPoint(gotMain);
+	std::cout<<"get main Entry Point\n";
+	ADDRESS a ;
+	if(!ASS_FILE)//
+		a = getMainEntryPoint(gotMain);
+	std::cout<<"Get main entry point ok\n";
 	if (VERBOSE)
 		LOG << "start: " << a << " gotmain: " << (gotMain ? "true" : "false") << "\n";
 	if (a == NO_ADDRESS) {

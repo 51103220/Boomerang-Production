@@ -608,19 +608,19 @@ void UserProc::addCallee(Proc* callee) {
 }
 
 void UserProc::generateCode(HLLCode *hll) {
+	
 	assert(cfg);
 	assert(getEntryBB());
-
+	
 	cfg->structure();
 	removeUnusedLocals();
-
 	// Note: don't try to remove unused statements here; that requires the
 	// RefExps, which are all gone now (transformed out of SSA form)!
 
 	if (VERBOSE || Boomerang::get()->printRtl)
 		printToLog();
-
-	hll->AddProcStart(this);
+	
+	if(!ASS_FILE) hll->AddProcStart(this);//donbinhvn: check if i can hack here
 	
 	// Local variables; print everything in the locals map
 	std::map<std::string, Type*>::iterator last = locals.end();
@@ -639,12 +639,13 @@ void UserProc::generateCode(HLLCode *hll) {
 		else if (prog->getFrontEndId() == PLAT_SPARC)
 			hll->AddCallStatement(1, NULL, "SPARCSETUP", args, &results);
 	}
+	
 
 	std::list<PBB> followSet, gotoSet;
 	getEntryBB()->generateCode(hll, 1, NULL, followSet, gotoSet, this);
 	
 	hll->AddProcEnd();
-
+	
 	if (!Boomerang::get()->noRemoveLabels)
 		cfg->removeUnneededLabels(hll);
 
@@ -1066,17 +1067,20 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	if (child->size() == 0) {
 		Boomerang::get()->alert_decompiling(this);
 		std::cout << std::setw(indent) << " " << "decompiling " << getName() << "\n";
-		std::cerr<<"AFTER initialise"<<std::endl;
+		std::cerr<<"AFTER initialise1"<<std::endl;
 		initialiseDecompile();					// Sort the CFG, number statements, etc
 		
 		earlyDecompile();
-		std::cerr<<"AFTER initialise"<<std::endl;
+		std::cerr<<"AFTER initialise2"<<std::endl;
+
 		child = middleDecompile(path, indent);
+
 		// If there is a switch statement, middleDecompile could contribute some cycles. If so, we need to test for
 		// the recursion logic again
 		if (child->size() != 0)
 			// We've just come back out of decompile(), so we've lost the current proc from the path.
 			path->push_back(this);
+
 	}
 	if (child->size() == 0) {
 		remUnusedStmtEtc();	// Do the whole works
@@ -1162,7 +1166,7 @@ void UserProc::initialiseDecompile() {
 		LOG << "=== end initial debug print after decoding for " << getName() << " ===\n\n";
 	}
 
-	Boomerang::get()->alert_decompile_debug_point(this, "after initialise");
+	Boomerang::get()->alert_decompile_debug_point(this, "after initialise3");
 }
 // Can merge these two now
 void UserProc::earlyDecompile() {
@@ -1216,7 +1220,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-
+	
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
@@ -1233,12 +1237,15 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	// This part used to be calle middleDecompile():
 
-	findSpPreservation();
+	if(!ASS_FILE) findSpPreservation(); //donbinhvn : to check if i can hack here
+
 	// Oops - the idea of splitting the sp from the rest of the preservations was to allow correct naming of locals
 	// so you are alias conservative. But of course some locals are ebp (etc) based, and so these will never be correct
 	// until all the registers have preservation analysis done. So I may as well do them all together here.
-	findPreserveds();
+	if(!ASS_FILE) findPreserveds(); //donbinhvn: to check if i can hack here
+	
 	fixCallAndPhiRefs(); 	// Propagate and bypass sp
+
 	if (VERBOSE) {
 		LOG << "--- after preservation, bypass and propagation ---\n";
 		printToLog();
@@ -1246,7 +1253,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 	}
 	// Oh, no, we keep doing preservations till almost the end...
 	//setStatus(PROC_PRESERVEDS);		// Preservation done
-
+	
 	if (!Boomerang::get()->noPromote)
 		// We want functions other than main to be promoted. Needed before mapExpressionsToLocals
 		promoteSignature();
@@ -1373,19 +1380,22 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 			printToLog();
 			LOG << "=== end propagate for " << getName() << " at pass " << pass << " ===\n\n";
 		}
-
+	
 		Boomerang::get()->alert_decompile_afterPropagate(this, pass);
 		Boomerang::get()->alert_decompile_debug_point(this, "after propagating statements");
-
 		// this is just to make it readable, do NOT rely on these statements being removed 
-		removeSpAssignsIfPossible();
+	
+		if (!ASS_FILE)removeSpAssignsIfPossible();//donbinhvn: just check if i can hack here
+		
 		// The problem with removing %flags and %CF is that %CF is a subset of %flags
 		//removeMatchingAssignsIfPossible(new Terminal(opFlags));
 		//removeMatchingAssignsIfPossible(new Terminal(opCF));
 		removeMatchingAssignsIfPossible(new Unary(opTemp, new Terminal(opWildStrConst)));
+	
 		removeMatchingAssignsIfPossible(new Terminal(opPC));
 
 		//processTypes();
+		
 
 		if (!change)
 			break;				// Until no change
@@ -1876,6 +1886,7 @@ void UserProc::findSpPreservation() {
 
 	bool stdsp = false;		// FIXME: are these really used?
 	// Note: need this non-virtual version most of the time, since nothing proved yet
+	//std::cout<<"where the fuck you got errors\n";
 	int sp = signature->getStackRegister(prog);
 
 	for (int n = 0; n < 2; n++) {

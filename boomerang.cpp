@@ -934,6 +934,7 @@ int Boomerang::commandLine(int argc, const char **argv)
 					decompileAssembly = true;
 				else
 				assumeABI = true;
+				std::cout<<"Decode assembly \n";
 				break;
 			case 'l':
 				if (++i == argc) {
@@ -1177,9 +1178,9 @@ int Boomerang::decompile(const char *fname, const char *pname)
 	} else
 #endif
 	{
-		if(ASS_FILE)
-		prog = loadAndDecodeAssembly(fname,pname);
-		else
+		//if(ASS_FILE)//donbinhvn::no need to separate it
+		//prog = loadAndDecodeAssembly(fname,pname);
+		//else
 		prog = loadAndDecode(fname, pname);
 		if (prog == NULL)
 			return 1;
@@ -1213,7 +1214,7 @@ int Boomerang::decompile(const char *fname, const char *pname)
 			}
 	}
 
-	std::cout << "generating code...\n";
+	std::cout << "generating code.1..\n";
 	prog->generateCode();
 
 	std::cout << "output written to " << outputPath << prog->getRootCluster()->getName() << "\n";

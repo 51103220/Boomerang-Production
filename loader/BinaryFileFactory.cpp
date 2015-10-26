@@ -11,7 +11,7 @@
 #else
 #include <windows.h>			// include before types.h: name collision of NO_ADDRESS and WinSock.h
 #endif
-
+#include "boomerang.h"
 #include "BinaryFile.h"
 #include "ElfBinaryFile.h"
 #include "Win32BinaryFile.h"
@@ -32,6 +32,7 @@ BinaryFile *BinaryFileFactory::Load( const char *sName )
 		std::cerr << "unrecognised binary file format.\n";
 		return NULL;
 	}
+	if(ASS_FILE) return pBF;// return right after get instance, no need for realload
 	if( pBF->RealLoad( sName ) == 0 ) {
 		fprintf( stderr, "Loading '%s' failed\n", sName );
 		std::cout<<"no realLOAD();\n";
@@ -58,10 +59,14 @@ BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
 	std::string libName;
 	BinaryFile *res = NULL;
 // donbinhvn: mac dinh neu doc file assembly thi kieu file la ELF
- 
+ if(!ASS_FILE){
 	f = fopen (sName, "rb");
 	//donbinhvn: khoi phai doc vao file
-#if !ASS_FILE
+/**if(ASS_FILE)
+	std::cout<<"test assfile\n";
+else
+	std::cout<<"test not ass file\n";**/ //do this if decompile assembly file
+
 	if( f == NULL ) {
 		fprintf(stderr, "Unable to open binary file: %s\n", sName );
 		return NULL;
@@ -129,9 +134,11 @@ BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
 	libName += ".so";
 #endif
 #endif
-#else//donbinhvn gan mac dinh cho string libname
-	libname=str::string("lib/libElfBinaryFile.so");
-#endif
+}
+else//donbinhvn gan mac dinh cho string libname
+	{std::cout<<"test assfile\n";
+		libName=std::string("lib/libElfBinaryFile.so");}
+//#endif
 
 	dlHandle = dlopen(libName.c_str(), RTLD_LAZY);
 	if (dlHandle == NULL) {
@@ -174,7 +181,10 @@ BinaryFile* BinaryFileFactory::getInstanceFor( const char *sName ) {
 	}
 	// Call the construct function
 	res = (*pFcn)();
-	fclose(f);
+	std::cout<<"before close\n";
+	if(!ASS_FILE) //no need to close file here if decompile assfile
+		fclose(f);
+	std::cout<<"after close\n";
 	return res;
 }
 

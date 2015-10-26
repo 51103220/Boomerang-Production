@@ -182,6 +182,7 @@ void Prog::generateDotFile() {
 }
 
 void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
+
 	std::string basedir = m_rootCluster->makeDirs();
 	std::ofstream os;
 	if (cluster) {
@@ -230,7 +231,6 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 			if (global) code->print(os);		// Avoid blank line if no globals
 		}
 	}
-
 	// First declare prototypes for all but the first proc
 	std::list<Proc*>::iterator it = m_procs.begin();
 	bool first = true, proto = false;
@@ -251,8 +251,10 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 	}
 	if ((proto && cluster == NULL) || cluster == m_rootCluster)
 		os << "\n";				// Separate prototype(s) from first proc
+
 		
 	for (it = m_procs.begin(); it != m_procs.end(); it++) {
+		std::cout<<"got into generate code\n";
 		Proc *pProc = *it;
 		if (pProc->isLib()) continue;
 		UserProc *up = (UserProc*)pProc;
@@ -261,7 +263,9 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 			continue;
 		up->getCFG()->compressCfg();
 		HLLCode *code = Boomerang::get()->getHLLCode(up);
+		std::cout<<"got into generate code1\n";
 		up->generateCode(code);
+
 		if (up->getCluster() == m_rootCluster) {
 			if (cluster == NULL || cluster == m_rootCluster)
 				code->print(os);
@@ -272,6 +276,7 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 			}
 		}
 	}
+
 	os.close();
 	m_rootCluster->closeStreams();
 }
@@ -425,6 +430,7 @@ Cluster	*Prog::getDefaultCluster(const char *name)
 }
 
 void Prog::generateCode(std::ostream &os) {
+
 	HLLCode *code = Boomerang::get()->getHLLCode();
 	for (std::set<Global*>::iterator it1 = globals.begin(); it1 != globals.end(); it1++) {
 		// Check for an initial value
