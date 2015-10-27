@@ -32,6 +32,8 @@
 #include <cstring>
 #include <iomanip>			// For setfill etc
 #include <sstream>
+#include <string> //
+#include <fstream>// donbinhvn: for file reader
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 #pragma warning(disable:4786)
 #endif
@@ -731,7 +733,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 	// Declare an object to manage the queue of targets not yet processed yet.
 	// This has to be individual to the procedure! (so not a global)
 	TargetQueue targetQueue;
-
+ 	std::cout<<"getProg"<<prog->getPathAndName()<<"\n";
 	// Similarly, we have a set of CallStatement pointers. These may be
 	// disregarded if this is a speculative decode that fails (i.e. an illegal
 	// instruction is found). If not, this set will be used to add to the set
@@ -755,7 +757,8 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 	// Initialise the queue of control flow targets that have yet to be decoded.
 	targetQueue.initial(address);
 	/////////////////////////////////// MY CODE HERE ///////////////////////////////////////////////////////////
-	const char *vinit[]	= {"save	%sp, -104, %sp",
+	
+	/*const char *vinit[]	= {"save	%sp, -104, %sp",
 	"st	%i0, [%fp+68]" ,
 	"st	%i1, [%fp+72]",
 	"st	%i2, [%fp+76]",
@@ -766,12 +769,37 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 	"mov	%g1, %i0",
 	"restore",
 	"jmp	%o7+8",
-	"nop"	};
+	"nop"	};*/
+
+	char **vinit= new char*[100];
+	int count = 0;
+	
+	if(ASS_FILE)
+	{	std::cout<<"process file \n";
+		std::ifstream infile(prog->getPathAndName());
+		std::string line;
+		std::string temp ;
+		for( ; getline( infile, line );) 
+		{
+			//vinit[count]=new char[100];
+    		//vinit[count]=new char*;
+    		temp=line;
+    		vinit[count]=(char*)temp.c_str();//(char*)line.c_str()
+    		//std::cout<<count<<" - "<<vinit[count]<<"\n";
+    		count++;
+    		//if(count>=2)
+    		//std::cout<<0<<" - "<<vinit[0]<<vinit[count-2]<<"\n";
+
+		}
+		
+	}
+
 	std::vector<std::string> assemblySets(vinit,vinit+12) ;
 	int sizeSets = assemblySets.size();
 	std::cerr<<"size = "<< sizeSets << std::endl;
 	int line = 0;
 	std::cerr<<"line = "<< line << std::endl;
+	std::cout<<"assset.at"<<vinit[line]<<"\n";
 /////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////
 	// Get the next address from which to continue decoding and go from
 	// there. Exit the loop if there are no more addresses or they all
@@ -806,10 +834,14 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			else{
 //<<<<<<< HEAD
 				std::cerr<<"line"<<line<<"\n";
-				if(line<sizeSets){
-					inst = decodeAssemblyInstruction(address,assemblySets.at(line));
+				
+				if(ASS_FILE){
+					if(line<sizeSets){
+						inst = decodeAssemblyInstruction(address,assemblySets.at(line));//donbinhvn: decode assembly inst instead of binary
+					}
 				}
-//				inst = decodeInstruction(address);
+				else
+				inst = decodeInstruction(address);
 //=======
 				/////////////////////////////////// END MY CODE HERE ///////////////////////////////////////////////////////////
 				//if(line<sizeSets)

@@ -66,6 +66,7 @@ protected:
 class Prog {
 public:
 					Prog();							// Default constructor
+					std::string	m_name, m_path;			// name of the program and its full path
 virtual				~Prog();
 					Prog(const char* name);			// Constructor with name
 		void		setFrontEnd(FrontEnd* fe);
@@ -290,7 +291,7 @@ protected:
 		FrontEnd	*pFE;					// Pointer to the FrontEnd object for the project
 
 		/* Persistent state */
-		std::string	m_name, m_path;			// name of the program and its full path
+		
 		std::list<Proc*> m_procs;			// list of procedures
 		PROGMAP		m_procLabels;			// map from address to Proc*
 		// FIXME: is a set of Globals the most appropriate data structure? Surely not.

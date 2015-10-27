@@ -99,6 +99,8 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
 	//BinaryFile *pBF = NULL;
+	if(ASS_FILE)
+		prog->m_path=fname;
 	std::cout<<"Load ok\n";
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
@@ -257,12 +259,12 @@ std::vector<ADDRESS> FrontEnd::getEntryPoints()
 void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 	if (pname)
 		{prog->setName(pname);
-	std::cout<<"pname=="<<pname<<"\n";	
+		
 }
 	else {std::cout<<"pname==null1\n";}
 	if (!decodeMain)
 		return;
-	
+	std::cout<<"path=="<<prog->getPathAndName()<<"\n";
 	Boomerang::get()->alert_start_decode(pBF->getLimitTextLow(), pBF->getLimitTextHigh() - pBF->getLimitTextLow());
 
 	bool gotMain;
@@ -534,7 +536,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	int sizeSets = assemblySets.size();
 	std::cerr<<"size = "<< sizeSets << std::endl;
 	int line = 0;
-	std::cerr<<"line = "<< line << std::endl;
+	std::cerr<<"line1 = "<< line << std::endl;
 
 	while ((uAddr = targetQueue.nextAddress(pCfg)) != NO_ADDRESS) {
 		// The list of RTLs for the current basic block
@@ -551,9 +553,9 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				LOG << "*" << uAddr << "\t";
 
 			// Decode the inst at uAddr.
-			if(line < sizeSets)
-			inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
-
+			//if(line < sizeSets)
+			//inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
+			//inst = decodeInstruction(uAddr);
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
 				return false;
