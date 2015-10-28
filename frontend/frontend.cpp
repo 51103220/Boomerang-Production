@@ -73,13 +73,13 @@ FrontEnd::FrontEnd(BinaryFile *pBF, Prog* prog, BinaryFileFactory* pbff) : pBF(p
 
 // Static function to instantiate an appropriate concrete front end
 FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* pbff) {
-	if(ASS_FILE)
-		return new SparcFrontEnd(pBF, prog, pbff);//donbinhvn: this line is such a trick, we will try so check type of assembly insts later
 	switch(pBF->GetMachine()) {
 		case MACHINE_PENTIUM:
 			return new PentiumFrontEnd(pBF, prog, pbff);
 		case MACHINE_SPARC:
+		std::cout<<"i'm here -MACHINE_SPARC\n";
 			return new SparcFrontEnd(pBF, prog, pbff);
+		
 		case MACHINE_PPC:
 			return new PPCFrontEnd(pBF, prog, pbff);
 		case MACHINE_MIPS:
@@ -98,10 +98,8 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	std::cout<<"in frontend::load pBF =bff->load\n";
 	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
-	//BinaryFile *pBF = NULL;
-	if(ASS_FILE)
-		prog->m_path=fname;
-	std::cout<<"Load ok\n";
+  	std::cout<<fname<<"\n";
+  	if(ASS_FILE)prog->m_path=fname;//donbinhvn: remember path for later processing
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
 }
@@ -259,20 +257,17 @@ std::vector<ADDRESS> FrontEnd::getEntryPoints()
 void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 	if (pname)
 		{prog->setName(pname);
-		
+	std::cout<<"decode pname == "<<pname<<"\n";	
 }
-	else {std::cout<<"pname==null1\n";}
+	else {std::cout<<"decode pname==null\n";}
 	if (!decodeMain)
 		return;
-	std::cout<<"path=="<<prog->getPathAndName()<<"\n";
+	
 	Boomerang::get()->alert_start_decode(pBF->getLimitTextLow(), pBF->getLimitTextHigh() - pBF->getLimitTextLow());
 
 	bool gotMain;
-	std::cout<<"get main Entry Point\n";
-	ADDRESS a ;
-	if(!ASS_FILE)//
-		a = getMainEntryPoint(gotMain);
-	std::cout<<"Get main entry point ok\n";
+	ADDRESS a = getMainEntryPoint(gotMain);
+	std::cout<< "start: " << a << " gotmain: " << (gotMain ? "true" : "false") << "\n";
 	if (VERBOSE)
 		LOG << "start: " << a << " gotmain: " << (gotMain ? "true" : "false") << "\n";
 	if (a == NO_ADDRESS) {
@@ -283,11 +278,15 @@ void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 	}
 
 	decode(prog, a);
+	
+		
 	prog->setEntryPoint(a);
+			
 
 	if (gotMain) {
 		static const char *mainName[] = { "main", "WinMain", "DriverEntry" };
 		const char *name = pBF->SymbolByAddress(a);
+		std::cout<<"Proc name "<<name<<"\n";
 		if (name == NULL)
 			name = mainName[0];
 		for (size_t i = 0; i < sizeof(mainName)/sizeof(char*); i++) {
@@ -302,6 +301,8 @@ void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 				if (fty == NULL)
 					LOG << "unable to find signature for known entrypoint " << name << "\n";
 				else {
+
+					std::cout<<"Sig type:"<<fty->getSignature()->getReturns()[0]->type->prints();
 					proc->setSignature(fty->getSignature()->clone());
 					proc->getSignature()->setName(name);
 					//proc->getSignature()->setFullSig(true);		// Don't add or remove parameters
@@ -317,6 +318,7 @@ void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 // Somehow, a == NO_ADDRESS has come to mean decode anything not already decoded
 void FrontEnd::decode(Prog *prog, ADDRESS a) {
 	if (a != NO_ADDRESS) {
+		std::cout<<"decode main at a!= NOADDRESS\n";
 		prog->setNewProc(a);
 		if (VERBOSE)
 			LOG << "starting decode at address " << a << "\n";
@@ -331,11 +333,19 @@ void FrontEnd::decode(Prog *prog, ADDRESS a) {
 			return;
 		}
 		std::ofstream os;
-		
+			PROGMAP::const_iterator it;
+			for (Proc *pProc = prog->getFirstProc(it); pProc != NULL; pProc = prog->getNextProc(it)) {
+				std::cout<<"Proc name boom1 "<<pProc->getName()<<"\n";
+			}
 		processProc(a, p, os);
+			for (Proc *pProc = prog->getFirstProc(it); pProc != NULL; pProc = prog->getNextProc(it)) {
+				std::cout<<"Proc name boom2 "<<pProc->getName()<<"\n";
+
+			}
 		p->setDecoded();
 
 	} else {						// a == NO_ADDRESS
+		std::cout<<"decode child proc\n";
 		bool change = true;
 		while (change) {
 			change = false;
@@ -348,7 +358,12 @@ void FrontEnd::decode(Prog *prog, ADDRESS a) {
 				// undecoded userproc.. decode it			
 				change = true;
 				std::ofstream os;
+				std::cout<<"process Proc :"<<p->getSignature()->prints()<<"\n";
+
 				int res = processProc(p->getNativeAddress(), p, os);
+				//std::cout<<"Sig type:"<<p->getSignature()->prints()<<"\n";
+				std::cout<<"process Proc finish< res:"<<res<<"\n";
+
 				if (res == 1)
 					p->setDecoded();
 				else
@@ -489,7 +504,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 		bool spec /* = false */) {
 	PBB pBB;					// Pointer to the current basic block
 	std::cerr<<"Entering Processing Proc" << std::endl;
-
+	std::cout<<"Entering Processing Proc\n"; 
 	// just in case you missed it
 	Boomerang::get()->alert_new(pProc);
 
@@ -536,8 +551,8 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	int sizeSets = assemblySets.size();
 	std::cerr<<"size = "<< sizeSets << std::endl;
 	int line = 0;
-	std::cerr<<"line1 = "<< line << std::endl;
-
+	std::cerr<<"line = "<< line << std::endl;
+	std::cout<<"line = "<< line << std::endl;
 	while ((uAddr = targetQueue.nextAddress(pCfg)) != NO_ADDRESS) {
 		// The list of RTLs for the current basic block
 		std::list<RTL*>* BB_rtls = new std::list<RTL*>();
@@ -553,9 +568,9 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				LOG << "*" << uAddr << "\t";
 
 			// Decode the inst at uAddr.
-			//if(line < sizeSets)
-			//inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
-			//inst = decodeInstruction(uAddr);
+			if(line < sizeSets)
+			inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
+
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
 				return false;
@@ -1066,7 +1081,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	}
 
 	Boomerang::get()->alert_decode(pProc, startAddr, lastAddr, nTotalBytes);
-
+	std::cout<< "finished processing proc " << pProc->getName() << " at address " << pProc->getNativeAddress() << "\n";
 	if (VERBOSE)
 		LOG << "finished processing proc " << pProc->getName() << " at address " << pProc->getNativeAddress() << "\n";
 

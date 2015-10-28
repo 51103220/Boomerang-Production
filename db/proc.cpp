@@ -608,19 +608,19 @@ void UserProc::addCallee(Proc* callee) {
 }
 
 void UserProc::generateCode(HLLCode *hll) {
-	
 	assert(cfg);
 	assert(getEntryBB());
-	
+
 	cfg->structure();
 	removeUnusedLocals();
+
 	// Note: don't try to remove unused statements here; that requires the
 	// RefExps, which are all gone now (transformed out of SSA form)!
 
 	if (VERBOSE || Boomerang::get()->printRtl)
 		printToLog();
-	
-	if(!ASS_FILE) hll->AddProcStart(this);//donbinhvn: check if i can hack here
+
+	hll->AddProcStart(this);
 	
 	// Local variables; print everything in the locals map
 	std::map<std::string, Type*>::iterator last = locals.end();
@@ -639,13 +639,12 @@ void UserProc::generateCode(HLLCode *hll) {
 		else if (prog->getFrontEndId() == PLAT_SPARC)
 			hll->AddCallStatement(1, NULL, "SPARCSETUP", args, &results);
 	}
-	
 
 	std::list<PBB> followSet, gotoSet;
 	getEntryBB()->generateCode(hll, 1, NULL, followSet, gotoSet, this);
 	
 	hll->AddProcEnd();
-	
+
 	if (!Boomerang::get()->noRemoveLabels)
 		cfg->removeUnneededLabels(hll);
 
@@ -958,6 +957,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	Boomerang::get()->alert_considering(path->empty() ? NULL : path->back(), this);
 	std::cout << std::setw(++indent) << " " << (status >= PROC_VISITED ? "re" : "") << "considering " << getName() <<
 		"\n";
+		std::cout<<"decompile proc \n";
 	if (VERBOSE)
 		LOG << "begin decompile(" << getName() << ")\n";
 
@@ -969,7 +969,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	if (status < PROC_DECODED)
 		// Can happen e.g. if a callee is visible only after analysing a switch statement
 		prog->reDecode(this);					// Actually decoding for the first time, not REdecoding
-
+            
 	if (status < PROC_VISITED)
 		setStatus(PROC_VISITED); 					// We have at least visited this proc "on the way down"
 	ProcSet* child = new ProcSet;
@@ -982,6 +982,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	 *	*	*	*	*	*	*	*	*	*	*	*/
 
 	if (!Boomerang::get()->noDecodeChildren) {
+		std::cout<<"No Decode Childern\n";
 		// Recurse to children first, to perform a depth first search
 		BB_IT it;
 		// Look at each call, to do the DFS
@@ -994,15 +995,18 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 				}
 				assert(call->isCall());
 				UserProc* c = (UserProc*)call->getDestProc();
+				std::cout<<"Call1 "<<c->getName()<<"\n";
 				if (c == NULL || c->isLib()) continue;
 				if (c->status == PROC_FINAL) {
 					// Already decompiled, but the return statement still needs to be set for this call
 					call->setCalleeReturn(c->getTheReturnStatement());
 					continue;
 				}
+				std::cout<<"Call2 "<<c->getName()<<"\n";
 				// if c has already been visited but not done (apart from global analyses, i.e. we have a new cycle)
 				if (c->status >= PROC_VISITED && c->status <= PROC_EARLYDONE) {
 					// if c is in path
+					std::cout<<"Call3 "<<c->getName()<<"\n";
 					ProcList::iterator pi;
 					bool inPath = false;
 					for (pi = path->begin(); pi != path->end(); ++pi) {
@@ -1045,12 +1049,15 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 							child->insert(cg->begin(), cg->end());
 						cg = child;
 					}
-					setStatus(PROC_INCYCLE);	
+					setStatus(PROC_INCYCLE);
+						std::cout<<"Call3.3 "<<c->getSignature()->prints()<<"\n";
 				} else {
 					// No new cycle
 					if (VERBOSE)
 						LOG << "visiting on the way down child " << c->getName() << " from " << getName() << "\n";
+					std::cout<<"Call3.5 "<<c->getSignature()->prints()<<"\n";
 					ProcSet* tmp = c->decompile(path, indent);
+					std::cout<<"Call3.51 "<<c->getSignature()->prints()<<"\n";
 					child->insert(tmp->begin(), tmp->end());
 					// Child has at least done middleDecompile(), possibly more
 					call->setCalleeReturn(c->getTheReturnStatement());
@@ -1065,28 +1072,27 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 
 	// if child is empty, i.e. no child involved in recursion
 	if (child->size() == 0) {
+		std::cout<<"child size = 0\n";
 		Boomerang::get()->alert_decompiling(this);
 		std::cout << std::setw(indent) << " " << "decompiling " << getName() << "\n";
-		std::cerr<<"AFTER initialise1"<<std::endl;
+		std::cerr<<"AFTER initialise"<<std::endl;
 		initialiseDecompile();					// Sort the CFG, number statements, etc
 		
 		earlyDecompile();
-		std::cerr<<"AFTER initialise2"<<std::endl;
-
+		std::cerr<<"AFTER initialise"<<std::endl;
 		child = middleDecompile(path, indent);
-
 		// If there is a switch statement, middleDecompile could contribute some cycles. If so, we need to test for
 		// the recursion logic again
 		if (child->size() != 0)
 			// We've just come back out of decompile(), so we've lost the current proc from the path.
 			path->push_back(this);
-
 	}
 	if (child->size() == 0) {
 		remUnusedStmtEtc();	// Do the whole works
 		setStatus(PROC_FINAL);
 		Boomerang::get()->alert_end_decompile(this);
 	} else {
+		std::cout<<"real decompile 1"<<getSignature()->prints()<<"\n";
 		// this proc's children, and hence this proc, is/are involved in recursion
 		// find first element f in path that is also in cycleGrp
 		ProcList::iterator f;
@@ -1094,13 +1100,17 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 			if (cycleGrp->find(*f) != cycleGrp->end())
 				break;
 		// The big test: have we found all the strongly connected components (in the call graph)?
+			std::cout<<"real decompile 2"<<getSignature()->prints()<<"\n";
 		if (*f == this) {
 			// Yes, process these procs as a group
+			std::cout<<"real decompile 3"<<getSignature()->prints()<<"\n";
 			recursionGroupAnalysis(path, indent);// Includes remUnusedStmtEtc on all procs in cycleGrp
+			std::cout<<"real decompile 4"<<getSignature()->prints()<<"\n";
 			setStatus(PROC_FINAL);
 			Boomerang::get()->alert_end_decompile(this);
 			child = new ProcSet;
 		}
+		std::cout<<"real decompile "<<getSignature()->prints()<<"\n";
 	}
 
 	// Remove last element (= this) from path
@@ -1111,6 +1121,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 		LOG << "WARNING: UserProc::decompile: empty path when trying to remove last proc\n";
 
 	--indent;
+
 	if (VERBOSE)
 		LOG << "end decompile(" << getName() << ")\n";
 	return child;
@@ -1166,7 +1177,7 @@ void UserProc::initialiseDecompile() {
 		LOG << "=== end initial debug print after decoding for " << getName() << " ===\n\n";
 	}
 
-	Boomerang::get()->alert_decompile_debug_point(this, "after initialise3");
+	Boomerang::get()->alert_decompile_debug_point(this, "after initialise");
 }
 // Can merge these two now
 void UserProc::earlyDecompile() {
@@ -1220,7 +1231,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-	
+
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
@@ -1237,15 +1248,12 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	// This part used to be calle middleDecompile():
 
-	if(!ASS_FILE) findSpPreservation(); //donbinhvn : to check if i can hack here
-
+	findSpPreservation();
 	// Oops - the idea of splitting the sp from the rest of the preservations was to allow correct naming of locals
 	// so you are alias conservative. But of course some locals are ebp (etc) based, and so these will never be correct
 	// until all the registers have preservation analysis done. So I may as well do them all together here.
-	if(!ASS_FILE) findPreserveds(); //donbinhvn: to check if i can hack here
-	
+	findPreserveds();
 	fixCallAndPhiRefs(); 	// Propagate and bypass sp
-
 	if (VERBOSE) {
 		LOG << "--- after preservation, bypass and propagation ---\n";
 		printToLog();
@@ -1253,7 +1261,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 	}
 	// Oh, no, we keep doing preservations till almost the end...
 	//setStatus(PROC_PRESERVEDS);		// Preservation done
-	
+
 	if (!Boomerang::get()->noPromote)
 		// We want functions other than main to be promoted. Needed before mapExpressionsToLocals
 		promoteSignature();
@@ -1380,22 +1388,19 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 			printToLog();
 			LOG << "=== end propagate for " << getName() << " at pass " << pass << " ===\n\n";
 		}
-	
+
 		Boomerang::get()->alert_decompile_afterPropagate(this, pass);
 		Boomerang::get()->alert_decompile_debug_point(this, "after propagating statements");
+
 		// this is just to make it readable, do NOT rely on these statements being removed 
-	
-		if (!ASS_FILE)removeSpAssignsIfPossible();//donbinhvn: just check if i can hack here
-		
+		removeSpAssignsIfPossible();
 		// The problem with removing %flags and %CF is that %CF is a subset of %flags
 		//removeMatchingAssignsIfPossible(new Terminal(opFlags));
 		//removeMatchingAssignsIfPossible(new Terminal(opCF));
 		removeMatchingAssignsIfPossible(new Unary(opTemp, new Terminal(opWildStrConst)));
-	
 		removeMatchingAssignsIfPossible(new Terminal(opPC));
 
 		//processTypes();
-		
 
 		if (!change)
 			break;				// Until no change
@@ -1735,19 +1740,21 @@ void UserProc::recursionGroupAnalysis(ProcList* path, int indent) {
 	// Need to propagate into the initial arguments, since arguments are uses, and we are about to remove unused
 	// statements.
 	bool convert;
+		std::cout<<"recursionGroupAnalysis 1"<<getSignature()->prints()<<"\n";
 	for (p = cycleGrp->begin(); p != cycleGrp->end(); ++p) {
 		//(*p)->initialParameters();					// FIXME: I think this needs to be mapping locals and params now
 		(*p)->mapLocalsAndParams();
 		(*p)->updateArguments();
 		(*p)->propagateStatements(convert, 0);		// Need to propagate into arguments
 	}
-
+	std::cout<<"recursionGroupAnalysis 2"<<getSignature()->prints()<<"\n";
 	// while no change
 for (int i=0; i < 2; i++) {
 	for (p = cycleGrp->begin(); p != cycleGrp->end(); ++p) {
 		(*p)->remUnusedStmtEtc();				// Also does final parameters and arguments at present
 	}
 }
+std::cout<<"recursionGroupAnalysis 3"<<getSignature()->prints()<<"\n";
 	if (VERBOSE)
 		LOG << "=== end recursion group analysis ===\n";
 	Boomerang::get()->alert_end_decompile(this);
@@ -1886,7 +1893,6 @@ void UserProc::findSpPreservation() {
 
 	bool stdsp = false;		// FIXME: are these really used?
 	// Note: need this non-virtual version most of the time, since nothing proved yet
-	//std::cout<<"where the fuck you got errors\n";
 	int sp = signature->getStackRegister(prog);
 
 	for (int n = 0; n < 2; n++) {
@@ -2256,7 +2262,7 @@ void UserProc::findFinalParameters() {
 			// Add this parameter to the signature (for now; creates parameter names)
 			addParameter(e, ty);
 			// Insert it into the parameters StatementList, in sensible order
-			insertParameter(e, ty);
+			insertParameter(e, ty);// donbinhvn: this line add parameter to signature
 		}
 	}
 

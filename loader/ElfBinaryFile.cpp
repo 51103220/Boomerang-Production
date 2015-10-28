@@ -39,6 +39,7 @@
 #include <cstring>
 #include <assert.h>
 #include "config.h"
+//#include "boomerang.h"
 #if defined(_MSC_VER) && _MSC_VER >= 1400
 #pragma warning(disable:4996)		// Warnings about e.g. _strdup deprecated in VS 2005
 #endif
@@ -111,7 +112,10 @@ bool ElfBinaryFile::RealLoad(const char* sName)
         return false;
     }
 
-    m_pFileName = sName;
+    m_pFileName = sName;//donbinhvn:hack here for a while
+
+    //m_fd = fopen("output/hellosparc/sparc/a.out", "rb");
+   // 	else
     m_fd = fopen (sName, "rb");
     if (m_fd == NULL) return 0;
 

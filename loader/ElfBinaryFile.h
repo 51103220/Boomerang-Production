@@ -24,7 +24,7 @@
 /*==============================================================================
  * Dependencies.
  *============================================================================*/
-
+#include "boomerang.h"
 #include "BinaryFile.h"
 #include "SymTab.h"					// For SymTab (probably unused)
 typedef std::map<ADDRESS,std::string,std::less<ADDRESS> >  RelocMap;
