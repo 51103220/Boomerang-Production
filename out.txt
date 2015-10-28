@@ -1,0 +1,10 @@
+make -C loader
+make[1]: Entering directory `/home/donbinhvn/LVTN/boomerang/loader'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/donbinhvn/LVTN/boomerang/loader'
+g++ -g -O2 -Wall -I./include   -c -o frontend/sparcdecoder.o  frontend/sparcdecoder.cpp
+make -C loader
+make[1]: Entering directory `/home/donbinhvn/LVTN/boomerang/loader'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/donbinhvn/LVTN/boomerang/loader'
+g++ -g -O2 -Wall -I./include   -c -o frontend/sparcdecoder.o  frontend/sparcdecoder.cpp
