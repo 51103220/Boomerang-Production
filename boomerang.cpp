@@ -1182,6 +1182,7 @@ int Boomerang::decompile(const char *fname, const char *pname)
 		//prog = loadAndDecodeAssembly(fname,pname);
 		//else
 		prog = loadAndDecode(fname, pname);
+		if(ASS_FILE) prog->setName("testfolder");//for set output folder
 		if (prog == NULL)
 			return 1;
 	}

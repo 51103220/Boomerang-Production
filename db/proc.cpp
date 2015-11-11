@@ -54,7 +54,7 @@
 #include <iomanip>			// For std::setw etc
 #include <sstream>
 #include <cstring>
-
+#include "procABI.cpp"
 #ifdef _WIN32
 #undef NO_ADDRESS
 #include <windows.h>
@@ -805,11 +805,17 @@ void UserProc::numberStatements() {
 void UserProc::getStatements(StatementList &stmts) {
 	BB_IT it;
 	for (PBB bb = cfg->getFirstBB(it); bb; bb = cfg->getNextBB(it)) 
+	{
 		bb->getStatements(stmts);
-
+	
+	}
+	int count = 0;
 	for (StatementList::iterator it = stmts.begin(); it != stmts.end(); it++)
-		if ((*it)->getProc() == NULL)
+		{if ((*it)->getProc() == NULL)
 			(*it)->setProc(this);
+			
+			}
+
 }
 
 // Remove a statement. This is somewhat inefficient - we have to search the whole BB for the statement.
@@ -953,11 +959,12 @@ void UserProc::insertStatementAfter(Statement* s, Statement* a) {
  */
 
 // Decompile this UserProc
+
 ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	Boomerang::get()->alert_considering(path->empty() ? NULL : path->back(), this);
 	std::cout << std::setw(++indent) << " " << (status >= PROC_VISITED ? "re" : "") << "considering " << getName() <<
 		"\n";
-		std::cout<<"decompile proc \n";
+		std::cout<<"decompile proc  \n";
 	if (VERBOSE)
 		LOG << "begin decompile(" << getName() << ")\n";
 
@@ -983,8 +990,12 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 
 	if (!Boomerang::get()->noDecodeChildren) {
 		std::cout<<"No Decode Childern\n";
-		// Recurse to children first, to perform a depth first search
 		BB_IT it;
+		// Recurse to children first, to perform a depth first search
+		//initialiseDecompile();
+		////////////////donbinhvn: just hardcode here for testing
+		findABIParameters();
+		//////////////////end my code/////////////////////////////
 		// Look at each call, to do the DFS
 		for (PBB bb = cfg->getFirstBB(it); bb; bb = cfg->getNextBB(it)) {
 			if (bb->getType() == CALL) {
@@ -996,6 +1007,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 				assert(call->isCall());
 				UserProc* c = (UserProc*)call->getDestProc();
 				std::cout<<"Call1 "<<c->getName()<<"\n";
+				//std::cout<<c->getTheReturnStatement()->getNumReturns()<<"\n";
 				if (c == NULL || c->isLib()) continue;
 				if (c->status == PROC_FINAL) {
 					// Already decompiled, but the return statement still needs to be set for this call
@@ -1003,10 +1015,12 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 					continue;
 				}
 				std::cout<<"Call2 "<<c->getName()<<"\n";
+				std::cout<<c->getTheReturnStatement()->getNumReturns()<<"\n";
 				// if c has already been visited but not done (apart from global analyses, i.e. we have a new cycle)
 				if (c->status >= PROC_VISITED && c->status <= PROC_EARLYDONE) {
 					// if c is in path
 					std::cout<<"Call3 "<<c->getName()<<"\n";
+					std::cout<<c->getTheReturnStatement()->getNumReturns()<<"\n";
 					ProcList::iterator pi;
 					bool inPath = false;
 					for (pi = path->begin(); pi != path->end(); ++pi) {
@@ -1093,6 +1107,8 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 		Boomerang::get()->alert_end_decompile(this);
 	} else {
 		std::cout<<"real decompile 1"<<getSignature()->prints()<<"\n";
+		std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
+
 		// this proc's children, and hence this proc, is/are involved in recursion
 		// find first element f in path that is also in cycleGrp
 		ProcList::iterator f;
@@ -1104,13 +1120,16 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 		if (*f == this) {
 			// Yes, process these procs as a group
 			std::cout<<"real decompile 3"<<getSignature()->prints()<<"\n";
+			std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 			recursionGroupAnalysis(path, indent);// Includes remUnusedStmtEtc on all procs in cycleGrp
 			std::cout<<"real decompile 4"<<getSignature()->prints()<<"\n";
+			std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 			setStatus(PROC_FINAL);
 			Boomerang::get()->alert_end_decompile(this);
 			child = new ProcSet;
 		}
 		std::cout<<"real decompile "<<getSignature()->prints()<<"\n";
+		std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	}
 
 	// Remove last element (= this) from path
@@ -1231,7 +1250,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-
+	std::cout<<"middle decompile 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
@@ -1293,6 +1312,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 	// Repeat until no change
 	int pass;
 	for (pass = 3; pass <= 12; ++pass) {
+		std::cout<<"middle decompile 3"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		// Redo the renaming process to take into account the arguments
 		if (VERBOSE)
 			LOG << "renaming block variables (2) pass " << pass << "\n";
@@ -1303,11 +1323,12 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 		// Seed the return statement with reaching definitions
 		// FIXME: does this have to be in this loop?
+		std::cout<<"middle decompile 4"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		if (theReturnStatement) {
 			theReturnStatement->updateModifieds();		// Everything including new arguments reaching the exit
 			theReturnStatement->updateReturns();
 		}
-
+	std::cout<<"middle decompile 5"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		printXML();
 
 		// Print if requested
@@ -1322,7 +1343,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 		Boomerang::get()->alert_decompile_SSADepth(this, pass);	// FIXME: need depth -> pass in GUI code
 
 		// (* Was: mapping expressions to Parameters as we go *)
-
+		std::cout<<"middle decompile 6"<<getTheReturnStatement()->getNumReturns()<<"\n";
 #if 1	// FIXME: Check if this is needed any more. At least fib seems to need it at present.
 		if (!Boomerang::get()->noChangeSignatures) {
 			// addNewReturns(depth);
@@ -1331,10 +1352,15 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 					LOG << "### update returns loop iteration " << i << " ###\n";
 				if (status != PROC_INCYCLE)
 					doRenameBlockVars(pass, true);
+				std::cout<<"middle decompile 6.1 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				findPreserveds();
+				std::cout<<"middle decompile 6.2 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				updateCallDefines();		// Returns have uses which affect call defines (if childless)
+				std::cout<<"middle decompile 6.3 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				fixCallAndPhiRefs();
+				std::cout<<"middle decompile 6.4 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				findPreserveds();			// Preserveds subtract from returns
+				std::cout<<"middle decompile 6.5 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 			}
 			printXML();
 			if (VERBOSE) {
@@ -1344,6 +1370,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 				LOG << "=== end debug print SSA for " << getName() << " at pass " << pass << " ===\n\n";
 			}
 		}
+		std::cout<<"middle decompile 7"<<getTheReturnStatement()->getNumReturns()<<"\n";
 #endif
 
 		printXML();
@@ -1381,7 +1408,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 				LOG << "\ndone after rename (2) of " << getName() << ":\n\n";
 			}
 		} while (convert);
-
+		std::cout<<"middle decompile 8"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		printXML();
 		if (VERBOSE) {
 			LOG << "--- after propagate for " << getName() << " at pass " << pass << " ---\n";
@@ -1401,7 +1428,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 		removeMatchingAssignsIfPossible(new Terminal(opPC));
 
 		//processTypes();
-
+		std::cout<<"middle decompile 10 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 		if (!change)
 			break;				// Until no change
 	}
@@ -1518,7 +1545,7 @@ void UserProc::remUnusedStmtEtc() {
 
     Boomerang::get()->alert_decompiling(this);
 	Boomerang::get()->alert_decompile_debug_point(this, "before final");
-
+	std::cout<<"\nremUnusedStmtEtc "<<getSignature()->prints()<<"\n";
 	if (VERBOSE)
 		LOG << "--- remove unused statements for " << getName() << " ---\n";
 	// A temporary hack to remove %CF = %CF{7} when 7 isn't a SUBFLAGS
@@ -1551,7 +1578,7 @@ void UserProc::remUnusedStmtEtc() {
 #endif
 
 	}
-
+	std::cout<<"\nremUnusedStmtEtc 2"<<getSignature()->prints()<<"\n";
 	// Only remove unused statements after decompiling as much as possible of the proc
 	// Remove unused statements
 	RefCounter refCounts;			// The map
@@ -1572,8 +1599,10 @@ void UserProc::remUnusedStmtEtc() {
 		LOG << "=== end after removing unused statements for " << getName() << " ===\n\n";
 	}
 	Boomerang::get()->alert_decompile_afterRemoveStmts(this, 1);
-
+	std::cout<<"\nremUnusedStmtEtc 2.5"<<getSignature()->prints()<<"\n";
+	std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	findFinalParameters();
+	std::cout<<"\nremUnusedStmtEtc  3"<<getSignature()->prints()<<"\n";
 	if (!Boomerang::get()->noParameterNames) {
 		// Replace the existing temporary parameters with the final ones:
 		//mapExpressionsToParameters();
@@ -1600,7 +1629,7 @@ void UserProc::remUnusedStmtEtc() {
 
 	branchAnalysis();
 	fixUglyBranches();
-	
+	std::cout<<"\nremUnusedStmtEtc 4"<<getSignature()->prints()<<"\n";
 	if (VERBOSE) {
 		LOG << "--- after remove unused statements etc for " << getName() << "\n";
 		printToLog();
@@ -1712,16 +1741,21 @@ void UserProc::recursionGroupAnalysis(ProcList* path, int indent) {
 			LOG << (*csi)->getName() << ", ";
 		LOG << "# # #\n";
 	}
-
+	std::cout<<"recursion group analysis for ";
+	ProcSet::iterator csi;
+	for (csi = cycleGrp->begin(); csi != cycleGrp->end(); ++csi)
+			std::cout << (*csi)->getName() << ", ";
+		std::cout<<"##\n";
 	// First, do the initial decompile, and call earlyDecompile
 	ProcSet::iterator curp;
+	std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	for (curp = cycleGrp->begin(); curp != cycleGrp->end(); ++curp) {
 		(*curp)->setStatus(PROC_INCYCLE);				// So the calls are treated as childless
 		Boomerang::get()->alert_decompiling(*curp);
 		(*curp)->initialiseDecompile();					// Sort the CFG, number statements, etc
 		(*curp)->earlyDecompile();
 	}
-
+	std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// Now all the procs in the group should be ready for preservation analysis
 	// The standard preservation analysis should automatically perform conditional preservation
 	for (curp = cycleGrp->begin(); curp != cycleGrp->end(); ++curp) {
@@ -1729,7 +1763,7 @@ void UserProc::recursionGroupAnalysis(ProcList* path, int indent) {
 		(*curp)->setStatus(PROC_PRESERVEDS);
 	}
 
-
+	std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// FIXME: why exactly do we do this?
 	// Mark all the relevant calls as non childless (will harmlessly get done again later)
 	ProcSet::iterator it;
@@ -1741,6 +1775,7 @@ void UserProc::recursionGroupAnalysis(ProcList* path, int indent) {
 	// statements.
 	bool convert;
 		std::cout<<"recursionGroupAnalysis 1"<<getSignature()->prints()<<"\n";
+		std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	for (p = cycleGrp->begin(); p != cycleGrp->end(); ++p) {
 		//(*p)->initialParameters();					// FIXME: I think this needs to be mapping locals and params now
 		(*p)->mapLocalsAndParams();
@@ -1942,6 +1977,7 @@ void UserProc::findPreserveds() {
 		Exp* equation = new Binary(opEquals, lhs, lhs);
 		if (DEBUG_PROOF)
 			LOG << "attempting to prove " << equation << " is preserved by " << getName() << "\n";
+		//std::cout<<"attempting to prove " << equation << " is preserved by " << getName() << "\n";
 		if (prove(equation)) {
 			removes.insert(equation);	
 		}
@@ -1952,11 +1988,13 @@ void UserProc::findPreserveds() {
 		for (std::map<Exp*, Exp*, lessExpStar>::iterator it = provenTrue.begin(); it != provenTrue.end(); it++)
 			LOG << it->first << " = " << it->second << "\n";
 		LOG << "### end proven true for procedure " << getName() << "\n\n";
+		std::cout<<"### end proven true cfor procedure " << getName() << "\n";
 #if PROVEN_FALSE
 		LOG << "### proven false for procedure " << getName() << ":\n";
 		for (std::map<Exp*, Exp*, lessExpStar>::iterator it = provenFalse.begin(); it != provenFalse.end(); it++)
 			LOG << it->first << " != " << it->second << "\n";
 		LOG << "### end proven false for procedure " << getName() << "\n\n";
+		std::cout<<"### end proven false for procedure " << getName() << "\n";
 #endif
 	}
 
@@ -2066,7 +2104,7 @@ void UserProc::removeMatchingAssignsIfPossible(Exp *e)
 		}
 	
 	str.str("");
-	str << "after removing matching assigns (" << e << ").";
+	str << "after removing matching assigns  (" << e << ").";
 	Boomerang::get()->alert_decompile_debug_point(this, str.str().c_str());
 		LOG << str.str().c_str() << "\n";
 
@@ -2156,10 +2194,12 @@ void UserProc::findFinalParameters() {
 	parameters.clear();
 
 	if (signature->isForced()) {
+		std::cout<<"when will a signature force\n";
 		// Copy from signature
 		int n = signature->getNumParams();
 		ImplicitConverter ic(cfg);
 		for (int i=0; i < n; ++i) {
+
 			Exp* paramLoc = signature->getParamExp(i)->clone();		// E.g. m[r28 + 4]
 			LocationSet components;
 			LocationSet::iterator cc;
@@ -2186,16 +2226,23 @@ void UserProc::findFinalParameters() {
 	signature->setNumParams(0);			// Clear any old ideas
 	StatementList stmts;
 	getStatements(stmts);
-
+	std::cout<<"finalised parameters "<<getSignature()->prints()<<"\n";
 	StatementList::iterator it;
+/*	for (it = stmts.begin(); it != stmts.end(); ++it) {
+		Statement* s = *it;
+		std::cout<<"stmt "<<s->prints()<<"\n";
+	}*/
 	for (it = stmts.begin(); it != stmts.end(); ++it) {
 		Statement* s = *it;
+
 		// Assume that all parameters will be m[]{0} or r[]{0}, and in the implicit definitions at the start of the
 		// program
 		if (!s->isImplicit())
 			// Note: phis can get converted to assignments, but I hope that this is only later on: check this!
 			break;					// Stop after reading all implicit assignments
 		Exp *e = ((ImplicitAssign*)s)->getLeft();
+		
+		//std::cout<<"final  para2.1\n";
 		if (signature->findParam(e) == -1) {
 			if (VERBOSE || DEBUG_PARAMS)
 				LOG << "potential param " << e << "\n";
@@ -2203,7 +2250,37 @@ void UserProc::findFinalParameters() {
 			// pararameters)
 			if (!(e->isRegOf() || isLocalOrParamPattern(e)))
 				continue;
+
+			if(true)//donbinhvn: this bool will check if use ABIconvention or not
+			{
+			std::list<Exp*>::iterator eit;
+			
+			Exp* temp2 = e->clone();
+				//if (!(e->isRegOf()))
+				//	temp2->setSubExp1(temp2->getSubExp1()->expSubscriptValNull()e);
+				std::cout<<"test  ABIparameters :"<<temp2->prints()<<"\n";
+			for(eit=ABIparameters.begin();eit != ABIparameters.end();eit++)
+			{	
+				Exp* temp = *eit;
+				//std::cout<<"list ABIparameters:"<<temp->prints()<<"\n";
+				
+				//std::cout<<"test  ABIparameters :"<<temp2->prints()<<"\n";
+					if(((std::string)temp2->prints())==((std::string)temp->prints()))//donbinhvn//will check it later
+				{
+					Type* ty = ((ImplicitAssign*)s)->getType();
+					std::cout<<"found new ABIparameters:"<<e->prints()<<"\n";
+					// Add this parameter to the signature (for now; creates parameter names)
+					addParameter(e, ty);
+					// Insert it into the parameters StatementList, in sensible order
+					insertParameter(e, ty);// donbinhvn: this line add parameter to signature
+					break;
+				}
+			}
+			continue;
+			}
+		//end my code right here
 #else
+
 			if (signature->isStackLocal(prog, e) || e->getOper() == opLocal) {
 				if (VERBOSE || DEBUG_PARAMS)
 					LOG << "ignoring local " << e << "\n";
@@ -2257,13 +2334,25 @@ void UserProc::findFinalParameters() {
 #endif
 			if (VERBOSE || DEBUG_PARAMS)
 				LOG << "found new parameter " << e << "\n";
-
+			std::cout<<"found new parameter  "<<e<<"\n";
 			Type* ty = ((ImplicitAssign*)s)->getType();
+			std::cout<<e->prints() <<" - "<<ty->prints();
+			/*int regno =((Const*) e->getSubExp1())->getInt();
+			if(regno!=8) {
+std::cout<<"remove "<<e->prints()<<"from parameters\n";
+				continue;}*/
+			/*if(test==1)//donbinhvn: just hack for test
+			{
+			std::cout<<"remove "<<e->prints()<<"from parameters\n";
+			continue;	
+			}*/
 			// Add this parameter to the signature (for now; creates parameter names)
 			addParameter(e, ty);
 			// Insert it into the parameters StatementList, in sensible order
 			insertParameter(e, ty);// donbinhvn: this line add parameter to signature
+	
 		}
+		//std::cout<<"final  para21\n";
 	}
 
 	Boomerang::get()->alert_decompile_debug_point(this, "after find final parameters.");

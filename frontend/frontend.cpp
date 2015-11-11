@@ -99,7 +99,9 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
   	std::cout<<fname<<"\n";
-  	if(ASS_FILE)prog->m_path=fname;//donbinhvn: remember path for later processing
+  	if(ASS_FILE)
+  	{prog->m_path=fname;
+  	prog->setName("testfolder");}//donbinhvn: remember path for later processing
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
 }
