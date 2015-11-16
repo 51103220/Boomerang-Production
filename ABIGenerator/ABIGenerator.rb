@@ -1,10 +1,7 @@
 require 'roo'
 require 'yaml'
-class CallSpec1
-	attr_accessor :platform, :return,:param,:additionParam,:stackAlign,:scratch,:preserved,:callList
-end
 
-Test1 = Struct.new(:clgt)
+
 CallSpec = Struct.new(:platform, :return,:param,:additionParam,:stackAlign,:scratch,:preserved,:callList) 
 def restructure_data
 	file = Roo::Spreadsheet.open('./CallSpec.ods')
@@ -57,7 +54,7 @@ def code_generation (specification)
 			code<<"\tbool param#{index}#{i} = false;\n"
 		end
 		code<<"\tbool ispara#{index} = false;\n";
-		code<<"\tbool addparam#{index} = false;"
+		code<<"\tbool addparam#{index} = false;\n"
 		i=1
 		code<<"\tfor (stit = stmts.begin(); stit != stmts.end(); ++stit) {\n" #check each STMT
 		code<<"\t\tStatement* s = *stit;\n"
@@ -86,14 +83,18 @@ def code_generation (specification)
 			code<<"\t\tif(addparam#{index} &&"
 			code<<"(((std::string)lhs->prints()).find(\"#{machine[:additionParam]}\")!=std::string::npos)"
 			code<<"){\n"
+			#if machine[:param].length >0
+			code<<"\t\t\tif(lhs->isMemOf())\n"
+			#end
 			code<<"\t\t\tispara#{index} = true;\n"
 			code<<"\t\t}\n"
 		end
 		code<<"\t\tif (ispara#{index}){\n" ##Add to paralist if this check is true
 		#code<<"\tcount ++;\n"
+		code<<"\t\t\tExp* temp2 = lhs->clone();"
 		code<<"\t\t\tstd::list<Exp*>::iterator eit;\n"
 		code<<"\t\t\teit=c->ABIparameters.begin();\n"
-		code<<"\t\t\tc->ABIparameters.insert(eit,lhs);\n"
+		code<<"\t\t\tc->ABIparameters.insert(eit,temp2);\n"
 		code<<"\t\t}\n"## finish adding to paralist
 		code<<"\t}\n"#END check each STMT
 		
@@ -123,7 +124,7 @@ def write_cpp_file
 		if line =~ /.*}.*/
 			indent=indent-1
 		end
-		if line =~ /\/\/##.+/
+		if line =~ /\/\/##@@.+/
 			indentstr="";
 			print indent
 			for temp in 1..indent
@@ -144,7 +145,7 @@ def write_to_output file
 		f.puts @content
 	end
 end
-
- spec = restructure_data
- code_generation spec
- write_cpp_file
+						
+ spec = restructure_data #read calling convention specification from spec file
+ code_generation spec # generate code from calling spec
+ write_cpp_file #detect and push code into cpp file

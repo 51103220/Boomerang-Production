@@ -994,7 +994,8 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 		// Recurse to children first, to perform a depth first search
 		//initialiseDecompile();
 		////////////////donbinhvn: just hardcode here for testing
-		findABIParameters();
+				std::cout<<"find ABI :\n";
+				findABIParameters();		
 		//////////////////end my code/////////////////////////////
 		// Look at each call, to do the DFS
 		for (PBB bb = cfg->getFirstBB(it); bb; bb = cfg->getNextBB(it)) {
@@ -1250,7 +1251,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-	std::cout<<"middle decompile 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
+	std::cout<<"middle decompile  1"<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
@@ -2226,7 +2227,7 @@ void UserProc::findFinalParameters() {
 	signature->setNumParams(0);			// Clear any old ideas
 	StatementList stmts;
 	getStatements(stmts);
-	std::cout<<"finalised parameters "<<getSignature()->prints()<<"\n";
+	std::cout<<"finalised para meters "<<getSignature()->prints()<<"\n";
 	StatementList::iterator it;
 /*	for (it = stmts.begin(); it != stmts.end(); ++it) {
 		Statement* s = *it;
@@ -2250,25 +2251,27 @@ void UserProc::findFinalParameters() {
 			// pararameters)
 			if (!(e->isRegOf() || isLocalOrParamPattern(e)))
 				continue;
-
-			if(true)//donbinhvn: this bool will check if use ABIconvention or not
+			Exp* temp2 = e->clone();
+				//if (!(e->isRegOf()))
+		std::cout<<"potential param : "<<e->prints()<<"\n";
+			if(ABI_ASS)//donbinhvn: this bool will check if use ABIconvention or not
 			{
 			std::list<Exp*>::iterator eit;
 			
-			Exp* temp2 = e->clone();
-				//if (!(e->isRegOf()))
-				//	temp2->setSubExp1(temp2->getSubExp1()->expSubscriptValNull()e);
-				std::cout<<"test  ABIparameters :"<<temp2->prints()<<"\n";
+				
+				bool allZero;
+				temp2= temp2->removeSubscripts(allZero);
+				//std::cout<<"test ABIparameters :"<<temp2->prints()<<"\n";
 			for(eit=ABIparameters.begin();eit != ABIparameters.end();eit++)
 			{	
 				Exp* temp = *eit;
-				//std::cout<<"list ABIparameters:"<<temp->prints()<<"\n";
-				
-				//std::cout<<"test  ABIparameters :"<<temp2->prints()<<"\n";
+				bool allZero;
+				temp = temp->removeSubscripts(allZero);
+				//std::cout<<"eit :"<<temp->prints()<<" ### - ";
 					if(((std::string)temp2->prints())==((std::string)temp->prints()))//donbinhvn//will check it later
 				{
 					Type* ty = ((ImplicitAssign*)s)->getType();
-					std::cout<<"found new ABIparameters:"<<e->prints()<<"\n";
+					std::cout<<"\nfound new ABIparameters:"<<e->prints()<<"\n";
 					// Add this parameter to the signature (for now; creates parameter names)
 					addParameter(e, ty);
 					// Insert it into the parameters StatementList, in sensible order
@@ -2334,11 +2337,11 @@ void UserProc::findFinalParameters() {
 #endif
 			if (VERBOSE || DEBUG_PARAMS)
 				LOG << "found new parameter " << e << "\n";
-			std::cout<<"found new parameter  "<<e<<"\n";
+			std::cout<<"found new parameter "<<e<<"\n";
 			Type* ty = ((ImplicitAssign*)s)->getType();
 			std::cout<<e->prints() <<" - "<<ty->prints();
 			/*int regno =((Const*) e->getSubExp1())->getInt();
-			if(regno!=8) {
+			if(regno=28) {
 std::cout<<"remove "<<e->prints()<<"from parameters\n";
 				continue;}*/
 			/*if(test==1)//donbinhvn: just hack for test
