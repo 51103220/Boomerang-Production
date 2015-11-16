@@ -375,6 +375,7 @@ private:
 		 * recreated).
 		 */
 		StatementList parameters;
+		std::list<Exp* > ABIparameters;
 
 		/**
 		 * The set of address-escaped locals and parameters. If in this list, they should not be propagated
@@ -559,6 +560,7 @@ virtual bool		isNoReturn();
 		void		initialParameters();				///< Get initial parameters based on proc's use collector
 		void		mapLocalsAndParams();				///< Map expressions to locals and initial parameters
 		void		findFinalParameters();
+		void 		findABIParameters(); // to find abi params
 		int			nextParamNum() {return ++nextParam;}
 		void		addParameter(Exp *e, Type* ty);		///< Add parameter to signature
 		void		insertParameter(Exp* e, Type* ty);	///< Insert into parameters list correctly sorted

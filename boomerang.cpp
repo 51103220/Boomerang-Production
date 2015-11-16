@@ -79,7 +79,7 @@ Boomerang::Boomerang() : logger(NULL), vFlag(false), printRtl(false),
 	loadBeforeDecompile(false), saveBeforeDecompile(false),
 	noProve(false), noChangeSignatures(false), conTypeAnalysis(false), dfaTypeAnalysis(true),
 	propMaxDepth(3), generateCallGraph(false), generateSymbols(false), noGlobals(false), assumeABI(false),
-	experimental(false), minsToStopAfter(0),decompileAssembly(false) //donbinhvn :default for ass_file is false
+	experimental(false), minsToStopAfter(0),decompileAssembly(false),ABI_conv(false) //donbinhvn :default for ass_file is false
 {
 	progPath = "./";
 	outputPath = "./output/";
@@ -932,6 +932,8 @@ int Boomerang::commandLine(int argc, const char **argv)
 			case 'a':
 				if(argv[i][2] == 's')
 					decompileAssembly = true;
+				else if(argv[i][2] == 'b')
+					ABI_conv = true;
 				else
 				assumeABI = true;
 				std::cout<<"Decode assembly \n";

@@ -1,4 +1,11 @@
-after removing matching assigns (t[WILDSTR]).
+after removing matching assigns  (t[WILDSTR]).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure cparam ###
+finding final parameters for cparam
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+after removing matching assigns  (t[WILDSTR]).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
 in proc main adding addrExp r14{0} to local table
 in proc main adding addrExp r14{0} + 4 to local table
@@ -16,9 +23,6 @@ in proc main adding addrExp r14{0} + 48 to local table
 in proc main adding addrExp r14{0} + 52 to local table
 in proc main adding addrExp r14{0} + 56 to local table
 in proc main adding addrExp r14{0} + 60 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
 in proc main adding addrExp r14{0} to local table
 in proc main adding addrExp r14{0} + 4 to local table
@@ -36,13 +40,17 @@ in proc main adding addrExp r14{0} + 48 to local table
 in proc main adding addrExp r14{0} + 52 to local table
 in proc main adding addrExp r14{0} + 56 to local table
 in proc main adding addrExp r14{0} + 60 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-in proc main adding addrExp r14{0} - 20 to local table
-local o0 has type char * that doesn't agree with type of define void of a library, why?
-local o1 has type int that doesn't agree with type of define void of a library, why?
-local o6 has type void * that doesn't agree with type of define void of a library, why?
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure cparam ###
+finding final parameters for cparam
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for cparam
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+local o0 has type int that doesn't agree with type of define void of a library, why?
+local o1 has type __size32 that doesn't agree with type of define void of a library, why?
