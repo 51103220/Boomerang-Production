@@ -1492,6 +1492,8 @@ void CHLLCode::AddProcDec(UserProc* proc, bool open) {
 		else {
 			unsigned int n = 0;
 			Exp *e = proc->getSignature()->getReturnExp(0);
+			std::cout<<"proc name "<<proc->getName()<<"\n";
+			std::cout<<"return exp: "<<e->prints()<<"\n";
 			if (e->isRegN(Signature::getStackRegister(proc->getProg())))
 				n = 1;
 			if (n < proc->getSignature()->getNumReturns())
@@ -1502,8 +1504,10 @@ void CHLLCode::AddProcDec(UserProc* proc, bool open) {
 	} else if (returns == NULL || returns->getNumReturns() == 0) {
 		s << "void ";
 	} else {
+		std::cout<<"proc name "<<proc->getName()<<"\n";
 		Assign* firstRet = (Assign*)*returns->begin();
 		retType = firstRet->getType();
+		std::cout<<"return stmt :"<<firstRet->prints()<<"\n";
 		if (retType == NULL || retType->isVoid())
 			// There is a real return; make it integer (Remove with AD HOC type analysis)
 			retType = new IntegerType();

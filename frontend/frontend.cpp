@@ -538,7 +538,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	ADDRESS lastAddr = uAddr;
 
 	
-	const char *vinit[]	= {"save	%sp, -104, %sp", 
+/*	const char *vinit[]	= {"save	%sp, -104, %sp", 
 						 "st	%i0, [%fp+68]",
 						 "st	%i1, [%fp+72]",	
 						 "st	%i2, [%fp+76]",
@@ -554,7 +554,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	std::cerr<<"size = "<< sizeSets << std::endl;
 	int line = 0;
 	std::cerr<<"line = "<< line << std::endl;
-	std::cout<<"line = "<< line << std::endl;
+	std::cout<<"line = "<< line << std::endl;*/
 	while ((uAddr = targetQueue.nextAddress(pCfg)) != NO_ADDRESS) {
 		// The list of RTLs for the current basic block
 		std::list<RTL*>* BB_rtls = new std::list<RTL*>();
@@ -570,8 +570,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				LOG << "*" << uAddr << "\t";
 
 			// Decode the inst at uAddr.
-			if(line < sizeSets)
-			inst = decodeAssemblyInstruction(uAddr,assemblySets.at(line));
+			inst = decodeInstruction(uAddr);
 
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
@@ -1053,7 +1052,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 		// Must set sequentialDecode back to true
 		sequentialDecode = true;
-		line = line +1 ;
+		//line = line +1 ;
 
 	}	// while nextAddress() != NO_ADDRESS
 
@@ -1223,6 +1222,7 @@ PBB FrontEnd::createReturnBlock(UserProc* pProc, std::list<RTL*>* BB_rtls, RTL* 
 		// Create the basic block
 		pBB = pCfg->newBB(BB_rtls, RET, 0);
 		Statement* s = pRtl->getList().back();		// The last statement should be the ReturnStatement
+		std::cout<<"Return statement "<<s->prints()<<"address"<<pRtl->getAddress()<<"\n";
 		pProc->setTheReturnAddr((ReturnStatement*)s, pRtl->getAddress());
 	} else {
 		// We want to replace the *whole* RTL with a branch to THE first return's RTL. There can sometimes be extra

@@ -254,7 +254,7 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 
 		
 	for (it = m_procs.begin(); it != m_procs.end(); it++) {
-		std::cout<<"got into generate code\n";
+		//std::cout<<"got into generate code\n";
 		Proc *pProc = *it;
 		if (pProc->isLib()) continue;
 		UserProc *up = (UserProc*)pProc;
@@ -263,7 +263,7 @@ void Prog::generateCode(Cluster *cluster, UserProc *proc, bool intermixRTL) {
 			continue;
 		up->getCFG()->compressCfg();
 		HLLCode *code = Boomerang::get()->getHLLCode(up);
-		std::cout<<"got into generate code1\n";
+		//std::cout<<"got into generate  code1\n";
 		up->generateCode(code);
 
 		if (up->getCluster() == m_rootCluster) {

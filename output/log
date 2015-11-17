@@ -1,56 +1,26 @@
-after removing matching assigns  (t[WILDSTR]).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure cparam ###
-finding final parameters for cparam
-potential param r8
-found new parameter r8
-potential param r9
-found new parameter r9
-after removing matching assigns  (t[WILDSTR]).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure proc1 ###
+in proc proc1 adding addrExp r1{0} - 32 to local table
+in proc proc1 adding addrExp r1{0} - 4 to local table
+in proc proc1 adding addrExp r1{0} - 24 to local table
+in proc proc1 adding addrExp r1{0} - 20 to local table
+finding final parameters for proc1
+potential param r1
+potential param r3
+potential param r4
+after removing matching assigns  (%pc).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r14{0} to local table
-in proc main adding addrExp r14{0} + 4 to local table
-in proc main adding addrExp r14{0} + 8 to local table
-in proc main adding addrExp r14{0} + 12 to local table
-in proc main adding addrExp r14{0} + 16 to local table
-in proc main adding addrExp r14{0} + 20 to local table
-in proc main adding addrExp r14{0} + 24 to local table
-in proc main adding addrExp r14{0} + 28 to local table
-in proc main adding addrExp r14{0} + 32 to local table
-in proc main adding addrExp r14{0} + 36 to local table
-in proc main adding addrExp r14{0} + 40 to local table
-in proc main adding addrExp r14{0} + 44 to local table
-in proc main adding addrExp r14{0} + 48 to local table
-in proc main adding addrExp r14{0} + 52 to local table
-in proc main adding addrExp r14{0} + 56 to local table
-in proc main adding addrExp r14{0} + 60 to local table
+in proc main adding addrExp r1{0} - 32 to local table
+in proc main adding addrExp r1{0} - 4 to local table
+in proc main adding addrExp r1{0} + 4 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r14{0} to local table
-in proc main adding addrExp r14{0} + 4 to local table
-in proc main adding addrExp r14{0} + 8 to local table
-in proc main adding addrExp r14{0} + 12 to local table
-in proc main adding addrExp r14{0} + 16 to local table
-in proc main adding addrExp r14{0} + 20 to local table
-in proc main adding addrExp r14{0} + 24 to local table
-in proc main adding addrExp r14{0} + 28 to local table
-in proc main adding addrExp r14{0} + 32 to local table
-in proc main adding addrExp r14{0} + 36 to local table
-in proc main adding addrExp r14{0} + 40 to local table
-in proc main adding addrExp r14{0} + 44 to local table
-in proc main adding addrExp r14{0} + 48 to local table
-in proc main adding addrExp r14{0} + 52 to local table
-in proc main adding addrExp r14{0} + 56 to local table
-in proc main adding addrExp r14{0} + 60 to local table
+in proc main adding addrExp r1{0} - 32 to local table
+in proc main adding addrExp r1{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
+in proc main adding addrExp r1{0} + 4 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure cparam ###
-finding final parameters for cparam
-potential param r8
-found new parameter r8
-potential param r9
-found new parameter r9
-finding final parameters for cparam
-potential param r8
-found new parameter r8
-potential param r9
-found new parameter r9
-local o0 has type int that doesn't agree with type of define void of a library, why?
-local o1 has type __size32 that doesn't agree with type of define void of a library, why?
+finding final parameters for proc1
+potential param r3
+potential param r4
+local g3 has type __size32 that doesn't agree with type of define void of a library, why?
+local g4 has type __size32 that doesn't agree with type of define void of a library, why?
+local g4 has type void that doesn't agree with type of define __size32 of a library, why?

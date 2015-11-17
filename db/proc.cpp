@@ -1070,7 +1070,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 					// No new cycle
 					if (VERBOSE)
 						LOG << "visiting on the way down child " << c->getName() << " from " << getName() << "\n";
-					std::cout<<"Call3.5 "<<c->getSignature()->prints()<<"\n";
+					std::cout<<"Call3.5  "<<c->getSignature()->prints()<<"\n";
 					ProcSet* tmp = c->decompile(path, indent);
 					std::cout<<"Call3.51 "<<c->getSignature()->prints()<<"\n";
 					child->insert(tmp->begin(), tmp->end());
@@ -1251,7 +1251,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-	std::cout<<"middle decompile  1"<<getTheReturnStatement()->getNumReturns()<<"\n";
+	std::cout<<"middle decompile 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
@@ -1313,7 +1313,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 	// Repeat until no change
 	int pass;
 	for (pass = 3; pass <= 12; ++pass) {
-		std::cout<<"middle decompile 3"<<getTheReturnStatement()->getNumReturns()<<"\n";
+		//std::cout<<"middle decompile 3"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		// Redo the renaming process to take into account the arguments
 		if (VERBOSE)
 			LOG << "renaming block variables (2) pass " << pass << "\n";
@@ -1324,12 +1324,12 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 		// Seed the return statement with reaching definitions
 		// FIXME: does this have to be in this loop?
-		std::cout<<"middle decompile 4"<<getTheReturnStatement()->getNumReturns()<<"\n";
+		//std::cout<<"middle decompile 4"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		if (theReturnStatement) {
 			theReturnStatement->updateModifieds();		// Everything including new arguments reaching the exit
 			theReturnStatement->updateReturns();
 		}
-	std::cout<<"middle decompile 5"<<getTheReturnStatement()->getNumReturns()<<"\n";
+	//std::cout<<"middle decompile 5"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		printXML();
 
 		// Print if requested
@@ -1344,7 +1344,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 		Boomerang::get()->alert_decompile_SSADepth(this, pass);	// FIXME: need depth -> pass in GUI code
 
 		// (* Was: mapping expressions to Parameters as we go *)
-		std::cout<<"middle decompile 6"<<getTheReturnStatement()->getNumReturns()<<"\n";
+		//std::cout<<"middle decompile 6"<<getTheReturnStatement()->getNumReturns()<<"\n";
 #if 1	// FIXME: Check if this is needed any more. At least fib seems to need it at present.
 		if (!Boomerang::get()->noChangeSignatures) {
 			// addNewReturns(depth);
@@ -1353,15 +1353,15 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 					LOG << "### update returns loop iteration " << i << " ###\n";
 				if (status != PROC_INCYCLE)
 					doRenameBlockVars(pass, true);
-				std::cout<<"middle decompile 6.1 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+				//std::cout<<"middle decompile 6.1 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				findPreserveds();
-				std::cout<<"middle decompile 6.2 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+				//std::cout<<"middle decompile 6.2 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				updateCallDefines();		// Returns have uses which affect call defines (if childless)
-				std::cout<<"middle decompile 6.3 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+				//std::cout<<"middle decompile 6.3 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				fixCallAndPhiRefs();
-				std::cout<<"middle decompile 6.4 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+				//std::cout<<"middle decompile 6.4 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 				findPreserveds();			// Preserveds subtract from returns
-				std::cout<<"middle decompile 6.5 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+				//std::cout<<"middle decompile 6.5 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 			}
 			printXML();
 			if (VERBOSE) {
@@ -1371,7 +1371,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 				LOG << "=== end debug print SSA for " << getName() << " at pass " << pass << " ===\n\n";
 			}
 		}
-		std::cout<<"middle decompile 7"<<getTheReturnStatement()->getNumReturns()<<"\n";
+		//std::cout<<"middle decompile 7"<<getTheReturnStatement()->getNumReturns()<<"\n";
 #endif
 
 		printXML();
@@ -1409,7 +1409,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 				LOG << "\ndone after rename (2) of " << getName() << ":\n\n";
 			}
 		} while (convert);
-		std::cout<<"middle decompile 8"<<getTheReturnStatement()->getNumReturns()<<"\n";
+		//std::cout<<"middle decompile 8"<<getTheReturnStatement()->getNumReturns()<<"\n";
 		printXML();
 		if (VERBOSE) {
 			LOG << "--- after propagate for " << getName() << " at pass " << pass << " ---\n";
@@ -1429,7 +1429,7 @@ ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 		removeMatchingAssignsIfPossible(new Terminal(opPC));
 
 		//processTypes();
-		std::cout<<"middle decompile 10 "<<getTheReturnStatement()->getNumReturns()<<"\n";
+	//	std::cout<<"middle decompile 10 "<<getTheReturnStatement()->getNumReturns()<<"\n";
 		if (!change)
 			break;				// Until no change
 	}
@@ -1603,7 +1603,7 @@ void UserProc::remUnusedStmtEtc() {
 	std::cout<<"\nremUnusedStmtEtc 2.5"<<getSignature()->prints()<<"\n";
 	std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	findFinalParameters();
-	std::cout<<"\nremUnusedStmtEtc  3"<<getSignature()->prints()<<"\n";
+	std::cout<<"\nremUnusedStmtEtc 3"<<getSignature()->prints()<<"\n";
 	if (!Boomerang::get()->noParameterNames) {
 		// Replace the existing temporary parameters with the final ones:
 		//mapExpressionsToParameters();
