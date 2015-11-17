@@ -1,26 +1,70 @@
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure proc1 ###
-in proc proc1 adding addrExp r1{0} - 32 to local table
-in proc proc1 adding addrExp r1{0} - 4 to local table
-in proc proc1 adding addrExp r1{0} - 24 to local table
-in proc proc1 adding addrExp r1{0} - 20 to local table
-finding final parameters for proc1
-potential param r1
-potential param r3
-potential param r4
+Unknown library function __libc_start_main
+got filename crtstuff.c for main
+Unknown library function __isoc99_scanf
+got filename crtstuff.c for add2
+after removing matching assigns  (t[WILDSTR]).
+after removing matching assigns  (%pc).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add2 ###
+in proc add2 adding addrExp r28{0} - 4 to local table
+finding final parameters for add2
+potential param r28
+found new parameter r28
+potential param m[r28{0} + 8]
+found new parameter m[r28{0} + 8]
+potential param m[r28{0} + 4]
+found new parameter m[r28{0} + 4]
+after removing matching assigns  (t[WILDSTR]).
 after removing matching assigns  (%pc).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r1{0} - 32 to local table
-in proc main adding addrExp r1{0} - 4 to local table
-in proc main adding addrExp r1{0} + 4 to local table
+in proc main adding addrExp r28{0} - 12 to local table
+in proc main adding addrExp r28{0} - 16 to local table
+in proc main adding addrExp r28{0} - 4 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 8 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r1{0} - 32 to local table
-in proc main adding addrExp r1{0} - 4 to local table
+in proc main adding addrExp r28{0} - 12 to local table
+in proc main adding addrExp r28{0} - 16 to local table
+in proc main adding addrExp r28{0} - 4 to local table
 TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
-in proc main adding addrExp r1{0} + 4 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+TYPE DIFFERENCE (could be OK): At address 0xffffffe0 existing type /*signed?*/int but added type union { void * x5; /*signed?*/int x6; }
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+TYPE DIFFERENCE (could be OK): At address 0xffffffe0 existing type /*signed?*/int but added type union { void * x9; /*signed?*/int x10; }
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
+in proc main adding addrExp r28{0} - 8 to local table
+in proc main adding addrExp r28{0} - 32 to local table
+in proc main adding addrExp r28{0} - 36 to local table
+in proc main adding addrExp r28{0} - 40 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-finding final parameters for proc1
-potential param r3
-potential param r4
-local g3 has type __size32 that doesn't agree with type of define void of a library, why?
-local g4 has type __size32 that doesn't agree with type of define void of a library, why?
-local g4 has type void that doesn't agree with type of define __size32 of a library, why?
+in proc main adding addrExp r28{0} - 12 to local table
+in proc main adding addrExp r28{0} - 16 to local table
+could not set type for unknown parameter expression m[r28{0} + 4]
+could not set type for unknown parameter expression m[r28{0} + 8]
+could not set type for unknown parameter expression m[r28{0} + 12]
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add2 ###
+finding final parameters for add2
+potential param r28
+found new parameter r28
+potential param m[r28{0} + 8]
+found new parameter m[r28{0} + 8]
+potential param m[r28{0} + 4]
+found new parameter m[r28{0} + 4]
+local eax has type /*signed?*/int that doesn't agree with type of define __size32 of a library, why?
+local esp has type void * that doesn't agree with type of define void of a library, why?

@@ -12,7 +12,7 @@ void UserProc::findABIParameters(){
 			if (c == NULL || c->isLib()) continue;
 			BB_IT previous=it;
 			previous--;
-			std::cout<<"Get user call "<<c->getName()<<"from"<< getName()<<"\n";
+			std::cout<<"Get user call "<<c->getName()<<" from "<< getName()<<"\n";
 			
 			std::cout<<" current bb test remake";
 			StatementList stmts;
@@ -39,6 +39,7 @@ void UserProc::findABIParameters(){
 					if(!s->isAssignment())
 						continue;
 					Exp *lhs = ((Assignment*)s)->getLeft();
+					std::cout<<"stmt : "<<s->prints()<<"\n";
 					Exp* temp2;
 					if(((std::string)lhs->prints())=="r8"){
 						ispara1 = true;

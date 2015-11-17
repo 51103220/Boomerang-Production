@@ -12,9 +12,9 @@ void UserProc::findABIParameters(){
 			if (c == NULL || c->isLib()) continue;
 			BB_IT previous=it;
 			previous--;
-			std::cout<<"Get user call "<<c->getName()<<"from"<< getName()<<"\n";
+			std::cout<<"Get user call "<<c->getName()<<" from "<< getName()<<"\n";
 			
-			std::cout<<" current bb test remake";
+			std::cout<<" current bb test remake\n";
 			StatementList stmts;
 			bb->getStatements(stmts);
 			StatementList::iterator stit;

@@ -1251,7 +1251,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-	std::cout<<"middle decompile 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
+	std::cout<<"middle decomple 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).

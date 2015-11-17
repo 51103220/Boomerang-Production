@@ -1,6 +1,13 @@
 require 'roo'
 
 CallSpec = Struct.new(:platform, :return,:param,:additionParam,:alias,:scratch,:preserved,:righttoleft) 
+def transform_reg str
+	temp = str.scan(/r(\d+)/)
+	code =""
+	code <<"Location::regOf(#{temp[0][0]})"
+	print code 
+	return code
+end
 def read_CallSpec
 content = File.read('CallSpec')
 	 
@@ -158,13 +165,7 @@ def code_generation (specification)
 	@content = code
 	write_to_output "test.cpp"
 end
-def transform_reg str
-	temp = str.scan(/r(\d+)/)
-	code =""
-	code <<"Location::regOf(#{temp[0][0]})"
-	print code 
-	return code
-end
+
 @content
 def write_cpp_file 
 	 mfile=""
