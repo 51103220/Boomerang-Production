@@ -67,7 +67,7 @@ calculateSum:
 	subl	$24, %esp
 	cmpl	$0, 12(%ebp)
 	jne	.L6
-	movl	sum.1839, %eax
+	movl	sum.1599, %eax
 	jmp	.L7
 .L6:
 	movl	12(%ebp), %eax
@@ -76,9 +76,9 @@ calculateSum:
 	movl	8(%ebp), %eax
 	addl	%edx, %eax
 	movl	(%eax), %edx
-	movl	sum.1839, %eax
+	movl	sum.1599, %eax
 	addl	%edx, %eax
-	movl	%eax, sum.1839
+	movl	%eax, sum.1599
 	subl	$1, 12(%ebp)
 	movl	12(%ebp), %eax
 	movl	%eax, 4(%esp)
@@ -93,7 +93,7 @@ calculateSum:
 	.cfi_endproc
 .LFE1:
 	.size	calculateSum, .-calculateSum
-	.local	sum.1839
-	.comm	sum.1839,4,4
+	.local	sum.1599
+	.comm	sum.1599,4,4
 	.ident	"GCC: (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4"
 	.section	.note.GNU-stack,"",@progbits

@@ -177,7 +177,7 @@ def code_generation (specification)
 			code<<"\t\t\tif(lhs->isMemOf()){\n"
 			#end
 			code<<"\t\t\tispara#{index} = true;\n"
-			if machine[:platform] != "PLAT_PENTIUM"
+			if machine[:platform] == "PLAT_PENTIUM"
 				code<<"\t\t\tint offset= 0;\n"
 				code<<"\t\t\tint regis = 0;\n"
 				code<<"\t\t\tif(!lhs->getSubExp1()->isRegOf()){\n"

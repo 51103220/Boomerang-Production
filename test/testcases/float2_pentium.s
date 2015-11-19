@@ -49,9 +49,13 @@ add2:
 	.cfi_offset 5, -8
 	movl	%esp, %ebp
 	.cfi_def_cfa_register 5
+	subl	$4, %esp
 	flds	8(%ebp)
-	fadds	12(%ebp)
-	popl	%ebp
+	flds	12(%ebp)
+	faddp	%st, %st(1)
+	fstps	-4(%ebp)
+	flds	-4(%ebp)
+	leave
 	.cfi_restore 5
 	.cfi_def_cfa 4, 4
 	ret

@@ -10,7 +10,7 @@ int main(int argc, char *argv[], char *envp[]) {
     puts("Fibonacci series");
     local3 = 1;
     while (local3 <= local0) {
-        eax = Fibonacci();
+        eax = Fibonacci(local1);
         printf("%d\n", eax);
         local1++;
         local3++;
@@ -19,15 +19,14 @@ int main(int argc, char *argv[], char *envp[]) {
 }
 
 // address: 0x804850f
-__size32 Fibonacci() {
+__size32 Fibonacci(__size32 param1) {
     __size32 eax; 		// r24
     __size32 eax_1; 		// r24{37}
-    __size32 local4; 		// m[esp + 4]
 
-    if (local4 != 0) {
-        if (local4 != 1) {
-            eax = Fibonacci();
-            eax_1 = Fibonacci();
+    if (param1 != 0) {
+        if (param1 != 1) {
+            eax = Fibonacci(param1 - 1);
+            eax_1 = Fibonacci(param1 - 2);
             eax = eax_1 + eax;
         } else {
             eax = 1;
