@@ -964,7 +964,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 	Boomerang::get()->alert_considering(path->empty() ? NULL : path->back(), this);
 	std::cout << std::setw(++indent) << " " << (status >= PROC_VISITED ? "re" : "") << "considering " << getName() <<
 		"\n";
-		std::cout<<"decompile proc  \n";
+		std::cout<<"decompile proce  \n";
 	if (VERBOSE)
 		LOG << "begin decompile(" << getName() << ")\n";
 

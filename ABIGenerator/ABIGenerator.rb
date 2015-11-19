@@ -177,7 +177,22 @@ def code_generation (specification)
 			code<<"\t\t\tif(lhs->isMemOf()){\n"
 			#end
 			code<<"\t\t\tispara#{index} = true;\n"
-			code<<"\t\t\ttemp2 = lhs->clone();\n"
+			if machine[:platform] != "PLAT_PENTIUM"
+				code<<"\t\t\tint offset= 0;\n"
+				code<<"\t\t\tint regis = 0;\n"
+				code<<"\t\t\tif(!lhs->getSubExp1()->isRegOf()){\n"
+				code<<"\t\t\t\toffset= ((Const*)lhs->getSubExp1()->getSubExp2())->getInt();\n"
+				code<<"\t\t\t\tregis = ((Const*)(lhs->getSubExp1()->getSubExp1()->getSubExp1()))->getInt();\n"
+				code<<"\t\t\t}\n"
+				code<<"\t\t\telse\n"
+				code<<"\t\t\t\tregis = ((Const*)(lhs->getSubExp1()->getSubExp1()))->getInt();\n"
+				code<<"\t\t\toffset = offset + 4;\n"
+				code<<"\t\t\ttemp2=Location::memOf((new Binary(opPlus, Location::regOf(regis), new Const(offset))));\n"
+
+
+			else
+				code<<"\t\t\ttemp2 = lhs->clone();\n"
+			end
 			code<<"\t\t\t}\n"
 			code<<"\t\t}\n"
 		end

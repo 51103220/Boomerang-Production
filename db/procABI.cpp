@@ -76,9 +76,19 @@ void UserProc::findABIParameters(){
 						addparam1 = true;
 					}
 					if(addparam1 &&(((std::string)lhs->prints()).find("r14")!=std::string::npos)){
-						if(lhs->isMemOf())
+						if(lhs->isMemOf()){
 						ispara1 = true;
-						temp2 = lhs->clone();
+						int offset= 0;
+						int regis = 0;
+						if(!lhs->getSubExp1()->isRegOf()){
+							offset= ((Const*)lhs->getSubExp1()->getSubExp2())->getInt();
+							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()->getSubExp1()))->getInt();
+						}
+						else
+							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()))->getInt();
+						offset = offset + 4;
+						temp2=Location::memOf((new Binary(opPlus, Location::regOf(regis), new Const(offset))));
+						}
 					}
 					if (ispara1){
 						std::list<Exp*>::iterator eit;
@@ -95,7 +105,6 @@ void UserProc::findABIParameters(){
 					ispara2=false;
 					if(!s->isAssignment())
 						continue;
-					std::cout<<"stmt "<<s->prints()<<"\n";
 					Exp *lhs = ((Assignment*)s)->getLeft();
 					Exp* temp2;
 					if(!addparam2){
@@ -106,24 +115,11 @@ void UserProc::findABIParameters(){
 					if(addparam2 &&(((std::string)lhs->prints()).find("r28")!=std::string::npos)){
 						if(lhs->isMemOf()){
 						ispara2 = true;
-						std::cout<<"LHS 1"<<lhs->getSubExp1()->getSubExp1()<<"\n";
-						int offset= 0;
-						int regis = 0;
-
-						if(!lhs->getSubExp1()->isRegOf()){
-							offset= ((Const*)lhs->getSubExp1()->getSubExp2())->getInt();
-							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()->getSubExp1()))->getInt();
+						temp2 = lhs->clone();
 						}
-						else
-							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()))->getInt();
-						offset = offset + 4;
-						temp2=Location::memOf((new Binary(opPlus, Location::regOf(regis), new Const(offset))));
-					}
-
 					}
 					if (ispara2){
 						std::list<Exp*>::iterator eit;
-						std::cout<<"Exp "<<temp2->prints()<<"\n";
 						eit=c->ABIparameters.begin();
 						c->ABIparameters.insert(eit,temp2);
 					}
@@ -233,9 +229,19 @@ void UserProc::findABIParameters(){
 						addparam3 = true;
 					}
 					if(addparam3 &&(((std::string)lhs->prints()).find("r1")!=std::string::npos)){
-						if(lhs->isMemOf())
+						if(lhs->isMemOf()){
 						ispara3 = true;
-						temp2 = lhs->clone();
+						int offset= 0;
+						int regis = 0;
+						if(!lhs->getSubExp1()->isRegOf()){
+							offset= ((Const*)lhs->getSubExp1()->getSubExp2())->getInt();
+							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()->getSubExp1()))->getInt();
+						}
+						else
+							regis = ((Const*)(lhs->getSubExp1()->getSubExp1()))->getInt();
+						offset = offset + 4;
+						temp2=Location::memOf((new Binary(opPlus, Location::regOf(regis), new Const(offset))));
+						}
 					}
 					if (ispara3){
 						std::list<Exp*>::iterator eit;
