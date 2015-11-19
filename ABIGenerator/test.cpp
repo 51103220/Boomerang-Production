@@ -12,9 +12,9 @@ void UserProc::findABIParameters(){
 			if (c == NULL || c->isLib()) continue;
 			BB_IT previous=it;
 			previous--;
-			std::cout<<"Get user call "<<c->getName()<<" from "<< getName()<<"\n";
+			std::cout<<"Get user call "<<c->getName()<<"from"<< getName()<<"\n";
 			
-			std::cout<<" current bb test remake\n";
+			std::cout<<" current bb test remake";
 			StatementList stmts;
 			bb->getStatements(stmts);
 			StatementList::iterator stit;
@@ -40,32 +40,32 @@ void UserProc::findABIParameters(){
 						continue;
 					Exp *lhs = ((Assignment*)s)->getLeft();
 					Exp* temp2;
-					if(((std::string)lhs->prints())=="r8"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(8)->prints()){
 						ispara1 = true;
 						param11 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r9"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(9)->prints()){
 						ispara1 = true;
 						param12 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r10"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(10)->prints()){
 						ispara1 = true;
 						param13 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r11"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(11)->prints()){
 						ispara1 = true;
 						param14 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r12"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(12)->prints()){
 						ispara1 = true;
 						param15 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r13"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(13)->prints()){
 						ispara1 = true;
 						param16 = true;
 						temp2 = lhs->clone();
@@ -78,6 +78,7 @@ void UserProc::findABIParameters(){
 					if(addparam1 &&(((std::string)lhs->prints()).find("r14")!=std::string::npos)){
 						if(lhs->isMemOf())
 						ispara1 = true;
+						temp2 = lhs->clone();
 					}
 					if (ispara1){
 						std::list<Exp*>::iterator eit;
@@ -96,6 +97,16 @@ void UserProc::findABIParameters(){
 						continue;
 					Exp *lhs = ((Assignment*)s)->getLeft();
 					Exp* temp2;
+					if(!addparam2){
+						stit = stmts.begin();
+						c->ABIparameters.clear();
+						addparam2 = true;
+					}
+					if(addparam2 &&(((std::string)lhs->prints()).find("r28")!=std::string::npos)){
+						if(lhs->isMemOf())
+						ispara2 = true;
+						temp2 = lhs->clone();
+					}
 					if (ispara2){
 						std::list<Exp*>::iterator eit;
 						eit=c->ABIparameters.begin();
@@ -121,82 +132,82 @@ void UserProc::findABIParameters(){
 						continue;
 					Exp *lhs = ((Assignment*)s)->getLeft();
 					Exp* temp2;
-					if(((std::string)lhs->prints())=="r3"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(3)->prints()){
 						ispara3 = true;
 						param31 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r4"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(4)->prints()){
 						ispara3 = true;
 						param32 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r5"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(5)->prints()){
 						ispara3 = true;
 						param33 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r6"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(6)->prints()){
 						ispara3 = true;
 						param34 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r7"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(7)->prints()){
 						ispara3 = true;
 						param35 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r8"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(8)->prints()){
 						ispara3 = true;
 						param36 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r9"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(9)->prints()){
 						ispara3 = true;
 						param37 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="r10"){
+					if(((std::string)lhs->prints())==(std::string)Location::regOf(10)->prints()){
 						ispara3 = true;
 						param38 = true;
 						temp2 = lhs->clone();
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 24]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)24))))->prints()){
 						ispara3 = true;
 						param31 = true;
 						temp2 = Location::regOf(3);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 28]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)28))))->prints()){
 						ispara3 = true;
 						param32 = true;
 						temp2 = Location::regOf(4);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 32]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)32))))->prints()){
 						ispara3 = true;
 						param33 = true;
 						temp2 = Location::regOf(5);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 36]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)36))))->prints()){
 						ispara3 = true;
 						param34 = true;
 						temp2 = Location::regOf(6);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 40]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)40))))->prints()){
 						ispara3 = true;
 						param35 = true;
 						temp2 = Location::regOf(7);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 44]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)44))))->prints()){
 						ispara3 = true;
 						param36 = true;
 						temp2 = Location::regOf(8);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 48]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)48))))->prints()){
 						ispara3 = true;
 						param37 = true;
 						temp2 = Location::regOf(9);
 					}
-					if(((std::string)lhs->prints())=="m[r1 + 52]"){
+					if(((std::string)lhs->prints())==(std::string)Location::memOf((new Binary(opPlus, Location::regOf(1), new Const((int)52))))->prints()){
 						ispara3 = true;
 						param38 = true;
 						temp2 = Location::regOf(10);
@@ -209,6 +220,7 @@ void UserProc::findABIParameters(){
 					if(addparam3 &&(((std::string)lhs->prints()).find("r1")!=std::string::npos)){
 						if(lhs->isMemOf())
 						ispara3 = true;
+						temp2 = lhs->clone();
 					}
 					if (ispara3){
 						std::list<Exp*>::iterator eit;

@@ -5,9 +5,38 @@ def transform_reg str
 	temp = str.scan(/r(\d+)/)
 	code =""
 	code <<"Location::regOf(#{temp[0][0]})"
-	print code 
+	#print code 
 	return code
 end
+def transform_const str
+	temp = str.scan(/(\d+)/)
+	code = ""
+	code << "new Const((int)#{temp[0][0]})"
+	return code
+end
+def transform_reg_op str
+	temp = str.scan(/(r\d+)\s*(\+|\-)\s*(\d+)/)
+	#print temp
+	code = ""
+	code<<"(new Binary("
+	code<< (temp[0][1]=='+' ? "opPlus, " : "opMinus, ")
+	code<< transform_reg(temp[0][0])
+	code << ", "
+	code <<transform_const(temp[0][2])
+	code<<")"
+	code<<")"
+	return code
+end
+def transform_mem_op str
+	temp = str.scan(/m\[(r\d+\s*[+-]\s*\d+)\]/)
+	#print temp
+	code = ""
+	code <<"Location::memOf("
+	code << transform_reg_op(temp[0][0])
+	code <<")"
+	return code
+end
+#transform_mem_op "m[r3+ 10]"
 def read_CallSpec
 content = File.read('CallSpec')
 	 
@@ -23,7 +52,7 @@ content = File.read('CallSpec')
  	 	p7 = nil
  	 	p8 = nil
  	 	p1 = machine[0]
- 	 	assignments=machine[1].scan(/[\n\r]*([a-zA-Z_]+)[ ]+=[ ]+([a-zA-Z0-9,\[\]\+\- ]+)[\n\r]+/m)
+ 	 	assignments=machine[1].scan(/[\n\r]*([a-zA-Z_]+)[ ]*=[ ]*([a-zA-Z0-9,\[\]\+\- ]+)[\n\r]+/m)
  	 	
  	 	for assignment in assignments
  	 		#print assignment[0]  + "123"
@@ -111,7 +140,8 @@ def code_generation (specification)
 		code<<"\t\tExp *lhs = ((Assignment*)s)->getLeft();\n"
 		code<<"\t\tExp* temp2;\n"
 		for reg in machine[:param] ## process parameter
-			code<<"\t\tif(((std::string)lhs->prints())==\"#{reg}\"){\n"## process parameter using switch case
+			temp = transform_reg(reg)
+			code<<"\t\tif(((std::string)lhs->prints())==(std::string)#{temp}->prints()){\n"## process parameter using switch case
 			code<<"\t\t\tispara#{index} = true;\n"
 			code<<"\t\t\tparam#{index}#{i} = true;\n"
 			code<<"\t\t\ttemp2 = lhs->clone();\n"
@@ -120,8 +150,8 @@ def code_generation (specification)
 		end       ##end process parameter
 		i=1;
 		for aliasreg in machine[:alias]
-			print "clgt"
-			code<<"\t\tif(((std::string)lhs->prints())==\"#{aliasreg}\"){\n"
+			temp = transform_mem_op(aliasreg)
+			code<<"\t\tif(((std::string)lhs->prints())==(std::string)#{temp}->prints()){\n"
 			code<<"\t\t\tispara#{index} = true;\n"
 			code<<"\t\t\tparam#{index}#{i} = true;\n"
 			aliascode = transform_reg(machine[:param][i-1])
@@ -144,9 +174,11 @@ def code_generation (specification)
 			code<<"(((std::string)lhs->prints()).find(\"#{machine[:additionParam]}\")!=std::string::npos)"
 			code<<"){\n"
 			#if machine[:param].length >0
-			code<<"\t\t\tif(lhs->isMemOf())\n"
+			code<<"\t\t\tif(lhs->isMemOf()){\n"
 			#end
 			code<<"\t\t\tispara#{index} = true;\n"
+			code<<"\t\t\ttemp2 = lhs->clone();\n"
+			code<<"\t\t\t}\n"
 			code<<"\t\t}\n"
 		end
 		code<<"\t\tif (ispara#{index}){\n" ##Add to paralist if this check is true

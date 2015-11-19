@@ -5,7 +5,11 @@
 	return = r24
 }
 #PLAT_PENTIUM{
-	
+	righttoleft = 1
+	add_params = stack
+	return = r24
+	add_params = r28
+
 }
 #PLAT_PPC{
 	return = r24

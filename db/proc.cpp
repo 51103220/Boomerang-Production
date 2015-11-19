@@ -1107,7 +1107,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 		setStatus(PROC_FINAL);
 		Boomerang::get()->alert_end_decompile(this);
 	} else {
-		std::cout<<"real decompile 1"<<getSignature()->prints()<<"\n";
+		std::cout<<"real decompiled 1"<<getSignature()->prints()<<"\n";
 		std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 
 		// this proc's children, and hence this proc, is/are involved in recursion
@@ -1129,7 +1129,7 @@ ProcSet* UserProc::decompile(ProcList* path, int& indent) {
 			Boomerang::get()->alert_end_decompile(this);
 			child = new ProcSet;
 		}
-		std::cout<<"real decompile "<<getSignature()->prints()<<"\n";
+		std::cout<<"real  decompile "<<getSignature()->prints()<<"\n";
 		std::cout<<getTheReturnStatement()->getNumReturns()<<"\n";
 	}
 
@@ -1251,7 +1251,7 @@ void UserProc::earlyDecompile() {
 ProcSet* UserProc::middleDecompile(ProcList* path, int indent) {
 
 	Boomerang::get()->alert_decompile_debug_point(this, "before middle");
-	std::cout<<"middle decomple 1"<<getTheReturnStatement()->getNumReturns()<<"\n";
+	std::cout<<"middle decompile  1"<<getTheReturnStatement()->getNumReturns()<<"\n";
 	// The call bypass logic should be staged as well. For example, consider m[r1{11}]{11} where 11 is a call.
 	// The first stage bypass yields m[r1{2}]{11}, which needs another round of propagation to yield m[r1{-}-32]{11}
 	// (which can safely be processed at depth 1).
