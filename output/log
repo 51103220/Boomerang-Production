@@ -1,99 +1,227 @@
-Unknown library function __libc_start_main
-got filename crtstuff.c for main
+got filename elf-init.c for main
 Unknown library function __isoc99_scanf
-got filename crtstuff.c for sumarray
-got filename crtstuff.c for add1
+got filename elf-init.c for sumarray1
+got filename elf-init.c for sumarray2
+got filename elf-init.c for sumarray3
 after removing matching assigns  (t[WILDSTR]).
-after removing matching assigns  (%pc).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add1 ###
-in proc add1 adding addrExp r28{0} - 4 to local table
-finding final parameters for add1
-potential param r28
-potential param m[r28{0} + 4]
-after removing matching assigns  (%pc).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray ###
-in proc sumarray adding addrExp r28{0} - 4 to local table
-in proc sumarray adding addrExp r28{0} - 8 to local table
-in proc sumarray adding addrExp r28{0} - 8 to local table
-in proc sumarray adding addrExp r28{0} - 8 to local table
-in proc sumarray adding addrExp r28{0} - 24 to local table
-in proc sumarray adding addrExp r28{0} - 28 to local table
-finding final parameters for sumarray
-potential param r28
-potential param m[r28{0} + 4]
-potential param r26
-potential param m[r28{0} + 8]
-after removing matching assigns  (%pc).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray3 ###
+in proc sumarray3 adding addrExp r14{0} to local table
+in proc sumarray3 adding addrExp r14{0} + 4 to local table
+in proc sumarray3 adding addrExp r14{0} + 8 to local table
+in proc sumarray3 adding addrExp r14{0} + 12 to local table
+in proc sumarray3 adding addrExp r14{0} + 16 to local table
+in proc sumarray3 adding addrExp r14{0} + 20 to local table
+in proc sumarray3 adding addrExp r14{0} + 24 to local table
+in proc sumarray3 adding addrExp r14{0} + 28 to local table
+in proc sumarray3 adding addrExp r14{0} + 32 to local table
+in proc sumarray3 adding addrExp r14{0} + 36 to local table
+in proc sumarray3 adding addrExp r14{0} + 40 to local table
+in proc sumarray3 adding addrExp r14{0} + 44 to local table
+in proc sumarray3 adding addrExp r14{0} + 48 to local table
+in proc sumarray3 adding addrExp r14{0} + 52 to local table
+in proc sumarray3 adding addrExp r14{0} + 56 to local table
+in proc sumarray3 adding addrExp r14{0} + 60 to local table
+in proc sumarray3 adding addrExp r14{0} + 68 to local table
+in proc sumarray3 adding addrExp r14{0} + 72 to local table
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+finding final parameters for sumarray3
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+after removing matching assigns  (t[WILDSTR]).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray2 ###
+in proc sumarray2 adding addrExp r14{0} to local table
+in proc sumarray2 adding addrExp r14{0} + 4 to local table
+in proc sumarray2 adding addrExp r14{0} + 8 to local table
+in proc sumarray2 adding addrExp r14{0} + 12 to local table
+in proc sumarray2 adding addrExp r14{0} + 16 to local table
+in proc sumarray2 adding addrExp r14{0} + 20 to local table
+in proc sumarray2 adding addrExp r14{0} + 24 to local table
+in proc sumarray2 adding addrExp r14{0} + 28 to local table
+in proc sumarray2 adding addrExp r14{0} + 32 to local table
+in proc sumarray2 adding addrExp r14{0} + 36 to local table
+in proc sumarray2 adding addrExp r14{0} + 40 to local table
+in proc sumarray2 adding addrExp r14{0} + 44 to local table
+in proc sumarray2 adding addrExp r14{0} + 48 to local table
+in proc sumarray2 adding addrExp r14{0} + 52 to local table
+in proc sumarray2 adding addrExp r14{0} + 56 to local table
+in proc sumarray2 adding addrExp r14{0} + 60 to local table
+in proc sumarray2 adding addrExp r14{0} + 68 to local table
+in proc sumarray2 adding addrExp r14{0} + 72 to local table
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+finding final parameters for sumarray2
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+after removing matching assigns  (t[WILDSTR]).
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray1 ###
+in proc sumarray1 adding addrExp r14{0} to local table
+in proc sumarray1 adding addrExp r14{0} + 4 to local table
+in proc sumarray1 adding addrExp r14{0} + 8 to local table
+in proc sumarray1 adding addrExp r14{0} + 12 to local table
+in proc sumarray1 adding addrExp r14{0} + 16 to local table
+in proc sumarray1 adding addrExp r14{0} + 20 to local table
+in proc sumarray1 adding addrExp r14{0} + 24 to local table
+in proc sumarray1 adding addrExp r14{0} + 28 to local table
+in proc sumarray1 adding addrExp r14{0} + 32 to local table
+in proc sumarray1 adding addrExp r14{0} + 36 to local table
+in proc sumarray1 adding addrExp r14{0} + 40 to local table
+in proc sumarray1 adding addrExp r14{0} + 44 to local table
+in proc sumarray1 adding addrExp r14{0} + 48 to local table
+in proc sumarray1 adding addrExp r14{0} + 52 to local table
+in proc sumarray1 adding addrExp r14{0} + 56 to local table
+in proc sumarray1 adding addrExp r14{0} + 60 to local table
+in proc sumarray1 adding addrExp r14{0} + 68 to local table
+in proc sumarray1 adding addrExp r14{0} + 72 to local table
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+finding final parameters for sumarray1
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+after removing matching assigns  (t[WILDSTR]).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 416 to local table
-in proc main adding addrExp r28{0} - 404 to local table
-in proc main adding addrExp r28{0} - 4 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-TYPE ERROR: Existing type at address 0xfffffe4c is not structure or array type
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 408 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
+in proc main adding addrExp r14{0} - 12 to local table
+in proc main adding addrExp r14{0} to local table
+in proc main adding addrExp r14{0} + 4 to local table
+in proc main adding addrExp r14{0} + 8 to local table
+in proc main adding addrExp r14{0} + 12 to local table
+in proc main adding addrExp r14{0} + 16 to local table
+in proc main adding addrExp r14{0} + 20 to local table
+in proc main adding addrExp r14{0} + 24 to local table
+in proc main adding addrExp r14{0} + 28 to local table
+in proc main adding addrExp r14{0} + 32 to local table
+in proc main adding addrExp r14{0} + 36 to local table
+in proc main adding addrExp r14{0} + 40 to local table
+in proc main adding addrExp r14{0} + 44 to local table
+in proc main adding addrExp r14{0} + 48 to local table
+in proc main adding addrExp r14{0} + 52 to local table
+in proc main adding addrExp r14{0} + 56 to local table
+in proc main adding addrExp r14{0} + 60 to local table
+in proc main adding addrExp r14{0} - 4 to local table
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 8 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 416 to local table
-in proc main adding addrExp r28{0} - 404 to local table
-in proc main adding addrExp r28{0} - 4 to local table
-TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
-in proc main adding addrExp r28{0} - 432 to local table
-TYPE DIFFERENCE (could be OK): At address 0xfffffe50 existing type unsigned int but added type union { void * x9; unsigned int x10; }
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-TYPE DIFFERENCE (could be OK): At address 0xfffffe50 existing type unsigned int but added type union { void * x15; unsigned int x16; }
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-TYPE DIFFERENCE (could be OK): At address 0xfffffe50 existing type unsigned int but added type union { void * x9; unsigned int x10; }
-in proc main adding addrExp r28{0} - 436 to local table
-TYPE ERROR: Existing type at address 0xfffffe4c is not structure or array type
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-TYPE DIFFERENCE (could be OK): At address 0xfffffe4c existing type /*signed?*/int but added type union { void * x19; /*signed?*/int x20; }
-in proc main adding addrExp r28{0} - 440 to local table
-in proc main adding addrExp r28{0} - 408 to local table
-in proc main adding addrExp r28{0} - 432 to local table
-in proc main adding addrExp r28{0} - 436 to local table
-in proc main adding addrExp r28{0} - 440 to local table
+in proc main adding addrExp r14{0} - 12 to local table
+in proc main adding addrExp r14{0} to local table
+in proc main adding addrExp r14{0} + 4 to local table
+in proc main adding addrExp r14{0} + 8 to local table
+in proc main adding addrExp r14{0} + 12 to local table
+in proc main adding addrExp r14{0} + 16 to local table
+in proc main adding addrExp r14{0} + 20 to local table
+in proc main adding addrExp r14{0} + 24 to local table
+in proc main adding addrExp r14{0} + 28 to local table
+in proc main adding addrExp r14{0} + 32 to local table
+in proc main adding addrExp r14{0} + 36 to local table
+in proc main adding addrExp r14{0} + 40 to local table
+in proc main adding addrExp r14{0} + 44 to local table
+in proc main adding addrExp r14{0} + 48 to local table
+in proc main adding addrExp r14{0} + 52 to local table
+in proc main adding addrExp r14{0} + 56 to local table
+in proc main adding addrExp r14{0} + 60 to local table
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 8 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 416 to local table
-in proc main adding addrExp r28{0} - 404 to local table
-could not set type for unknown parameter expression m[r28{0} + 4]
-could not set type for unknown parameter expression m[r28{0} + 8]
-could not set type for unknown parameter expression m[r28{0} + 12]
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-in proc main adding addrExp r28{0} - 412 to local table
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray ###
-in proc sumarray adding addrExp r28{0} - 8 to local table
-in proc sumarray adding addrExp r28{0} - 8 to local table
-in proc sumarray adding addrExp r28{0} - 8 to local table
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add1 ###
-finding final parameters for sumarray
-potential param r28
-potential param m[r28{0} + 4]
-potential param m[r28{0} + 8]
-local eax has type /*signed?*/int that doesn't agree with type of define __size32 of a library, why?
-local esp has type void * that doesn't agree with type of define void of a library, why?
+in proc main adding addrExp r14{0} - 12 to local table
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray1 ###
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray1 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray2 ###
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray2 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure sumarray3 ###
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+in proc sumarray3 adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type unsigned int does not resolve to compound or array
+finding final parameters for sumarray3
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for sumarray2
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for sumarray2
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for sumarray1
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for sumarray1
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+finding final parameters for sumarray1
+potential param r14
+found new parameter r14
+potential param r8
+found new parameter r8
+potential param r9
+found new parameter r9
+local o0 has type void * that doesn't agree with type of define __size32 of a library, why?
+local o1 has type unsigned int that doesn't agree with type of define __size32 of a library, why?
+local o6 has type void * that doesn't agree with type of define void of a library, why?
+local o0 has type __size32 that doesn't agree with type of define void of a library, why?
+local o1 has type __size32 that doesn't agree with type of define void of a library, why?

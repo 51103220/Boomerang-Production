@@ -40,7 +40,7 @@ end
 def read_CallSpec
 content = File.read('CallSpec')
 	 
- 	 machines = content.scan(/\#([^\#\{}]+)\{([^\#]+)\}/m )
+ 	 machines = content.scan(/^\s*\#([^\#\{}]+)\{([^\#]+)\}/m )
  	 callSpecs = []
  	 for machine in machines
  	 	p1 = nil
@@ -228,7 +228,7 @@ def write_cpp_file
 		end
 		if line =~ /\/\/##@@.+/
 			indentstr="";
-			print indent
+			#print indent
 			for temp in 1..indent
 				indentstr<<"\t"
 			end

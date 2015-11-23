@@ -1,14 +1,14 @@
-// address: 0x10684
+// address: 0x8048368
 int main(int argc, char *argv[], char *envp[]) {
-    int local0; 		// m[o6 - 24]
-    int local1; 		// m[o6 - 20]
-    int o0; 		// r8
+    __size32 edx; 		// r26
+    int local0; 		// m[esp - 12]
+    int local1; 		// m[esp - 8]
 
     local0 = 0;
     local1 = 0;
     while (local1 <= 4) {
-        o0 = *(unsigned char*)(local1 + 0x20930);
-        local0 += (int)(o0 * 0x1000000) >> 24;
+        edx = (int) *(local1 + 0x80495bc);
+        local0 += edx;
         local1++;
     }
     printf("Sum is %d\n", local0);

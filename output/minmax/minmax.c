@@ -1,12 +1,15 @@
-// address: 0x1000040c
+// address: 0x10000418
 int main(int argc, char *argv[], char *envp[]) {
-    if (argc >= 3) {
-        if (argc <= 3) {
-        }
-        printf("MinMax adjusted number of arguments is %d\n", 3);
-    } else {
-        printf("MinMax adjusted number of arguments is %d\n", -2);
+    int local0; 		// m[g1 - 24]
+
+    local0 = argc;
+    if (argc < -2) {
+        local0 = -2;
     }
+    if (local0 > 3) {
+        local0 = 3;
+    }
+    printf("MinMax adjusted number of arguments is %d\n", local0);
     return 0;
 }
 
