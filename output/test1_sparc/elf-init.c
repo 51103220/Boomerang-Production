@@ -9,7 +9,7 @@ int main(int argc, char *argv[], char *envp[]) {
     return 0;
 }
 
-// address: 0x1055c
+// address: 0x1058c
 __size32 add1(__size32 param1) {
     return param1 + 1;
 }

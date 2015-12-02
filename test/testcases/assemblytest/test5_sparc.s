@@ -27,6 +27,26 @@ main:
 	add %g1, %g2, %g1
 	mov 9, %g1
 	st %g1 ,[%sp + 92]
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	st %g1, [%fp - 4]
+	ld [%fp - 4], %g2
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
+	add %g1, 5, %g1
+	add %g1, %g2, %g1
 	call	add1, 0
 	 nop
 	st	%o0, [%fp-4]

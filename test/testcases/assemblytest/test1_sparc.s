@@ -25,6 +25,18 @@ main:
 	add %g1, 8, %g1
 	st %g1, [%fp - 12]
 	ld [%fp - 12], %g2
+	add %g1, 8, %g1
+	st %g1, [%fp - 12]
+	ld [%fp - 12], %g2
+	add %g2, 8, %g1
+	st %g1, [%fp - 12]
+	ld [%fp - 12], %g2
+	add %g2, 8, %g1
+	st %g1, [%fp - 12]
+	ld [%fp - 12], %g2
+	add %g2, 8, %g1
+	st %g1, [%fp - 12]
+	ld [%fp - 12], %g1
 	call	add1, 0
 	 nop
 	st	%o0, [%fp-4]

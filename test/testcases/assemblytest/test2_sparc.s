@@ -26,6 +26,24 @@ main:
 	st %g1, [%fp - 12]
 	ld [%fp - 12], %g2
 	mov %g2, %o1
+	add %o1, 2 , %o1
+	mov %o1, %o2
+	st %02, [%fp - 12]
+	ld [%fp - 12], %o1
+	add %o1, 2 , %o1
+	mov %o1, %o2
+	st %02, [%fp - 12]
+	ld [%fp - 12], %o1
+	add %o1, 2 , %o1
+	mov %o1, %o2
+	st %02, [%fp - 12]
+	ld [%fp - 12], %o1
+	add %o1, 2 , %o1
+	mov %o1, %o2
+	st %02, [%fp - 12]
+	ld [%fp - 12], %o1
+	add %o1, 2 , %o1
+	mov %o1, %o2
 	call	add1, 0
 	 nop
 	st	%o0, [%fp-4]

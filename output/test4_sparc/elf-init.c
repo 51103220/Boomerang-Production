@@ -3,13 +3,13 @@ int main(int argc, char *argv[], char *envp[]) {
     int o0; 		// r8
 
     __isoc99_scanf();
-    o0 = add1(9);
+    o0 = add1(34, 34);
     printf("Sum = %ld\n", o0);
     return 0;
 }
 
-// address: 0x1054c
-__size32 add1(__size32 param1) {
-    return param1 + 3;
+// address: 0x105ac
+__size32 add1(__size32 param1, __size32 param2) {
+    return param2 + param1 + 1;
 }
 

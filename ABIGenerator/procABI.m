@@ -18,9 +18,6 @@ void UserProc::findABIParameters(){
 			StatementList stmts;
 			bb->getStatements(stmts);
 			StatementList::iterator stit;
-
-
-						/*if (!(lhs->isRegOf() || isLocalOrParamPattern(lhs)))*/
 				
 						//##@@EACH TYPE OF MACHINE WILL BE PROCESSED HERE //DONT DELETE THIS LINE
 						//FINISH PROCESSED 
