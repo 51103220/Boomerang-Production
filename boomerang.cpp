@@ -151,6 +151,7 @@ void Boomerang::help() {
 	std::cout << "  -sf <filename>   : Read a symbol/signature file\n";
 	std::cout << "Decoding/decompilation options\n";
 	std::cout << "  -as              : Decompile assembly file \n";//donbinhvn: for help
+	std::cout << "  -ab              : Analyse prototype using calling convention \n";//donbinhvn: for help
 	std::cout << "  -e <addr>        : Decode the procedure beginning at addr, and callees\n";
 	std::cout << "  -E <addr>        : Decode the procedure at addr, no callees\n";
 	std::cout << "                     Use -e and -E repeatedly for multiple entry points\n";
@@ -163,7 +164,6 @@ void Boomerang::help() {
 	std::cout << "  -LD              : Load before decompile (<program> becomes xml input file)\n";
 	std::cout << "  -SD              : Save before decompile\n";
 #endif
-	std::cout << "  -a               : Assume ABI compliance\n";
 	std::cout << "  -W               : Windows specific decompilation mode (requires pdb information)\n";
 //	std::cout << "  -pa              : only propagate if can propagate to all\n";
 	std::cout << "Output\n";
