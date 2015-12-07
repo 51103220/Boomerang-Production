@@ -54,12 +54,14 @@
 #include "ppcfrontend.h"
 #include "st20frontend.h"
 #include "mipsfrontend.h"
+#include "_8051frontend.h"
 #include "prog.h"
 #include "signature.h"
 #include "boomerang.h"
 #include "log.h"
 #include "ansi-c-parser.h"
-
+AssemblyProgram* AssProgram;
+AssHandler* ass_handler;
 /*==============================================================================
  * FUNCTION:	  FrontEnd::FrontEnd
  * OVERVIEW:	  Construct the FrontEnd object
@@ -77,7 +79,17 @@ FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* 
 		case MACHINE_PENTIUM:
 			return new PentiumFrontEnd(pBF, prog, pbff);
 		case MACHINE_SPARC:
-			return new SparcFrontEnd(pBF, prog, pbff);
+			
+			if (!_8051){
+				std::cout<<"instantiate SPARC\n";
+				return new SparcFrontEnd(pBF, prog, pbff);
+			}
+			else{
+				std::cout<<"instantiate 8051\n";
+				ass_handler = new AssHandler();
+				AssProgram = ass_handler->process(prog->getPath());
+				return new _8051FrontEnd(pBF,prog, pbff);
+			}
 		case MACHINE_PPC:
 			return new PPCFrontEnd(pBF, prog, pbff);
 		case MACHINE_MIPS:
@@ -94,12 +106,9 @@ FrontEnd* FrontEnd::Load(const char *fname, Prog* prog) {
 	BinaryFileFactory* pbff = new BinaryFileFactory;
 	if (pbff == NULL) return NULL;
 	std::cout<<"in frontend::load pBF =bff->load\n";
-	//donbinhvn:phai sua lai cho nay
 	BinaryFile *pBF = pbff->Load(fname);
-  	std::cout<<fname<<"\n";
-  	if(ASS_FILE)
-  	{prog->m_path=fname;
-  	prog->setName("testfolder");}//donbinhvn: remember path for later processing
+  	std::cout<< fname << "\n";
+  	if(ASS_FILE)prog->m_path=fname;//donbinhvn: remember path for later processing
 	if (pBF == NULL) return NULL;
 	return instantiate(pBF, prog, pbff);
 }
@@ -266,7 +275,9 @@ void FrontEnd::decode(Prog* prog, bool decodeMain, const char *pname) {
 	Boomerang::get()->alert_start_decode(pBF->getLimitTextLow(), pBF->getLimitTextHigh() - pBF->getLimitTextLow());
 
 	bool gotMain;
-	ADDRESS a = getMainEntryPoint(gotMain);
+	ADDRESS a;
+	a = getMainEntryPoint(gotMain);
+	
 	std::cout<< "start: " << a << " gotmain: " << (gotMain ? "true" : "false") << "\n";
 	if (VERBOSE)
 		LOG << "start: " << a << " gotmain: " << (gotMain ? "true" : "false") << "\n";
@@ -335,11 +346,11 @@ void FrontEnd::decode(Prog *prog, ADDRESS a) {
 		std::ofstream os;
 			PROGMAP::const_iterator it;
 			for (Proc *pProc = prog->getFirstProc(it); pProc != NULL; pProc = prog->getNextProc(it)) {
-				std::cout<<"Proc name boom1 "<<pProc->getName()<<"\n";
+				std::cout<<"Proc name Before main "<<pProc->getName()<<"\n";
 			}
 		processProc(a, p, os);
 			for (Proc *pProc = prog->getFirstProc(it); pProc != NULL; pProc = prog->getNextProc(it)) {
-				std::cout<<"Proc name boom2 "<<pProc->getName()<<"\n";
+				std::cout<<"Proc name After decode main "<<pProc->getName()<<"\n";
 
 			}
 		p->setDecoded();
@@ -358,9 +369,10 @@ void FrontEnd::decode(Prog *prog, ADDRESS a) {
 				// undecoded userproc.. decode it			
 				change = true;
 				std::ofstream os;
-				std::cout<<"process Proc :"<<p->getSignature()->prints()<<"\n";
+				std::cout<<"Signature Before :"<<p->getSignature()->prints()<<"\n";
 
 				int res = processProc(p->getNativeAddress(), p, os);
+				std::cout<<"Signature After :"<<p->getSignature()->prints()<<"\n";
 				//std::cout<<"Sig type:"<<p->getSignature()->prints()<<"\n";
 				std::cout<<"process Proc finish< res:"<<res<<"\n";
 
@@ -411,7 +423,7 @@ DecodeResult& FrontEnd::decodeInstruction(ADDRESS pc) {
 	return decoder->decodeInstruction(pc, pBF->getTextDelta());
 }
 
-DecodeResult& FrontEnd::decodeAssemblyInstruction(ADDRESS pc,std::string line) {
+DecodeResult& FrontEnd::decodeAssemblyInstruction(ADDRESS pc,std::string line, AssemblyLine* Line) {
 		 //donbinhvn for test only
 		/*DecodeResult test = decoder->decodeAssembly(pc,line);
 		RTL* pRtl = test.rtl;
@@ -421,7 +433,7 @@ DecodeResult& FrontEnd::decodeAssemblyInstruction(ADDRESS pc,std::string line) {
 		std::cerr<<"after print"<<std::endl;
 		
 		std::cerr<<"TEST RTL "<< st.str().c_str() <<std::endl;*/
-	return decoder->decodeAssembly(pc,line);
+	return decoder->decodeAssembly(pc,line, Line);
 }
 
 /*==============================================================================
@@ -488,6 +500,37 @@ Signature *FrontEnd::getLibSignature(const char *name) {
 	return signature;
 }
 
+/*std::vector<std::string> process_file_frontend(Prog* prog, ADDRESS address){
+	std::cout<<"----Processing Assembly File---- \n";
+		char **vinit= new char*[100];
+		std::ifstream infile(prog->getPath());
+		std::string line;
+		std::string temp ;
+		int count = 0;
+		int start, end;
+		if (address == 66676)
+		{
+			start = 0;
+			end = 17;
+		}
+		else
+		{	
+			start = 5;
+			end = 8;
+		}
+		int i = 0;
+		for( ; getline( infile, line );) 
+		{
+	    	if (i>=start && i <= end){
+	    		temp=line;
+	    		vinit[count]=(char*)temp.c_str();
+	    		count++;
+	    	}
+	    		i++;
+		}
+		std::vector<std::string> assemblySets(vinit,vinit+count);
+	return assemblySets ;
+}*/
 /*==============================================================================
  * FUNCTION:	  FrontEnd::processProc
  * OVERVIEW:	  Process a procedure, given a native (source machine) address.
@@ -506,6 +549,9 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	std::cerr<<"Entering Processing Proc" << std::endl;
 	std::cout<<"Entering Processing Proc\n"; 
 	// just in case you missed it
+	
+	if (AssProgram && _8051)
+		std::cout <<"Name Of Program : " << AssProgram->name << std::endl;
 	Boomerang::get()->alert_new(pProc);
 
 	// We have a set of CallStatement pointers. These may be disregarded if this is a speculative decode
@@ -534,25 +580,27 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	int nTotalBytes = 0;
 	ADDRESS startAddr = uAddr;
 	ADDRESS lastAddr = uAddr;
+	ADDRESS address = uAddr;
 
+	//------IMPORTANT------------------------------------------------------------------------
+	list<AssemblyLabel*>::iterator lbi;
+	list<AssemblyLine*>* temp_lines = new list<AssemblyLine*>() ;
+	if (AssProgram && _8051){
+		for(lbi = AssProgram->labelList->begin(); lbi != AssProgram->labelList->end(); ++lbi ){
+			if((*lbi)->address == uAddr){
+				temp_lines = (*lbi)->lineList;
+				std::cout << "***DECODE LABEL: " << (*lbi)->name << std::endl;
+				std::cout << "***AT ADDRESS: " << (*lbi)->address << std::endl;
+				std::cout << "***NUMBER OF INSTRUCTION: " << (*lbi)->lineList->size() << std::endl;
+				break;
+			}
+		}
+	}
+	list<AssemblyLine*>::iterator li;
+	if (temp_lines->size()>0)
+		li = temp_lines->begin();
 	
-/*	const char *vinit[]	= {"save	%sp, -104, %sp", 
-						 "st	%i0, [%fp+68]",
-						 "st	%i1, [%fp+72]",	
-						 "st	%i2, [%fp+76]",
-						 "ld	[%fp-4], %g1",
-						 "add	%g1, 1, %g1",
-						 "ld	[%fp-4], %g1",
-						 "mov	%g1, %i0",
-						 "restore",
-						 "jmp	%o7+8"
-						};
-	std::vector<std::string> assemblySets(vinit,vinit+10) ;
-	int sizeSets = assemblySets.size();
-	std::cerr<<"size = "<< sizeSets << std::endl;
-	int line = 0;
-	std::cerr<<"line = "<< line << std::endl;
-	std::cout<<"line = "<< line << std::endl;*/
+	//---------------------------------------------------------------------------------------
 	while ((uAddr = targetQueue.nextAddress(pCfg)) != NO_ADDRESS) {
 		// The list of RTLs for the current basic block
 		std::list<RTL*>* BB_rtls = new std::list<RTL*>();
@@ -562,13 +610,19 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 		DecodeResult inst;
 		while (sequentialDecode) {
 
-
 			// Decode and classify the current source instruction
 			if (Boomerang::get()->traceDecoder)
 				LOG << "*" << uAddr << "\t";
 
 			// Decode the inst at uAddr.
-			inst = decodeInstruction(uAddr);
+			
+			if(ASS_FILE && _8051){
+				if(li != temp_lines->end()){
+					inst = decodeAssemblyInstruction(uAddr,"assemblySets.at(line)", (*li));
+				}
+			}
+			else
+				inst = decodeInstruction(uAddr);
 
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
@@ -581,6 +635,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 			RTL* pRtl = inst.rtl;
 			if (inst.valid == false) {
+				
 				// Alert the watchers to the problem
 				Boomerang::get()->alert_baddecode(uAddr);
 
@@ -602,7 +657,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 			// alert the watchers that we have decoded an instruction
 			Boomerang::get()->alert_decode(uAddr, inst.numBytes);
 			nTotalBytes += inst.numBytes;			
-	
+			
 			// Check if this is an already decoded jump instruction (from a previous pass with propagation etc)
 			// If so, we throw away the just decoded RTL (but we still may have needed to calculate the number
 			// of bytes.. ick.)
@@ -617,7 +672,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 					uAddr += inst.numBytes;
 				continue;
 			}
-
+			
 			// Display RTL representation if asked
 			if (Boomerang::get()->printRtl) {
 				std::ostringstream st;
@@ -668,8 +723,10 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 					if (dest != NO_ADDRESS) {
 						proc = prog->findProc(dest);
 						if (proc == NULL) {
-							if (pBF->IsDynamicLinkedProc(dest))
-								proc = prog->setNewProc(dest);
+							if(!ASS_FILE){
+								if (pBF->IsDynamicLinkedProc(dest))
+									proc = prog->setNewProc(dest);
+							}
 						}
 						if (proc != NULL && proc != (Proc*)-1) {
 							s = new CallStatement();
@@ -709,13 +766,20 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 						// Add the out edge if it is to a destination within the
 						// procedure
+
 						if (uDest < pBF->getLimitTextHigh()) {
 							targetQueue.visit(pCfg, uDest, pBB);
 							pCfg->addOutEdge(pBB, uDest, true);
 						}
 						else {
-							LOG << "Error: Instruction at " << uAddr << " branches beyond end of section, to "
-								<< uDest << "\n";
+							if (!ASS_FILE)
+								LOG << "Error: Instruction at " << uAddr << " branches beyond end of section, to "
+									<< uDest << "\n";
+							else{
+								targetQueue.visit(pCfg, uDest, pBB);
+								pCfg->addOutEdge(pBB, uDest, true);
+							} 
+
 						}
 					}
 					break;
@@ -740,8 +804,10 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 							LOG << "jump to a library function: " << stmt_jump << ", replacing with a call/ret.\n";
 						// jump to a library function
 						// replace with a call ret
+						// TODO: 
 						std::string func = pBF->GetDynamicProcName(
 							((Const*)stmt_jump->getDest()->getSubExp1())->getAddr());
+						//------------------------------------
 						CallStatement *call = new CallStatement;
 						call->setDest(stmt_jump->getDest()->clone());
 						LibProc *lp = pProc->getProg()->getLibraryProc(func.c_str());
@@ -808,13 +874,18 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 					else {
 
 						// Add the out edge if it is to a destination within the procedure
-						if (uDest < pBF->getLimitTextHigh()) {
-							targetQueue.visit(pCfg, uDest, pBB);
-							pCfg->addOutEdge(pBB, uDest, true);
+						if (!ASS_FILE){
+							if (uDest < pBF->getLimitTextHigh()) {
+								targetQueue.visit(pCfg, uDest, pBB);
+								pCfg->addOutEdge(pBB, uDest, true);
+							}
+							else
+								LOG << "Error: Instruction at " << uAddr << " branches beyond end of section, to "
+									<< uDest << "\n";
 						}
 						else {
-							LOG << "Error: Instruction at " << uAddr << " branches beyond end of section, to "
-								<< uDest << "\n";
+								targetQueue.visit(pCfg, uDest, pBB);
+								pCfg->addOutEdge(pBB, uDest, true);
 						}
 
 						// Add the fall-through outedge
@@ -830,59 +901,77 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 					CallStatement* call = static_cast<CallStatement*>(s);
 					
 					// Check for a dynamic linked library function
-					if (call->getDest()->getOper() == opMemOf &&
-							call->getDest()->getSubExp1()->getOper() == opIntConst &&
-							pBF->IsDynamicLinkedProcPointer(((Const*)call->getDest()->getSubExp1())->getAddr())) {
-						// Dynamic linked proc pointers are treated as static.
-						const char *nam = pBF->GetDynamicProcName( ((Const*)call->getDest()->getSubExp1())->getAddr());
-						Proc *p = pProc->getProg()->getLibraryProc(nam);
-						call->setDestProc(p);
-						call->setIsComputed(false);
+					// TODO: solution dont use pBF
+					if (!ASS_FILE){ 
+						if (call->getDest()->getOper() == opMemOf &&
+								call->getDest()->getSubExp1()->getOper() == opIntConst &&
+								pBF->IsDynamicLinkedProcPointer(((Const*)call->getDest()->getSubExp1())->getAddr())) {
+							// Dynamic linked proc pointers are treated as static.
+							const char *nam = pBF->GetDynamicProcName( ((Const*)call->getDest()->getSubExp1())->getAddr());
+							Proc *p = pProc->getProg()->getLibraryProc(nam);
+							call->setDestProc(p);
+							call->setIsComputed(false);
+						}
+					}
+					else {
+						if (call->getDest()->getOper() == opMemOf &&
+								call->getDest()->getSubExp1()->getOper() == opIntConst &&
+								funcsType.find(((Const*)call->getDest()->getSubExp1())->getAddr())->second) {
+							// Dynamic linked proc pointers are treated as static.
+							const char *nam = namesList.find(((Const*)call->getDest()->getSubExp1())->getAddr())->second;
+							Proc *p = pProc->getProg()->getLibraryProc(nam);
+							call->setDestProc(p);
+							call->setIsComputed(false);
+						}
 					}
 
 					// Is the called function a thunk calling a library function?
 					// A "thunk" is a function which only consists of: "GOTO library_function"
-					if(	call &&	call->getFixedDest() != NO_ADDRESS ) {
-						// Get the address of the called function.
-						ADDRESS callAddr=call->getFixedDest();
-						// It should not be in the PLT either, but getLimitTextHigh() takes this into account
-						if (callAddr < pBF->getLimitTextHigh()) {
-							// Decode it.
-							DecodeResult decoded=decodeInstruction(callAddr);
-							if (decoded.valid) { // is the instruction decoded succesfully?
-								// Yes, it is. Create a Statement from it.
-								RTL *rtl = decoded.rtl;
-								Statement* first_statement = *rtl->getList().begin();
-								if (first_statement) {
-									first_statement->setProc(pProc);
-									first_statement->simplify();
-									GotoStatement* stmt_jump = static_cast<GotoStatement*>(first_statement);
-									// In fact it's a computed (looked up) jump, so the jump seems to be a case
-									// statement.
-									if ( first_statement->getKind() == STMT_CASE &&
-										stmt_jump->getDest()->getOper() == opMemOf &&
-										stmt_jump->getDest()->getSubExp1()->getOper() == opIntConst &&
-										pBF->IsDynamicLinkedProcPointer(((Const*)stmt_jump->getDest()->getSubExp1())->
-											getAddr())) // Is it an "DynamicLinkedProcPointer"?
-									{
-										// Yes, it's a library function. Look up it's name.
-										ADDRESS a = ((Const*)stmt_jump->getDest()->getSubExp1())->getAddr();
-										const char *nam = pBF->GetDynamicProcName(a);
-										// Assign the proc to the call
-										Proc *p = pProc->getProg()->getLibraryProc(nam);
-										if (call->getDestProc()) {
-											// prevent unnecessary __imp procs
-											prog->removeProc(call->getDestProc()->getName());
+					// Should i modify
+					if (!ASS_FILE){
+						if(	call &&	call->getFixedDest() != NO_ADDRESS ) {
+							// Get the address of the called function.
+							ADDRESS callAddr=call->getFixedDest();
+							// It should not be in the PLT either, but getLimitTextHigh() takes this into account
+							if (callAddr < pBF->getLimitTextHigh()) {
+								// Decode it.
+								DecodeResult decoded=decodeInstruction(callAddr);
+								if (decoded.valid) { // is the instruction decoded succesfully?
+									// Yes, it is. Create a Statement from it.
+									RTL *rtl = decoded.rtl;
+									Statement* first_statement = *rtl->getList().begin();
+									if (first_statement) {
+										first_statement->setProc(pProc);
+										first_statement->simplify();
+										GotoStatement* stmt_jump = static_cast<GotoStatement*>(first_statement);
+										// In fact it's a computed (looked up) jump, so the jump seems to be a case
+										// statement.
+										//TODO : We dont handle this case
+										if ( first_statement->getKind() == STMT_CASE &&
+											stmt_jump->getDest()->getOper() == opMemOf &&
+											stmt_jump->getDest()->getSubExp1()->getOper() == opIntConst &&
+											pBF->IsDynamicLinkedProcPointer(((Const*)stmt_jump->getDest()->getSubExp1())->
+												getAddr())) // Is it an "DynamicLinkedProcPointer"?
+										{
+											// Yes, it's a library function. Look up it's name.
+											ADDRESS a = ((Const*)stmt_jump->getDest()->getSubExp1())->getAddr();
+											// TODO : We dont handle this case
+											const char *nam = pBF->GetDynamicProcName(a);
+											// Assign the proc to the call
+											Proc *p = pProc->getProg()->getLibraryProc(nam);
+											if (call->getDestProc()) {
+												// prevent unnecessary __imp procs
+												prog->removeProc(call->getDestProc()->getName());
+											}
+											call->setDestProc(p);
+											call->setIsComputed(false);
+											call->setDest(Location::memOf(new Const(a)));
 										}
-										call->setDestProc(p);
-										call->setIsComputed(false);
-										call->setDest(Location::memOf(new Const(a)));
 									}
 								}
 							}
 						}
 					}
-
 					// Treat computed and static calls separately
 					if (call->isComputed()) {
 						BB_rtls->push_back(pRtl);
@@ -931,12 +1020,19 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
  						// Check if this is the _exit or exit function. May prevent us from attempting to decode
 						// invalid instructions, and getting invalid stack height errors
-						const char* name = pBF->SymbolByAddress(uNewAddr);
-						if (name == NULL && call->getDest()->isMemOf() && 
-											call->getDest()->getSubExp1()->isIntConst()) {
-							ADDRESS a = ((Const*)call->getDest()->getSubExp1())->getInt();
-							if (pBF->IsDynamicLinkedProcPointer(a))
-								name = pBF->GetDynamicProcName(a);
+						
+						const char* name;
+						if (!ASS_FILE){
+							name = pBF->SymbolByAddress(uNewAddr);
+							if (name == NULL && call->getDest()->isMemOf() && 
+												call->getDest()->getSubExp1()->isIntConst()) {
+								ADDRESS a = ((Const*)call->getDest()->getSubExp1())->getInt();
+								if (pBF->IsDynamicLinkedProcPointer(a))
+									name = pBF->GetDynamicProcName(a);
+							}
+						}
+						else {
+							name = namesList.find(uNewAddr)->second;
 						}	
 						if (name && noReturnCallDest(name)) {
 							// Make sure it has a return appended (so there is only one exit from the function)
@@ -1020,6 +1116,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				// Special case: redecode the last instruction, without advancing uAddr by numBytes
 				continue;
 			uAddr += inst.numBytes;
+			
 			if (uAddr > lastAddr)
 				lastAddr = uAddr;
 
@@ -1043,6 +1140,8 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				if (!pCfg->isIncomplete(uAddr))
 					sequentialDecode = false;
 			}
+			if (AssProgram)
+			++ li ;
 		}	// while sequentialDecode
 
 		// Add this range to the coverage
@@ -1050,7 +1149,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 		// Must set sequentialDecode back to true
 		sequentialDecode = true;
-		//line = line +1 ;
+		
 
 	}	// while nextAddress() != NO_ADDRESS
 
@@ -1064,18 +1163,34 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 		ADDRESS dest = (*it)->getFixedDest();
 		// Don't speculatively decode procs that are outside of the main text section, apart from dynamically
 		// linked ones (in the .plt)
-		if (pBF->IsDynamicLinkedProc(dest) || !spec || (dest < pBF->getLimitTextHigh())) {
-			pCfg->addCall(*it);
-			// Don't visit the destination of a register call
-			Proc *np = (*it)->getDestProc();
-			if (np == NULL && dest != NO_ADDRESS) {
-				//np = newProc(pProc->getProg(), dest);
-				np = pProc->getProg()->setNewProc(dest);
+		// TODO: change pBF pointers
+		if (!ASS_FILE){
+			if (pBF->IsDynamicLinkedProc(dest) || !spec || (dest < pBF->getLimitTextHigh())) {
+				pCfg->addCall(*it);
+				// Don't visit the destination of a register call
+				Proc *np = (*it)->getDestProc();
+				if (np == NULL && dest != NO_ADDRESS) {
+					//np = newProc(pProc->getProg(), dest);
+					np = pProc->getProg()->setNewProc(dest);
+				}
+				if (np != NULL) {
+					np->setFirstCaller(pProc);
+					pProc->addCallee(np);
+				}			
 			}
-			if (np != NULL) {
-				np->setFirstCaller(pProc);
-				pProc->addCallee(np);
-			}			
+		}
+		else{
+				pCfg->addCall(*it);
+				// Don't visit the destination of a register call
+				Proc *np = (*it)->getDestProc();
+				if (np == NULL && dest != NO_ADDRESS) {
+					//np = newProc(pProc->getProg(), dest);
+					np = pProc->getProg()->setNewProc(dest);
+				}
+				if (np != NULL) {
+					np->setFirstCaller(pProc);
+					pProc->addCallee(np);
+				}			
 		}
 	}
 
@@ -1215,12 +1330,12 @@ PBB FrontEnd::createReturnBlock(UserProc* pProc, std::list<RTL*>* BB_rtls, RTL* 
 	if (BB_rtls == NULL) BB_rtls = new std::list<RTL*>;		// In case no other semantics
 	BB_rtls->push_back(pRtl);
 	ADDRESS retAddr = pProc->getTheReturnAddr();
+	std::cout << "retAddr = " << std::hex << retAddr << " rtl = " <<std::hex<< pRtl->getAddress() << "\n";
 	// LOG << "retAddr = " << retAddr << " rtl = " << pRtl->getAddress() << "\n";
 	if (retAddr == NO_ADDRESS) {
 		// Create the basic block
 		pBB = pCfg->newBB(BB_rtls, RET, 0);
 		Statement* s = pRtl->getList().back();		// The last statement should be the ReturnStatement
-		std::cout<<"Return statement "<<s->prints()<<"address"<<pRtl->getAddress()<<"\n";
 		pProc->setTheReturnAddr((ReturnStatement*)s, pRtl->getAddress());
 	} else {
 		// We want to replace the *whole* RTL with a branch to THE first return's RTL. There can sometimes be extra

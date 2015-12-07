@@ -99,7 +99,7 @@ ADDRESS nextPC = NO_ADDRESS;
 
 }
 
-DecodeResult& MIPSDecoder::decodeAssembly (ADDRESS pc, std::string instr)
+DecodeResult& MIPSDecoder::decodeAssembly (ADDRESS pc, std::string instr,AssemblyLine* line)
 {
 DecodeResult res;
 return res;

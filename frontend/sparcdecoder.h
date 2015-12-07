@@ -45,7 +45,7 @@ virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta);
 	 * Disassembles the machine instruction at pc and returns the number of
 	 * bytes disassembled. Assembler output goes to global _assembly
 	 */
-virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr);
+virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr,AssemblyLine* line);
 virtual int decodeAssemblyInstruction (ADDRESS pc, int delta);
 
 	/*
@@ -57,6 +57,7 @@ private:
 	 * Various functions to decode the operands of an instruction into
 	 * a SemStr representation.
 	 */
+	unsigned magic_process(std::string name);
 	Exp*	dis_Eaddr(ADDRESS pc, int size = 0);
 	Exp*	dis_RegImm(ADDRESS pc);
 	Exp*	dis_RegLhs(unsigned r);

@@ -36,7 +36,7 @@ public:
 	 * the instruction.
 	 */
 virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta);
-virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr);
+virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr, AssemblyLine* line);
 	/*
 	 * Disassembles the machine instruction at pc and returns the number of
 	 * bytes disassembled. Assembler output goes to global _assembly

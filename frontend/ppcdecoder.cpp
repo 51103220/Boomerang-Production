@@ -4651,7 +4651,7 @@ Exp* crBit(int bitNum) {
 		new Const(bitNum));
 }
 
-DecodeResult& PPCDecoder::decodeAssembly (ADDRESS pc, std::string instr)
+DecodeResult& PPCDecoder::decodeAssembly (ADDRESS pc, std::string instr,AssemblyLine* line)
 {
 DecodeResult res;
 return res;

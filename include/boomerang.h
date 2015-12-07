@@ -296,9 +296,10 @@ virtual void		alert_decompile_debug_point(UserProc *p, const char *description);
 		bool		assumeABI;			///< Assume ABI compliance
 		bool		experimental;		///< Activate experimental code. Caution!
 		int			minsToStopAfter;
-		bool 		decompileAssembly; //donbinhvn: if input is assembly
-		bool 		ABI_conv;
-	};
+		bool 		decompileAssembly;
+		bool            ABI_conv;
+		bool 		is_8051; //donbinhvn: if input is assembly
+};
 
 #define VERBOSE				(Boomerang::get()->vFlag)
 #define DEBUG_TA			(Boomerang::get()->debugTA)
@@ -313,7 +314,8 @@ virtual void		alert_decompile_debug_point(UserProc *p, const char *description);
 #define DEBUG_SWITCH		(Boomerang::get()->debugSwitch)
 #define EXPERIMENTAL		(Boomerang::get()->experimental)
 #define ASS_FILE			(Boomerang::get()->decompileAssembly) //donbinhvn: for reference
-#define ABI_ASS				(Boomerang::get()->ABI_conv) //donbinhvn: for reference
+#define ABI_ASS                         (Boomerang::get()->ABI_conv) //donbinhvn: for reference
+#define _8051				(Boomerang::get()->is_8051) // If input is 8051 machine
 
 
 #endif

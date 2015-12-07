@@ -4,14 +4,13 @@ int main(int argc, char *argv[], char *envp[]) {
     __size32 local1; 		// m[o6 - 4]
     int local2; 		// m[o6 - 8]
     __size32 o0; 		// r8
-    __size32 o5; 		// r13
 
     local1 = 0;
     __isoc99_scanf();
     puts("Fibonacci series");
     local2 = 1;
     while (local2 <= local0) {
-        o0 = Fibonacci(local1, o5);
+        o0 = Fibonacci(local1);
         printf("%d\n", o0);
         local1++;
         local2++;
@@ -20,19 +19,15 @@ int main(int argc, char *argv[], char *envp[]) {
 }
 
 // address: 0x105b8
-__size32 Fibonacci(__size32 param1, __size32 param2) {
+__size32 Fibonacci(__size32 param1) {
     __size32 g1; 		// r1
-    __size32 i5; 		// r29
     __size32 o0; 		// r8
     __size32 o0_1; 		// r8{52}
-    __size32 o5; 		// r13
 
-    i5 = param2;
     if (param1 != 0) {
         if (param1 != 1) {
-            o0 = Fibonacci(param1 - 1, param2); /* Warning: also results in o5 */
-            i5 = o0;
-            o0_1 = Fibonacci(param1 - 2, o5);
+            o0 = Fibonacci(param1 - 1);
+            o0_1 = Fibonacci(param1 - 2);
             g1 = o0 + o0_1;
         } else {
             g1 = 1;
@@ -40,6 +35,6 @@ __size32 Fibonacci(__size32 param1, __size32 param2) {
     } else {
         g1 = 0;
     }
-    return g1; /* WARNING: Also returning: o5 := i5 */
+    return g1;
 }
 

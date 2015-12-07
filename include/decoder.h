@@ -26,6 +26,7 @@
 #include <list>
 #include "types.h"
 #include "rtl.h"
+#include "AssemblyInfo.h"
 
 class Exp;
 class RTL;
@@ -114,7 +115,7 @@ virtual				~NJMCDecoder() {};
 		 * Decodes the machine instruction at pc and returns an RTL instance for the instruction.
 		 */
 virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta) = 0;
-virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr) = 0;
+virtual DecodeResult& decodeAssembly (ADDRESS pc, std::string instr, AssemblyLine* line) = 0;
 
 		/*
 		 * Disassembles the machine instruction at pc and returns the number of bytes disassembled.

@@ -61968,7 +61968,7 @@ PentiumDecoder::PentiumDecoder(Prog* prog) : NJMCDecoder(prog)
 // For now...
 int PentiumDecoder::decodeAssemblyInstruction(unsigned, int)
 { return 0; }
-DecodeResult& PentiumDecoder::decodeAssembly (ADDRESS pc, std::string instr)
+DecodeResult& PentiumDecoder::decodeAssembly (ADDRESS pc, std::string instr,AssemblyLine* line)
 {
 DecodeResult res;
 return res;

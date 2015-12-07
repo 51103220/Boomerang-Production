@@ -179,7 +179,7 @@ void SparcFrontEnd::handleBranch(ADDRESS dest, ADDRESS hiAddress, BasicBlock*& n
 void SparcFrontEnd::handleCall(UserProc *proc, ADDRESS dest, BasicBlock* callBB, Cfg* cfg, ADDRESS address,
 	int offset/* = 0*/)
 {
- std::cout<<"Handle call\n";
+ 	std::cout<<"Handle call\n";
 	if (callBB == NULL)
 		return;
 
@@ -193,8 +193,10 @@ void SparcFrontEnd::handleCall(UserProc *proc, ADDRESS dest, BasicBlock* callBB,
 	}
 
 	// Add the out edge if required
-	if (offset != 0)
+	if (offset != 0){
+		std::cout <<"Add out edge in handleCall"<<std::endl;
 		cfg->addOutEdge(callBB, address+offset);
+	}
 
 }
 
@@ -227,7 +229,7 @@ void SparcFrontEnd::case_unhandled_stub(ADDRESS addr)
 bool SparcFrontEnd::case_CALL(ADDRESS& address, DecodeResult& inst, DecodeResult& delay_inst,
 		std::list<RTL*>*& BB_rtls, UserProc* proc, std::list<CallStatement*>& callList, std::ofstream &os,
 		bool isPattern/* = false*/) {
-std::cout<<"case_CALL \n";
+	std::cout<<"Case_CALL \n";
 	// Aliases for the call and delay RTLs
 	CallStatement* call_stmt = ((CallStatement*)inst.rtl->getList().back());
 	RTL* delay_rtl = delay_inst.rtl;
@@ -312,8 +314,12 @@ std::cout<<"case_CALL \n";
 
 			bool ret = true;
 			// Check for _exit; probably should check for other "never return" functions
-			const char* name = pBF->SymbolByAddress(dest);
-			std::cout<<"name: "<<name<<"at address "<<std::hex<<dest<<"\n";
+			const char* name;
+			if (!ASS_FILE)
+				name = pBF->SymbolByAddress(dest);
+			else 
+				name = "WHAT EVER BEACUSE CANT IDENTIFY NAMES";
+			std::cout<<"name: "<< name <<" at address "<<std::hex<<dest<<"\n";
 			if (name && strcmp(name, "_exit") == 0) {
 				// Don't keep decoding after this call
 				ret = false;
@@ -713,6 +719,37 @@ std::vector<Exp*> &SparcFrontEnd::getDefaultReturns()
 	return returns;
 }
 
+std::vector<std::string> process_file(Prog* prog, ADDRESS address){
+	std::cout<<"----Processing Assembly File---- \n";
+		char **vinit= new char*[100];
+		std::ifstream infile(prog->getPath());
+		std::string line;
+		std::string temp ;
+		int count = 0;
+		int start, end;
+		if (address == 66676)
+		{
+			start = 0;
+			end = 18;
+		}
+		else
+		{	
+			start = 19;
+			end = 26;
+		}
+		int i = 0;
+		for( ; getline( infile, line );) 
+		{
+	    	if (i>=start && i <= end){
+	    		temp=line;
+	    		vinit[count]=(char*)temp.c_str();
+	    		count++;
+	    	}
+	    		i++;
+		}
+		std::vector<std::string> assemblySets(vinit,vinit+count);
+	return assemblySets ;
+}
 /*==============================================================================
  * FUNCTION:		 SparcFrontEnd::processProc
  * OVERVIEW:		 Builds the CFG for a procedure out of the RTLs constructed
@@ -730,11 +767,11 @@ std::vector<Exp*> &SparcFrontEnd::getDefaultReturns()
  *============================================================================*/
 bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &os, bool fragment /* = false */,
 		bool spec /* = false */) {
- std::cout<<"this is sparc process proc \n";
+ 	std::cout<<"Sparc process proc \n";
 	// Declare an object to manage the queue of targets not yet processed yet.
 	// This has to be individual to the procedure! (so not a global)
 	TargetQueue targetQueue;
-	std::cout<<"getProg "<<prog->getPath()<<"\n";
+	std::cout<<"getProg "<< prog->getPath() << "\n";
 	// Similarly, we have a set of CallStatement pointers. These may be
 	// disregarded if this is a speculative decode that fails (i.e. an illegal
 	// instruction is found). If not, this set will be used to add to the set
@@ -759,39 +796,24 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 	targetQueue.initial(address);
 
 	//////////////donbinhvn: MYCODE TO GET ASSEMBLY INSTS//////////////
-	char **vinit= new char*[100];
-	int count = 0;
-	
+	std::vector<std::string> assemblySets;
 	if(ASS_FILE)
-	{	std::cout<<"process file \n";
-		std::ifstream infile(prog->getPath());
-		std::string line;
-		std::string temp ;
-		for( ; getline( infile, line );) 
-		{
-			//vinit[count]=new char[100];
-    		//vinit[count]=new char*;
-    		temp=line;
-    		vinit[count]=(char*)temp.c_str();//(char*)line.c_str()
-    		//std::cout<<count<<" - "<<vinit[count]<<"\n";
-    		count++;
-    		//if(count>=2)
-    		//std::cout<<0<<" - "<<vinit[0]<<vinit[count-2]<<"\n";
-
-		}
-		
+	{	
+		assemblySets = process_file(prog,address);
 	}
-	std::cout<<"fail here \n";
-	std::vector<std::string> assemblySets(vinit,vinit+count) ;
+	std::cout<<"Start First Address \n" << address << std::endl;
+
 	int sizeSets = assemblySets.size();
-	//std::cerr<<"size = "<< sizeSets << std::endl;
+
 	int line = 0;
-	//std::cerr<<"line = "<< line << std::endl;
-	//std::cout<<"assset.at"<<vinit[line]<<"\n";
-	////////////////////////////END MY CODE////////////////////////////
+
 	// Get the next address from which to continue decoding and go from
 	// there. Exit the loop if there are no more addresses or they all
 	// correspond to locations that have been decoded.
+	//ADDRESS new_address = 66704;
+	ADDRESS new_address = address;
+	if(ASS_FILE)
+		address = new_address;
 	while ((address = targetQueue.nextAddress(cfg)) != NO_ADDRESS) {
 
 		// The list of RTLs for the current basic block
@@ -801,6 +823,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 		// is decoded
 		//ADDRESS start = address;
 		DecodeResult inst;
+		AssemblyLine * Line;
 		while (sequentialDecode && ((line<sizeSets)||(!ASS_FILE))) {//donbinhvn: hack herre
 
 			if (Boomerang::get()->traceDecoder)
@@ -808,21 +831,29 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 			// Check if this is an already decoded jump instruction (from a previous pass with propagation etc)
 			// If so, we don't need to decode this instruction
-			std::map<ADDRESS, RTL*>::iterator ff = previouslyDecoded.find(address);
+			std::map<ADDRESS, RTL*>::iterator ff ;
+			if (ASS_FILE)
+				ff = previouslyDecoded.find(new_address);
+			else
+				ff = previouslyDecoded.find(address);
+
 			if (ff != previouslyDecoded.end()) {
+				std::cout << "Decoded address" << new_address << std::endl;
 				inst.rtl = ff->second;
 				inst.valid = true;
 				inst.type = DD;			// E.g. decode the delay slot instruction
 			}
 			else
+			{
 				if(ASS_FILE){
-				if(line<sizeSets){
-				inst = decodeAssemblyInstruction(address,assemblySets.at(line));//donbinhvn: decode assembly inst instead of binary
-				}
+					if(line<sizeSets){
+								inst = decodeAssemblyInstruction(new_address,assemblySets.at(line),Line);//donbinhvn: decode assembly inst instead of binary	
+							
+					}
 				}
 				else
 				inst = decodeInstruction(address);
-
+		    }
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
 				return false;
@@ -863,6 +894,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				(last->getKind() == STMT_CALL) ||
 				(last->getKind() == JCOND_RTL) ||
 				(last->getKind() == STMT_RET)) {
+				std::cout<<"Check outside lask kind" << new_address;
 				ADDRESS dest = stmt_jump->getFixedDest();
 				if ((dest != NO_ADDRESS) && (dest < hiAddress)){
 					unsigned inst_before_dest = *((unsigned*)(dest-4+pBF->getTextDelta()));
@@ -890,7 +922,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				// the destinsation of a branch. Even if not the start of a BB,
 				// some other branch may be discovered to it later.
 				BB_rtls->push_back(rtl);
-
+				std::cout<<"In NOP" << std::hex << new_address << std::endl;
 				// Then increment the native address pointer
 				address = address + 4;
 				break;
@@ -898,6 +930,9 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			case NCT:
 				// Ordinary instruction. Add it to the list of RTLs this BB
 				BB_rtls->push_back(rtl);
+				if (ASS_FILE)
+					new_address = new_address + 4;
+				else
 				address += inst.numBytes;
 				// Ret/restore epilogues are handled as ordinary RTLs now
 				if (last->getKind() == STMT_RET)
@@ -939,7 +974,14 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			case SD: {
 				
 				// This includes "call" and "ba". If a "call", it might be a move_call_move idiom, or a call to .stret4
-				DecodeResult delay_inst = decodeInstruction(address+4);
+				DecodeResult delay_inst;
+				if(ASS_FILE){
+					delay_inst = decodeAssemblyInstruction(new_address+4,assemblySets.at(line+1),Line);
+					line = line + 1;	
+				}
+				else
+					delay_inst = decodeInstruction(address+4);
+
 				if (Boomerang::get()->traceDecoder)
 					LOG << "*" << address+4 << "\t\n";
 				if (last->getKind() == STMT_CALL) {
@@ -947,6 +989,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 					// e.g.
 					// 142c8:  40 00 5b 91		  call		   exit
 					// 142cc:  91 e8 3f ff		  restore	   %g0, -1, %o0
+					std::cout<<"First STMT_CALL in last->getKind() " << std::hex << new_address << std::endl;
 					if (((SparcDecoder*)decoder)->isRestore(address+4+pBF->getTextDelta())) {
 						// Give the address of the call; I think that this is actually important, if faintly annoying
 						delay_inst.rtl->updateAddress(address);
@@ -967,6 +1010,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 					// (move/x/call/move in UQBT terms).  In boomerang, we leave the semantics of the moves there
 					// (to be likely removed by dataflow analysis) and merely insert a return BB after the call
 					int nd = delay_inst.rtl->getNumStmt();
+					std::cout << "Num of Stmt" << nd << std::endl;
 					// Note that if an add, there may be an assignment to a temp register first. So look at last RT
 					Statement* a = delay_inst.rtl->elementAt(nd-1); // Look at last
 					if (a && a->isAssign()) {
@@ -1009,7 +1053,14 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 					if (last->getKind() == STMT_CALL) {
 						std::cout<<"SD - NCT - STMT_CALL here\n";
 						// This is a call followed by an NCT/NOP
-						sequentialDecode = case_CALL(address, inst, delay_inst, BB_rtls, proc, callList, os);
+						if (ASS_FILE){
+							std::cout << "Check address SD NCT" << new_address << std::endl;
+							sequentialDecode = case_CALL(new_address, inst, delay_inst, BB_rtls, proc, callList, os);
+							std::cout << "Check address SD NCT" << new_address << std::endl;
+						}
+						else
+							sequentialDecode = case_CALL(address, inst, delay_inst, BB_rtls, proc, callList, os);
+						std::cout << sequentialDecode << std::endl;
 					}
 					else {
 						// This is a non-call followed by an NCT/NOP
@@ -1076,8 +1127,9 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			}
 
 			case DD: {
-				DecodeResult delay_inst; 
-				if (inst.numBytes == 4) {
+				DecodeResult delay_inst;
+				if (ASS_FILE) delay_inst = decodeAssemblyInstruction(new_address+4,assemblySets.at(line+1), Line);
+				else if (inst.numBytes == 4) {
 					// Ordinary instruction. Look at the delay slot
 					delay_inst = decodeInstruction(address+4);
 				}
@@ -1096,7 +1148,11 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 				switch(delay_inst.type) {
 				case NOP:
 				case NCT: {
-					sequentialDecode = case_DD(address, pBF->getTextDelta(), inst, delay_inst, BB_rtls, targetQueue,
+					if (ASS_FILE)
+						sequentialDecode = case_DD(new_address, pBF->getTextDelta(), inst, delay_inst, BB_rtls, targetQueue,
+						proc, callList);
+					else
+						sequentialDecode = case_DD(address, pBF->getTextDelta(), inst, delay_inst, BB_rtls, targetQueue,
 						proc, callList);
 					break;
 				}
@@ -1198,21 +1254,35 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 			// incomplete BB, then we do decode it).  In fact, mustn't decode twice, because it will muck up the
 			// coverage, but also will cause subtle problems like add a call to the list of calls to be processed, then
 			// delete the call RTL (e.g. Pentium 134.perl benchmark)
-			if (sequentialDecode && cfg->existsBB(address)) {
+			ADDRESS choice ;
+			if (ASS_FILE)
+				choice = new_address;
+			else
+				choice = address;
+			std::cout << "BB_rtls " << BB_rtls << std::endl;
+			if (sequentialDecode && cfg->existsBB(choice)) {
 				// Create the fallthrough BB, if there are any RTLs at all
+				std::cout<<"Creating BB " << std::hex << choice << std::endl;
 				if (BB_rtls) {
+					std::cout << "BB_rtls exist" << std::endl;
 					PBB pBB = cfg->newBB(BB_rtls, FALL, 1);
 					// Add an out edge to this address
 					if (pBB) {
-						cfg->addOutEdge(pBB, address);
+						cfg->addOutEdge(pBB, choice);
 						BB_rtls = NULL;			// Need new list of RTLs
 					}
 				}
 				// Pick a new address to decode from, if the BB is complete
-				if (!cfg->isIncomplete(address))
+				std::cout << "If incomplete " << cfg->isIncomplete(choice) << std::endl;
+				if (!cfg->isIncomplete(choice)){
+					std::cout<<"Completed " << std::hex << choice << std::endl;
 					sequentialDecode = false;
+				}
 			}
-
+		
+		
+			
+		
 			line = line + 1;
 		}		// while (sequentialDecode)
 
@@ -1226,10 +1296,17 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 	// Add the callees to the set of CallStatements to proces for parameter recovery, and also to the Prog object
 	for (std::list<CallStatement*>::iterator it = callList.begin(); it != callList.end(); it++) {
+		std::cout << "There are calles " << std::endl;
 		ADDRESS dest = (*it)->getFixedDest();
+		std::cout << "Calle Address " << std::hex << dest << std::endl;
 		// Don't speculatively decode procs that are outside of the main text section, apart from dynamically linked
 		// ones (in the .plt)
-		if (pBF->IsDynamicLinkedProc(dest) || !spec || (dest < pBF->getLimitTextHigh())) {
+		if (ASS_FILE)
+		{
+			cfg->addCall(*it);
+			if (dest != NO_ADDRESS) proc->getProg()->setNewProc(dest);
+		}
+		else if (pBF->IsDynamicLinkedProc(dest) || !spec || (dest < pBF->getLimitTextHigh())) {
 			cfg->addCall(*it);
 			// Don't visit the destination of a register call
 			//if (dest != NO_ADDRESS) newProc(proc->getProg(), dest);
@@ -1240,6 +1317,7 @@ bool SparcFrontEnd::processProc(ADDRESS address, UserProc* proc, std::ofstream &
 
 	// MVE: Not 100% sure this is the right place for this
 	proc->setEntryBB();
+	std::cout << "End-----getEntryBB------>" << cfg->getEntryBB() << std::endl;
 
 	return true;
 }
