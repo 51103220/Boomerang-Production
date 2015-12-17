@@ -62,6 +62,10 @@
 #include "ansi-c-parser.h"
 AssemblyProgram* AssProgram;
 AssHandler* ass_handler;
+std::map<ADDRESS,const char*> namesList;
+std::map<ADDRESS,bool> funcsType;
+std::list<char*> bitReg;
+bool first_line;
 /*==============================================================================
  * FUNCTION:	  FrontEnd::FrontEnd
  * OVERVIEW:	  Construct the FrontEnd object
@@ -88,6 +92,11 @@ FrontEnd* FrontEnd::instantiate(BinaryFile *pBF, Prog* prog, BinaryFileFactory* 
 				std::cout<<"instantiate 8051\n";
 				ass_handler = new AssHandler();
 				AssProgram = ass_handler->process(prog->getPath());
+				list<AssemblyLabel*>::iterator lbi;
+				for(lbi = AssProgram->labelList->begin(); lbi != AssProgram->labelList->end(); ++lbi ){
+					namesList[(*lbi)->address] = (*lbi)->name;
+				}
+				bitReg = AssProgram->bitReg;
 				return new _8051FrontEnd(pBF,prog, pbff);
 			}
 		case MACHINE_PPC:
@@ -546,14 +555,13 @@ Signature *FrontEnd::getLibSignature(const char *name) {
 bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bool frag /* = false */,
 		bool spec /* = false */) {
 	PBB pBB;					// Pointer to the current basic block
-	std::cerr<<"Entering Processing Proc" << std::endl;
 	std::cout<<"Entering Processing Proc\n"; 
 	// just in case you missed it
-	
-	if (AssProgram && _8051)
+	first_line = true;
+	if (AssProgram)
 		std::cout <<"Name Of Program : " << AssProgram->name << std::endl;
 	Boomerang::get()->alert_new(pProc);
-
+	 
 	// We have a set of CallStatement pointers. These may be disregarded if this is a speculative decode
 	// that fails (i.e. an illegal instruction is found). If not, this set will be used to add to the set of calls
 	// to be analysed in the cfg, and also to call newProc()
@@ -581,11 +589,12 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 	ADDRESS startAddr = uAddr;
 	ADDRESS lastAddr = uAddr;
 	ADDRESS address = uAddr;
-
+	std::cout << "Start at address = " << uAddr << std::endl; 
 	//------IMPORTANT------------------------------------------------------------------------
 	list<AssemblyLabel*>::iterator lbi;
-	list<AssemblyLine*>* temp_lines = new list<AssemblyLine*>() ;
-	if (AssProgram && _8051){
+	list<AssemblyLine*>* temp_lines = new list<AssemblyLine*>();
+	
+	if (AssProgram){
 		for(lbi = AssProgram->labelList->begin(); lbi != AssProgram->labelList->end(); ++lbi ){
 			if((*lbi)->address == uAddr){
 				temp_lines = (*lbi)->lineList;
@@ -596,6 +605,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 			}
 		}
 	}
+	
 	list<AssemblyLine*>::iterator li;
 	if (temp_lines->size()>0)
 		li = temp_lines->begin();
@@ -616,14 +626,14 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 
 			// Decode the inst at uAddr.
 			
-			if(ASS_FILE && _8051){
+			if(ASS_FILE){
 				if(li != temp_lines->end()){
 					inst = decodeAssemblyInstruction(uAddr,"assemblySets.at(line)", (*li));
 				}
 			}
 			else
 				inst = decodeInstruction(uAddr);
-
+			
 			// If invalid and we are speculating, just exit
 			if (spec && !inst.valid)
 				return false;
@@ -700,6 +710,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 			// The counter is introduced because ss != sl.end() does not work as it should
 			// FIXME: why? Does this really fix the problem?
 			int counter = sl.size();
+
 			for (ss = sl.begin(); counter > 0; ss++, counter--) {
 #endif
 				Statement* s = *ss;
@@ -718,6 +729,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				// (note that a LibProc entry for the PLT function may not yet exist)
 				ADDRESS dest;
 				Proc* proc;
+				
 				if (s->getKind() == STMT_GOTO) {
 					dest = stmt_jump->getFixedDest();
 					if (dest != NO_ADDRESS) {
@@ -772,6 +784,7 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 							pCfg->addOutEdge(pBB, uDest, true);
 						}
 						else {
+							std::cout<<"Entering Processing Proc5\n"; 
 							if (!ASS_FILE)
 								LOG << "Error: Instruction at " << uAddr << " branches beyond end of section, to "
 									<< uDest << "\n";
@@ -1140,10 +1153,10 @@ bool FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bo
 				if (!pCfg->isIncomplete(uAddr))
 					sequentialDecode = false;
 			}
-			if (AssProgram)
+			if(AssProgram)
 			++ li ;
 		}	// while sequentialDecode
-
+		
 		// Add this range to the coverage
 //		  pProc->addRange(start, uAddr);
 

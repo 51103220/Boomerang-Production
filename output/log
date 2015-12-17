@@ -1,242 +1,28 @@
-Unknown library function __libc_start_main
-got filename crtstuff.c for main
-Unknown library function __isoc99_scanf
-got filename crtstuff.c for add1
-got filename crtstuff.c for add2
-got filename crtstuff.c for add3
+got filename elf-init.c for main
 after removing matching assigns  (t[WILDSTR]).
-after removing matching assigns  (%pc).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add3 ###
-in proc add3 adding addrExp r28{0} - 4 to local table
-in proc add3 adding addrExp r28{0} - 8 to local table
-finding final parameters for add3
-potential param r28
-found new parameter r28
-potential param r37
-found new parameter r37
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 12]
-found new parameter m[r28{0} + 12]
-after removing matching assigns  (t[WILDSTR]).
-after removing matching assigns  (%pc).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add2 ###
-in proc add2 adding addrExp r28{0} - 4 to local table
-in proc add2 adding addrExp r28{0} - 16 to local table
-in proc add2 adding addrExp r28{0} - 20 to local table
-in proc add2 adding addrExp r28{0} - 24 to local table
-in proc add2 adding addrExp r28{0} - 28 to local table
-in proc add2 adding addrExp r28{0} - 32 to local table
-finding final parameters for add2
-potential param r28
-found new parameter r28
-potential param r37
-found new parameter r37
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-after removing matching assigns  (t[WILDSTR]).
-after removing matching assigns  (%pc).
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add1 ###
-in proc add1 adding addrExp r28{0} - 4 to local table
-in proc add1 adding addrExp r28{0} - 16 to local table
-in proc add1 adding addrExp r28{0} - 16 to local table
-in proc add1 adding addrExp r28{0} - 24 to local table
-in proc add1 adding addrExp r28{0} - 28 to local table
-in proc add1 adding addrExp r28{0} - 32 to local table
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-after removing matching assigns  (t[WILDSTR]).
-after removing matching assigns  (%pc).
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 12 to local table
-in proc main adding addrExp r28{0} - 4 to local table
-in proc main adding addrExp r28{0} - 32 to local table
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
-in proc main adding addrExp r28{0} - 8 to local table
-in proc main adding addrExp r28{0} - 32 to local table
-TYPE ERROR: at address 0xffffffe0, overlapping type double does not resolve to compound or array
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 12 to local table
-in proc main adding addrExp r28{0} - 4 to local table
+in proc main adding addrExp r14{0} - 4 to local table
+in proc main adding addrExp r14{0} to local table
+in proc main adding addrExp r14{0} + 4 to local table
+in proc main adding addrExp r14{0} + 8 to local table
+in proc main adding addrExp r14{0} + 12 to local table
+in proc main adding addrExp r14{0} + 16 to local table
+in proc main adding addrExp r14{0} + 20 to local table
+in proc main adding addrExp r14{0} + 24 to local table
+in proc main adding addrExp r14{0} + 28 to local table
+in proc main adding addrExp r14{0} + 32 to local table
+in proc main adding addrExp r14{0} + 36 to local table
+in proc main adding addrExp r14{0} + 40 to local table
+in proc main adding addrExp r14{0} + 44 to local table
+in proc main adding addrExp r14{0} + 48 to local table
+in proc main adding addrExp r14{0} + 52 to local table
+in proc main adding addrExp r14{0} + 56 to local table
+in proc main adding addrExp r14{0} + 60 to local table
+in proc main adding addrExp r14{0} + 68 to local table
+in proc main adding addrExp r14{0} + 72 to local table
+in proc main adding addrExp r14{0} + 76 to local table
+in proc main adding addrExp r14{0} - 4 to local table
 TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array
-in proc main adding addrExp r28{0} - 32 to local table
-TYPE DIFFERENCE (could be OK): At address 0xffffffe0 existing type /*signed?*/int but added type union { void * x5; /*signed?*/int x6; }
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
-in proc main adding addrExp r28{0} - 8 to local table
-in proc main adding addrExp r28{0} - 32 to local table
-TYPE ERROR: at address 0xffffffe0, overlapping type double does not resolve to compound or array
-in proc main adding addrExp r28{0} - 36 to local table
-in proc main adding addrExp r28{0} - 40 to local table
 ### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure main ###
-in proc main adding addrExp r28{0} - 12 to local table
-could not set type for unknown parameter expression m[r28{0} + 4]
-could not set type for unknown parameter expression m[r28{0} + 8]
-could not set type for unknown parameter expression m[r28{0} + 12]
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add1 ###
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add2 ###
-### WARNING: iteration limit exceeded for dfaTypeAnalysis of procedure add3 ###
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add2
-potential param r28
-found new parameter r28
-potential param r37
-found new parameter r37
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add2
-potential param r28
-found new parameter r28
-potential param r37
-found new parameter r37
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param r36
-found new parameter r36
-potential param r35
-found new parameter r35
-potential param r34
-found new parameter r34
-potential param r33
-found new parameter r33
-potential param r32
-found new parameter r32
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add3
-potential param r28
-found new parameter r28
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 12]
-found new parameter m[r28{0} + 12]
-finding final parameters for add2
-potential param r28
-found new parameter r28
-potential param m[r28{0} + 8]
-found new parameter m[r28{0} + 8]
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-finding final parameters for add1
-potential param r28
-found new parameter r28
-potential param m[r28{0} + 4]
-found new parameter m[r28{0} + 4]
-local esp has type void * that doesn't agree with type of define void of a library, why?
+in proc main adding addrExp r14{0} - 4 to local table
+TYPE ERROR: at address 0xfffffffc, overlapping type __size32 does not resolve to compound or array

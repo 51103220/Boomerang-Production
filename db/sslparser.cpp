@@ -1593,13 +1593,12 @@ YYLABEL(yyreduce)
     {
       int i;
 
-      fprintf (stderr, "Reducing via rule %d (line %d), ",
+      fprintf (stderr, "Reducing via rule %d (line %d), \n",
 	       yyn, yyrline[yyn]);
-
       /* Print the symbols being reduced, and their result.  */
       for (i = yyprhs[yyn]; yyrhs[i] > 0; i++)
 	fprintf (stderr, "%s ", yytname[yyrhs[i]]);
-      fprintf (stderr, " -> %s\n", yytname[yyr1[yyn]]);
+      fprintf (stderr, "-> %s\n", yytname[yyr1[yyn]]);
     }
 #endif
 

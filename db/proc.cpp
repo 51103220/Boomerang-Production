@@ -585,9 +585,10 @@ void UserProc::setEntryBB() {
 	std::list<PBB>::iterator bbit;
 	PBB pBB = cfg->getFirstBB(bbit);		// Get an iterator to the first BB
 	// Usually, but not always, this will be the first BB, or at least in the first few
-	while (pBB && address != pBB->getLowAddr()) {
-		pBB = cfg->getNextBB(bbit);
-	}
+	if (!ASS_FILE)
+		while (pBB && address != pBB->getLowAddr()) {
+			pBB = cfg->getNextBB(bbit);
+		}
 	cfg->setEntryBB(pBB);
 }
 

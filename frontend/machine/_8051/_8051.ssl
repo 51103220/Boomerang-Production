@@ -3,10 +3,12 @@ MAX8BITS := 0xFF;
 ADDRESSBITS := 8;
 
 INTEGER
-[%r0, %r1, %r2, %r3, %r4, %r5, %r6, %r7, %a, %b][8] -> 0..9,
-[%c][8] -> 10,
+[%r0, %r1, %r2, %r3, %r4, %r5, %r6, %r7 ][8] -> 0..7,
+%a[8] -> 8,
+%b[8] -> 9,
+%c[8] -> 10,
 [%dptr][16] -> 11,#0..15
-[ %ab, %p0, %p1, %p2 , %p3, 
+[  %ab, %p0, %p1, %p2 , %p3, 
   %dpl, %dph, %pcon, %tcon, 
   %tmod, %tl0, %tl1, %th0, %th1, 
   %scon, %sbuf, %ie, %ip, %psw ][8] -> 12..30, #sfr 
@@ -64,16 +66,19 @@ INC_R6
 INC_R7
   *8* %r7 := %r7 + 1;
 
+INC_EXP exp
+  *8* exp := exp + 1;
+
 INC_RI0
   *32* tmp1 := zfill(8, 31, %r0)
   *8* tmpb := m[tmp1]{8}
-  *8* tmpb := tmpb - 1
+  *8* tmpb := tmpb + 1
   *8* m[tmp1] := tmpb;
 
 INC_RI1
   *32* tmp1 := zfill(8, 31, %r1)
   *8* tmpb := m[tmp1]{8}
-  *8* tmpb := tmpb - 1
+  *8* tmpb := tmpb + 1
   *8* m[tmp1] := tmpb;
 
 # 0x10
@@ -104,6 +109,8 @@ RRC_A
   *7* %a@[1:7] := %a@[0:6]
   *1* %a@[0:0] := bt;
 
+DEC_EXP exp
+  *8* exp := exp - 1;
 
 DEC_DIR  z32
   *8* m[z32] := m[z32]{8} - 1;
@@ -153,7 +160,7 @@ JB_DIR_IMM  z32, i32
   #*32* %pc := %pc +3
   #add_signed_pc(i32)
   #*1* %CF := [m[z32]{8}=1? 1 : 0];
-  *v* %flags := m[z32]{8}  ~= 1;
+  *v* %flags := z32{8}  ~= 1;
 
 
 AJMP_IMM i32
@@ -163,27 +170,30 @@ RET retaddr
   *32* retaddr := %sp
   *32* %pc := retaddr;
 
-RL_A
-  *1* bt := %a@[0:0]
-  *7* %a@[0:6] := %a@[1:7]
-  *1* %a@[7:7] := bt;
+RL_A exp
+  *1* tmpb := exp@[0:0]
+  *7* exp@[0:6] := exp@[1:7]
+  *1* exp@[7:7] := tmpb;
 
 
-ADD_A_IMM i32
-  *8* %a := %a + i32;
+ADD_A_IMM exp,i32
+  *8* exp := exp + i32;
 
-ADD_A_DIR  z32
-  *8* %a := %a + m[z32]{8};
+ADD_A_DIR  exp,z32
+  *8* exp := exp + m[z32]{8};
 
-ADD_A_RI0
+ADD_A_RI0 exp
   *32* tmp1 := zfill(8, 31, %r0)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a + tmpb;
+  *8* exp := exp + m[tmp1];
 
-ADD_A_RI1
+ADD_A_RI1 exp
   *32* tmp1 := zfill(8, 31, %r1)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a + tmpb;
+  *8* exp := exp + m[tmp1];
+
+ADD_A_EXP exp1, exp2
+  *8* exp1 := exp1 + exp2;
 
 ADD_A_R0
   *8* %a := %a + %r0;
@@ -215,7 +225,7 @@ JNB_DIR_IMM  z32, i32
   #*32* %pc := %pc +3
   #add_signed_pc(i32)
   #*32* %pc := [m[z32]=0? tmp5 : %pc];
-  *v* %flags := m[z32]{8}  ~= 0;
+  *v* %flags := z32{8}  ~= 0;
 # ACALL
 
 RETI retaddr
@@ -234,15 +244,18 @@ ADDC_A_IMM i32
 ADDC_A_DIR  z32
   *8* %a := %a + m[z32]{8};
 
-ADDC_A_RI0
+ADDC_A_RI0 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r0)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a + tmpb;
+  *8* exp1 := exp1 + exp2 + m[tmp1];
 
-ADDC_A_RI1
+ADDC_A_RI1 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r1)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a + tmpb;
+  *8* exp1 := exp1 + exp2 + m[tmp1];
+
+ADDC_A_EXP exp1, exp2,exp3
+  *8*  exp1 := exp1 + exp2 + exp3;
 
 ADDC_A_R0
   *8* %a := %a + %r0;
@@ -270,10 +283,52 @@ ADDC_A_R7
 
 # 0x40
 
-JC_IMM i32
-  *32* %pc := %pc + 2
-  add_signed_pc(i32)
-  *32* %pc := [%CF = 1 ? tmp5: %pc];
+JC_IMM exp
+  #*32* %pc := %pc + 2
+  #add_signed_pc(i32)
+  #*32* %pc := [%CF = 1 ? tmp5: %pc];
+  *v* %flags := exp ~= 1; 
+
+#### BITWISE #####
+ORL_EXP exp1, exp2
+  *8* exp1 := exp1 | exp2;
+
+ANL_EXP exp1, exp2
+  *8* exp1 := exp1 & exp2;
+
+XRL_EXP exp1, exp2
+  *8* exp1 := exp1 ^ exp2;
+
+ORL_EXP_RI0 exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp | tmpb;
+
+ORL_EXP_RI1 exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp | tmpb;
+
+ANL_EXP_RI0 exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp & tmpb;
+
+ANL_EXP_RI1 exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp & tmpb;
+
+XRL_EXP_RI0 exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp ^ tmpb;
+
+XRL_EXP_RI1 exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *8* tmpb := m[tmp1]{8}
+  *8* exp := exp ^ tmpb;
+## END ####
 
 AJMP_IMM i32
   *32* %pc := i32;
@@ -326,10 +381,12 @@ ORL_A_R7
 
 # 0x50
 
-JNC_IMM i32
-  *32* %pc := %pc + 2
-  add_signed_pc(i32)
-  *32* %pc := [%CF = 0 ? tmp5 : %pc];
+JNC_IMM exp
+  #*32* %pc := %pc + 2
+  #add_signed_pc(i32)
+  #*32* %pc := [%CF = 0 ? tmp5 : %pc];
+  *v* %flags := exp ~= 0 ;
+
 # ACALL
 
 ANL_DIR_A z32
@@ -380,10 +437,11 @@ ANL_A_RI1
 
 # 0x60
 
-JZ_IMM i32
-  *32* %pc := %pc + 2
-  add_signed_pc(i32)
-  *32* %pc := [(%a = 0) ? tmp5 : %pc];
+JZ_IMM exp
+  #*32* %pc := %pc + 2
+  #add_signed_pc(i32)
+  #*32* %pc := [(%a = 0) ? tmp5 : %pc];
+  *v* %flags := exp ~=0 ;
 AJMP_IMM i32
   *32* %pc := i32;
 
@@ -436,10 +494,11 @@ XRL_A_RI1
 
 # 0x70
 
-JNZ_IMM i32
-  *32* %pc := %pc + 2
-  add_signed_pc(i32)
-  *32* %pc := [(%a ~= 0) ? tmp5 : %pc];
+JNZ_IMM exp
+  #*32* %pc := %pc + 2
+  #add_signed_pc(i32)
+  #*32* %pc := [(%a ~= 0) ? tmp5 : %pc];
+  *v* %flags :=  exp = 0;
 
 # ACALL
 ORL_C_DIR  i32
@@ -457,7 +516,7 @@ MOV_A_IMM i32
   *8* %a := i32;
 
 MOV_R0_IMM i32
-  *8* %r0 := i32;
+  *8* r0 := i32;
 
 MOV_R1_IMM i32
   *8* %r1 := i32;
@@ -488,6 +547,13 @@ MOV_RI1_IMM i32
   *32* tmp1 := zfill(8, 31, %r1)
   *8* m[tmp1] := i32;
 
+MOV_RI0_EXP exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *8* m[tmp1] := exp;
+
+MOV_RI1_EXP exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *8* m[tmp1] := exp;
 
 # 0x80
 
@@ -508,24 +574,21 @@ MOVC_A_AaddPC
   *32* tmp1 := tmp1 + tmp2
   *8* %a := m[tmp1]{8};
 
-DIV_AB
-  *8* tmpb := %a
-  *8* %a := %a / %b
-  *8* %b := %a % %b;
+DIV_AB exp1, exp2
+  *8* tmpb := exp1
+  *8* exp1 := exp1 / exp2
+  *8* exp2 := exp1 % exp2;
 
 MOV_DIR_DIR  z32, rx32
   *8* m[z32] := m[rx32]{8};
 
-MOV_DIR_RI0 z32
+MOV_DIR_RI0 exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[tmp1] := m[z32]{8};
+  *8* m[tmp1] := exp{8};
 
-MOV_DIR_RI1 z32
+MOV_DIR_RI1 exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[tmp1] := m[z32]{8};
-
-MOV_DIR_RI1 z32
-  *8* m[z32] := %r1;
+  *8* m[tmp1] := exp{8};
 
 MOV_DIR_R0 z32
   *8* m[z32] := %r0;
@@ -555,8 +618,8 @@ MOV_DIR_R7 z32
   *8* m[z32] := %r7;
 
 # 0x90
-MOV_DPTR_ADDR16 i32
-  *16* %dptr := i32;
+MOV_DPTR_ADDR16 exp, i32
+  *16* exp := i32;
 
 # ACALL
 
@@ -569,6 +632,9 @@ MOVC_A_AADDDPTR
   *32* tmp1 := tmp1 + tmp2
   *8* %a := m[tmp1]{8};
 
+SUBB_A_EXP exp1, exp2
+  *8* exp1 := exp1 - exp2;
+  
 SUBB_A_IMM i32
   *8* %a := %a - i32;
 
@@ -599,15 +665,15 @@ SUBB_A_R6
 SUBB_A_R7
   *8* %a := %a - %r7;
 
-SUBB_A_RI0
+SUBB_A_RI0 exp
   *32* tmp1 := zfill(8, 31, %r0)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a - tmpb;
+  *8* exp := exp - m[tmp1];
 
 SUBB_A_RI1
   *32* tmp1 := zfill(8, 31, %r1)
   *8* tmpb := m[tmp1]{8}
-  *8* %a := %a - tmpb;
+  *8* exp := exp - m[tmp1];
 
 # 0xA0
 
@@ -623,8 +689,8 @@ MOV_C_DIR  z32
 INC_DPTR
   *16* %dptr := %dptr + 1;
 
-MUL_AB
-  *16* %a := %a * %b;
+MUL_AB exp1, exp2
+  *16* m[%ab] := exp1 * exp2;
 
 MOV_RI0_DIR  z32
   *32* tmp1 := zfill(8, 31, %r0)
@@ -669,8 +735,8 @@ ANL_C_CDI z32
 
 # ACALL
 
-CPL_DIR  z32
-  *1* m[z32] := 1 - m[z32]{1};
+CPL_DIR  exp
+  *1* exp := 1 - exp{1};
 
 CPL_C
   *1* %CF := 1 - %CF;
@@ -688,6 +754,21 @@ CJNE_A_DIR_IMM  z32, i32
   add_signed_pc(ix32)
   *32* %pc := [(%a = tmpb) ? %pc : tmp5]
   *1* %CF := [(%a < tmpb) ? 1 : 0];
+
+# DEDO CJNE
+
+CJNE_RI0 exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *v* %flags := m[tmp1] = exp;
+
+CJNE_RI1 exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *v* %flags := m[tmp1] = exp;
+
+CJNE_EXP exp1, exp2
+  *v* %flags := exp1 = exp2;
+
+# END CJNE
 
 CJNE_RI0_IMM_IMM i32, ix32
   *32* tmp1 := zfill(8, 31, %r0)
@@ -772,20 +853,25 @@ AJMP_IMM i32
   *32* %pc := i32;
 
 CLR_DIR z32
-  *8* m[z32] := 0;
+  *8* z32 := 0;
 
 #CLR_C
 #  *1* %CF := 0;
 
-#SWAP_A
-#  *4* bt4 := %a@[0:3]
-#  *4* %a@[0:3] := %a@[4:7]
-#  *4* %a@[4:7] := bt4;
+SWAP_A exp
+  *4* tmpb := exp@[0:3]
+  *4* exp@[0:3] := exp@[4:7]
+  *4* exp@[4:7] := tmpb;
 
 #XCH_A_R0
 #  *8* tmpb := %a
 #  *8* %a := %r0
 #  *8* %r0 := tmpb;
+
+XCH_EXP exp1, exp2
+  *8* tmpb := exp1
+  *8* exp1 := exp2
+  *8* exp2 := tmpb;
 
 XCH_A_R1
   *8* tmpb := %a
@@ -822,24 +908,28 @@ XCH_A_R7
   *8* %a := %r7
   *8* %r7 := tmpb;
 
-XCH_A_RI0
-  *32* tmp1 := zfill(8, 31, %a)
-  *8* %r0 := m[tmp1]{8};
+XCH_A_RI0 exp
+  *32* tmp1 := zfill(8, 31, %r0)
+  *8* tmpb := exp{8}
+  *8* exp := m[tmp1] 
+  *8* m[tmp1] := tmpb;
 
-XCH_A_RI1
-  *32* tmp1 := zfill(8, 31, %a)
-  *8* %r1 := m[tmp1]{8};
+XCH_A_RI1 exp
+  *32* tmp1 := zfill(8, 31, %r1)
+  *8* tmpb := exp{8}
+  *8* exp := m[tmp1] 
+  *8* m[tmp1] := tmpb;
 
 # 0xD0
 
-#POP_DIR  z32
-#*32* m[z32] := m[%sp]
-#*32* %sp := %sp - 1;
+POP_DIR  z32
+*32* %sp := %sp - 1
+*32* m[z32] := m[%sp];
 
 # ACALL_addr11
 
 SETB_DIR z32
-  *8* m[z32] := 1;
+  *8* z32 := 1 ;
 
 #SETB_C
 #  *1* %CF := 1;
@@ -853,6 +943,13 @@ DJNZ_DIR_IMM  z32, i32
   *8* m[z32] := m[z32]{8} - 1
   add_signed_pc(i32)
   *32* %pc := [(m[z32]{8} = 0) ? %pc : tmp5];
+DJNZ_EXP exp
+  *8* exp := exp - 1
+  *v* %flags := exp = 0;
+  
+DJNZ_EXP_LOOP exp
+  *8* exp := exp - 1
+  *v* %flags := exp ~= 0;
 
 XCHD_A_RI0
   *32* tmp1 := zfill(8, 31, %r0)
@@ -916,20 +1013,26 @@ DJNZ_R7_IMM i32
 
 # 0xE0
 
-MOVX_A_DPTRA
+MOVX_A_DPTRA exp
   *32* tmp1 := zfill(16, 31, %dptr)
-  *8* %a := m[tmp1]{8};
+  *8* exp := m[tmp1]{8};
 
-MOVX_A_RI0
+MOVX_A_RI0 exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* %a := m[tmp1]{8};
+  *8* exp := m[tmp1]{8};
 
-MOVX_A_RI1
+MOVX_A_RI1 exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* %a := m[tmp1]{8};
+  *8* exp := m[tmp1]{8};
 
 CLR_A
   *8* %a := 0;
+
+MOV_A_EXP z32
+  *8* %a := z32;
+
+MOV_EXP exp1, exp2
+  *8* exp1 := exp2;
 
 MOV_A_DIR  z32
   *8* %a := m[z32]{8};
@@ -958,45 +1061,47 @@ MOV_A_R6
 MOV_A_R7
   *8* %a := %r7;
 
-MOV_A_RI0
+MOV_A_RI0 exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* %a := m[tmp1];
+  *8* exp := m[tmp1];
 
-MOV_A_RI1
+MOV_A_RI1 exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* %a := m[tmp1];
+  *8* exp := m[tmp1];
 
 
 # 0xF0
 
-MOVX_DPTRA_A
+MOVX_DPTRA_A exp
   *32* tmp1 := zfill(16, 31, %dptr)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
 # ACALL
 
-MOVX_RI0_A
+MOVX_RI0_A exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
-MOVX_RI1_A
+MOVX_RI1_A exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
-MOVX_RI1_A
+MOVX_RI1_A exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
-CPL_A
-  *8* %a := 0 - %a;
+CPL_A exp
+  *8* exp := 0 - exp;
+CPL_BIT exp
+  *8* exp :=  1 - exp@[0:7];
 
-MOV_RI0_A
+MOV_RI0_A exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
-MOV_RI1_A
+MOV_RI1_A exp
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[tmp1] := %a;
+  *8* m[tmp1] := exp;
 
 MOV_R0_A
   *8* %r0 := %a;

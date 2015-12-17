@@ -29,10 +29,10 @@
 
 CC = gcc
 CXX = g++
-CFLAGS = -g -O2 -Wall
-CXXFLAGS = -g -O2 -Wall
+CFLAGS = -m32 -Wall
+CXXFLAGS = -m32 -Wall
 CPPFLAGS = -I$(top_srcdir)/include 
-LDFLAGS = 
+LDFLAGS = -m32
 
 FPIC =# -fPIC		# FIXME: is this needed by architectures other than x86?
 

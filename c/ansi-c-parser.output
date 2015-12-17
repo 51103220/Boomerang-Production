@@ -1,0 +1,2054 @@
+
+
+Terminals which are not used:
+
+   PREINCLUDE
+   PREDEFINE
+   PREIF
+   PREIFDEF
+   PREENDIF
+   PRELINE
+   STRING_LITERAL
+   SIZEOF
+   PTR_OP
+   INC_OP
+   DEC_OP
+   LEFT_OP
+   RIGHT_OP
+   LE_OP
+   GE_OP
+   EQ_OP
+   NE_OP
+   AND_OP
+   OR_OP
+   MUL_ASSIGN
+   DIV_ASSIGN
+   MOD_ASSIGN
+   ADD_ASSIGN
+   SUB_ASSIGN
+   LEFT_ASSIGN
+   RIGHT_ASSIGN
+   AND_ASSIGN
+   XOR_ASSIGN
+   OR_ASSIGN
+   TYPE_NAME
+   EXTERN
+   STATIC
+   AUTO
+   REGISTER
+   SIGNED
+   VOLATILE
+   UNION
+   ENUM
+   CASE
+   DEFAULT
+   IF
+   ELSE
+   SWITCH
+   WHILE
+   DO
+   FOR
+   GOTO
+   CONTINUE
+   BREAK
+   RETURN
+
+
+State 2 contains 11 shift/reduce conflicts.
+State 48 contains 2 shift/reduce conflicts.
+State 98 contains 2 shift/reduce conflicts.
+State 99 contains 2 shift/reduce conflicts.
+
+Grammar
+rule 1    translation_unit -> decls
+rule 2    decls -> decl decls
+rule 3    decls ->		/* empty */
+rule 4    decl -> type_decl
+rule 5    decl -> func_decl
+rule 6    decl -> symbol_decl
+rule 7    decl -> symbol_ref_decl
+rule 8    convention -> CDECL
+rule 9    convention -> PASCAL
+rule 10   convention -> THISCALL
+rule 11   num_list -> CONSTANT ',' num_list
+rule 12   num_list -> CONSTANT
+rule 13   num_list ->		/* empty */
+rule 14   param_list -> param_exp ',' param_list
+rule 15   param_list -> param_exp
+rule 16   param_list -> VOID
+rule 17   param_list ->		/* empty */
+rule 18   param_exp -> exp ':' param
+rule 19   param_exp -> param
+rule 20   exp -> REGOF CONSTANT ']'
+rule 21   exp -> MEMOF exp ']'
+rule 22   exp -> exp '+' exp
+rule 23   exp -> exp '-' exp
+rule 24   exp -> CONSTANT
+rule 25   optional_bound -> MAXBOUND IDENTIFIER ')'
+rule 26   optional_bound ->		/* empty */
+rule 27   param -> type_ident optional_bound
+rule 28   param -> type '(' '*' IDENTIFIER ')' '(' param_list ')'
+rule 29   param -> ELLIPSIS
+rule 30   type_decl -> TYPEDEF type_ident ';'
+rule 31   type_decl -> TYPEDEF type '(' '*' IDENTIFIER ')' '(' param_list ')' ';'
+rule 32   type_decl -> TYPEDEF type_ident '(' param_list ')' ';'
+rule 33   type_decl -> STRUCT IDENTIFIER '{' type_ident_list '}' ';'
+rule 34   func_decl -> signature ';'
+rule 35   func_decl -> signature PREFER type_ident '(' num_list ')' ';'
+rule 36   signature -> type_ident '(' param_list ')'
+rule 37   signature -> convention type_ident '(' param_list ')'
+rule 38   signature -> CUSTOM custom_options type_ident '(' param_list ')'
+rule 39   symbol_ref_decl -> SYMBOLREF CONSTANT IDENTIFIER ';'
+rule 40   symbol_decl -> CONSTANT type_ident ';'
+rule 41   symbol_decl -> CONSTANT symbol_mods signature ';'
+rule 42   symbol_mods -> NODECODE symbol_mods
+rule 43   symbol_mods -> INCOMPLETE symbol_mods
+rule 44   symbol_mods ->		/* empty */
+rule 45   custom_options -> exp ':'
+rule 46   custom_options -> WITHSTACK CONSTANT ')'
+rule 47   custom_options ->		/* empty */
+rule 48   array_modifier -> '[' CONSTANT ']'
+rule 49   array_modifier -> '[' ']'
+rule 50   array_modifier -> array_modifier '[' CONSTANT ']'
+rule 51   array_modifier -> array_modifier '[' ']'
+rule 52   type_ident -> type IDENTIFIER
+rule 53   type_ident -> type IDENTIFIER array_modifier
+rule 54   type_ident_list -> type_ident ';' type_ident_list
+rule 55   type_ident_list -> type_ident ';'
+rule 56   type -> CHAR
+rule 57   type -> SHORT
+rule 58   type -> INT
+rule 59   type -> UNSIGNED CHAR
+rule 60   type -> UNSIGNED SHORT
+rule 61   type -> UNSIGNED INT
+rule 62   type -> UNSIGNED LONG
+rule 63   type -> UNSIGNED
+rule 64   type -> LONG
+rule 65   type -> LONG LONG
+rule 66   type -> UNSIGNED LONG LONG
+rule 67   type -> FLOAT
+rule 68   type -> DOUBLE
+rule 69   type -> VOID
+rule 70   type -> type '*'
+rule 71   type -> type '[' CONSTANT ']'
+rule 72   type -> type '[' ']'
+rule 73   type -> IDENTIFIER
+rule 74   type -> CONST type
+rule 75   type -> STRUCT IDENTIFIER
+rule 76   type -> STRUCT '{' type_ident_list '}'
+
+Terminals, with rules where they appear
+
+$ (-1)
+'(' (40) 28 31 32 35 36 37 38
+')' (41) 25 28 31 32 35 36 37 38 46
+'*' (42) 28 31 70
+'+' (43) 22
+',' (44) 11 14
+'-' (45) 23
+':' (58) 18 45
+';' (59) 30 31 32 33 34 35 39 40 41 54 55
+'[' (91) 48 49 50 51 71 72
+']' (93) 20 21 48 49 50 51 71 72
+'{' (123) 33 76
+'}' (125) 33 76
+error (256)
+PREINCLUDE (258)
+PREDEFINE (259)
+PREIF (260)
+PREIFDEF (261)
+PREENDIF (262)
+PRELINE (263)
+IDENTIFIER (264) 25 28 31 33 39 52 53 73 75
+STRING_LITERAL (265)
+CONSTANT (266) 11 12 20 24 39 40 41 46 48 50 71
+SIZEOF (267)
+NODECODE (268) 42
+INCOMPLETE (269) 43
+SYMBOLREF (270) 39
+CDECL (271) 8
+PASCAL (272) 9
+THISCALL (273) 10
+REGOF (274) 20
+MEMOF (275) 21
+MAXBOUND (276) 25
+CUSTOM (277) 38
+PREFER (278) 35
+WITHSTACK (279) 46
+PTR_OP (280)
+INC_OP (281)
+DEC_OP (282)
+LEFT_OP (283)
+RIGHT_OP (284)
+LE_OP (285)
+GE_OP (286)
+EQ_OP (287)
+NE_OP (288)
+AND_OP (289)
+OR_OP (290)
+MUL_ASSIGN (291)
+DIV_ASSIGN (292)
+MOD_ASSIGN (293)
+ADD_ASSIGN (294)
+SUB_ASSIGN (295)
+LEFT_ASSIGN (296)
+RIGHT_ASSIGN (297)
+AND_ASSIGN (298)
+XOR_ASSIGN (299)
+OR_ASSIGN (300)
+TYPE_NAME (301)
+TYPEDEF (302) 30 31 32
+EXTERN (303)
+STATIC (304)
+AUTO (305)
+REGISTER (306)
+CHAR (307) 56 59
+SHORT (308) 57 60
+INT (309) 58 61
+LONG (310) 62 64 65 66
+SIGNED (311)
+UNSIGNED (312) 59 60 61 62 63 66
+FLOAT (313) 67
+DOUBLE (314) 68
+CONST (315) 74
+VOLATILE (316)
+VOID (317) 16 69
+STRUCT (318) 33 75 76
+UNION (319)
+ENUM (320)
+ELLIPSIS (321) 29
+CASE (322)
+DEFAULT (323)
+IF (324)
+ELSE (325)
+SWITCH (326)
+WHILE (327)
+DO (328)
+FOR (329)
+GOTO (330)
+CONTINUE (331)
+BREAK (332)
+RETURN (333)
+
+Nonterminals, with rules where they appear
+
+translation_unit (91)
+    on left: 1
+decls (92)
+    on left: 2 3, on right: 1 2
+decl (93)
+    on left: 4 5 6 7, on right: 2
+convention (94)
+    on left: 8 9 10, on right: 37
+num_list (95)
+    on left: 11 12 13, on right: 11 35
+param_list (96)
+    on left: 14 15 16 17, on right: 14 28 31 32 36 37 38
+param_exp (97)
+    on left: 18 19, on right: 14 15
+exp (98)
+    on left: 20 21 22 23 24, on right: 18 21 22 23 45
+optional_bound (99)
+    on left: 25 26, on right: 27
+param (100)
+    on left: 27 28 29, on right: 18 19
+type_decl (101)
+    on left: 30 31 32 33, on right: 4
+func_decl (102)
+    on left: 34 35, on right: 5
+signature (103)
+    on left: 36 37 38, on right: 34 35 41
+symbol_ref_decl (104)
+    on left: 39, on right: 7
+symbol_decl (105)
+    on left: 40 41, on right: 6
+symbol_mods (106)
+    on left: 42 43 44, on right: 41 42 43
+custom_options (107)
+    on left: 45 46 47, on right: 38
+array_modifier (108)
+    on left: 48 49 50 51, on right: 50 51 53
+type_ident (109)
+    on left: 52 53, on right: 27 30 32 35 36 37 38 40 54 55
+type_ident_list (110)
+    on left: 54 55, on right: 33 54 76
+type (111)
+    on left: 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
+    74 75 76, on right: 28 31 52 53 70 71 72 74
+
+
+state 0
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 2
+    SYMBOLREF	shift, and go to state 3
+    CDECL	shift, and go to state 4
+    PASCAL	shift, and go to state 5
+    THISCALL	shift, and go to state 6
+    CUSTOM	shift, and go to state 7
+    TYPEDEF	shift, and go to state 8
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 18
+
+    $default	reduce using rule 3 (decls)
+
+    translation_unit	go to state 152
+    decls	go to state 19
+    decl	go to state 20
+    convention	go to state 21
+    type_decl	go to state 22
+    func_decl	go to state 23
+    signature	go to state 24
+    symbol_ref_decl	go to state 25
+    symbol_decl	go to state 26
+    type_ident	go to state 27
+    type	go to state 28
+
+
+
+state 1
+
+    type  ->  IDENTIFIER .   (rule 73)
+
+    $default	reduce using rule 73 (type)
+
+
+
+state 2
+
+    symbol_decl  ->  CONSTANT . type_ident ';'   (rule 40)
+    symbol_decl  ->  CONSTANT . symbol_mods signature ';'   (rule 41)
+
+    IDENTIFIER	shift, and go to state 1
+    NODECODE	shift, and go to state 29
+    INCOMPLETE	shift, and go to state 30
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    IDENTIFIER	[reduce using rule 44 (symbol_mods)]
+    CHAR	[reduce using rule 44 (symbol_mods)]
+    SHORT	[reduce using rule 44 (symbol_mods)]
+    INT 	[reduce using rule 44 (symbol_mods)]
+    LONG	[reduce using rule 44 (symbol_mods)]
+    UNSIGNED	[reduce using rule 44 (symbol_mods)]
+    FLOAT	[reduce using rule 44 (symbol_mods)]
+    DOUBLE	[reduce using rule 44 (symbol_mods)]
+    CONST	[reduce using rule 44 (symbol_mods)]
+    VOID	[reduce using rule 44 (symbol_mods)]
+    STRUCT	[reduce using rule 44 (symbol_mods)]
+    $default	reduce using rule 44 (symbol_mods)
+
+    symbol_mods	go to state 32
+    type_ident	go to state 33
+    type	go to state 28
+
+
+
+state 3
+
+    symbol_ref_decl  ->  SYMBOLREF . CONSTANT IDENTIFIER ';'   (rule 39)
+
+    CONSTANT	shift, and go to state 34
+
+
+
+state 4
+
+    convention  ->  CDECL .   (rule 8)
+
+    $default	reduce using rule 8 (convention)
+
+
+
+state 5
+
+    convention  ->  PASCAL .   (rule 9)
+
+    $default	reduce using rule 9 (convention)
+
+
+
+state 6
+
+    convention  ->  THISCALL .   (rule 10)
+
+    $default	reduce using rule 10 (convention)
+
+
+
+state 7
+
+    signature  ->  CUSTOM . custom_options type_ident '(' param_list ')'   (rule 38)
+
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    WITHSTACK	shift, and go to state 38
+
+    $default	reduce using rule 47 (custom_options)
+
+    exp 	go to state 39
+    custom_options	go to state 40
+
+
+
+state 8
+
+    type_decl  ->  TYPEDEF . type_ident ';'   (rule 30)
+    type_decl  ->  TYPEDEF . type '(' '*' IDENTIFIER ')' '(' param_list ')' ';'   (rule 31)
+    type_decl  ->  TYPEDEF . type_ident '(' param_list ')' ';'   (rule 32)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 41
+    type	go to state 42
+
+
+
+state 9
+
+    type  ->  CHAR .   (rule 56)
+
+    $default	reduce using rule 56 (type)
+
+
+
+state 10
+
+    type  ->  SHORT .   (rule 57)
+
+    $default	reduce using rule 57 (type)
+
+
+
+state 11
+
+    type  ->  INT .   (rule 58)
+
+    $default	reduce using rule 58 (type)
+
+
+
+state 12
+
+    type  ->  LONG .   (rule 64)
+    type  ->  LONG . LONG   (rule 65)
+
+    LONG	shift, and go to state 43
+
+    $default	reduce using rule 64 (type)
+
+
+
+state 13
+
+    type  ->  UNSIGNED . CHAR   (rule 59)
+    type  ->  UNSIGNED . SHORT   (rule 60)
+    type  ->  UNSIGNED . INT   (rule 61)
+    type  ->  UNSIGNED . LONG   (rule 62)
+    type  ->  UNSIGNED .   (rule 63)
+    type  ->  UNSIGNED . LONG LONG   (rule 66)
+
+    CHAR	shift, and go to state 44
+    SHORT	shift, and go to state 45
+    INT 	shift, and go to state 46
+    LONG	shift, and go to state 47
+
+    $default	reduce using rule 63 (type)
+
+
+
+state 14
+
+    type  ->  FLOAT .   (rule 67)
+
+    $default	reduce using rule 67 (type)
+
+
+
+state 15
+
+    type  ->  DOUBLE .   (rule 68)
+
+    $default	reduce using rule 68 (type)
+
+
+
+state 16
+
+    type  ->  CONST . type   (rule 74)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type	go to state 48
+
+
+
+state 17
+
+    type  ->  VOID .   (rule 69)
+
+    $default	reduce using rule 69 (type)
+
+
+
+state 18
+
+    type_decl  ->  STRUCT . IDENTIFIER '{' type_ident_list '}' ';'   (rule 33)
+    type  ->  STRUCT . IDENTIFIER   (rule 75)
+    type  ->  STRUCT . '{' type_ident_list '}'   (rule 76)
+
+    IDENTIFIER	shift, and go to state 49
+    '{' 	shift, and go to state 50
+
+
+
+state 19
+
+    translation_unit  ->  decls .   (rule 1)
+
+    $default	reduce using rule 1 (translation_unit)
+
+
+
+state 20
+
+    decls  ->  decl . decls   (rule 2)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 2
+    SYMBOLREF	shift, and go to state 3
+    CDECL	shift, and go to state 4
+    PASCAL	shift, and go to state 5
+    THISCALL	shift, and go to state 6
+    CUSTOM	shift, and go to state 7
+    TYPEDEF	shift, and go to state 8
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 18
+
+    $default	reduce using rule 3 (decls)
+
+    decls	go to state 51
+    decl	go to state 20
+    convention	go to state 21
+    type_decl	go to state 22
+    func_decl	go to state 23
+    signature	go to state 24
+    symbol_ref_decl	go to state 25
+    symbol_decl	go to state 26
+    type_ident	go to state 27
+    type	go to state 28
+
+
+
+state 21
+
+    signature  ->  convention . type_ident '(' param_list ')'   (rule 37)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 52
+    type	go to state 28
+
+
+
+state 22
+
+    decl  ->  type_decl .   (rule 4)
+
+    $default	reduce using rule 4 (decl)
+
+
+
+state 23
+
+    decl  ->  func_decl .   (rule 5)
+
+    $default	reduce using rule 5 (decl)
+
+
+
+state 24
+
+    func_decl  ->  signature . ';'   (rule 34)
+    func_decl  ->  signature . PREFER type_ident '(' num_list ')' ';'   (rule 35)
+
+    PREFER	shift, and go to state 53
+    ';' 	shift, and go to state 54
+
+
+
+state 25
+
+    decl  ->  symbol_ref_decl .   (rule 7)
+
+    $default	reduce using rule 7 (decl)
+
+
+
+state 26
+
+    decl  ->  symbol_decl .   (rule 6)
+
+    $default	reduce using rule 6 (decl)
+
+
+
+state 27
+
+    signature  ->  type_ident . '(' param_list ')'   (rule 36)
+
+    '(' 	shift, and go to state 55
+
+
+
+state 28
+
+    type_ident  ->  type . IDENTIFIER   (rule 52)
+    type_ident  ->  type . IDENTIFIER array_modifier   (rule 53)
+    type  ->  type . '*'   (rule 70)
+    type  ->  type . '[' CONSTANT ']'   (rule 71)
+    type  ->  type . '[' ']'   (rule 72)
+
+    IDENTIFIER	shift, and go to state 56
+    '*' 	shift, and go to state 57
+    '[' 	shift, and go to state 58
+
+
+
+state 29
+
+    symbol_mods  ->  NODECODE . symbol_mods   (rule 42)
+
+    NODECODE	shift, and go to state 29
+    INCOMPLETE	shift, and go to state 30
+
+    $default	reduce using rule 44 (symbol_mods)
+
+    symbol_mods	go to state 59
+
+
+
+state 30
+
+    symbol_mods  ->  INCOMPLETE . symbol_mods   (rule 43)
+
+    NODECODE	shift, and go to state 29
+    INCOMPLETE	shift, and go to state 30
+
+    $default	reduce using rule 44 (symbol_mods)
+
+    symbol_mods	go to state 60
+
+
+
+state 31
+
+    type  ->  STRUCT . IDENTIFIER   (rule 75)
+    type  ->  STRUCT . '{' type_ident_list '}'   (rule 76)
+
+    IDENTIFIER	shift, and go to state 61
+    '{' 	shift, and go to state 50
+
+
+
+state 32
+
+    symbol_decl  ->  CONSTANT symbol_mods . signature ';'   (rule 41)
+
+    IDENTIFIER	shift, and go to state 1
+    CDECL	shift, and go to state 4
+    PASCAL	shift, and go to state 5
+    THISCALL	shift, and go to state 6
+    CUSTOM	shift, and go to state 7
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    convention	go to state 21
+    signature	go to state 62
+    type_ident	go to state 27
+    type	go to state 28
+
+
+
+state 33
+
+    symbol_decl  ->  CONSTANT type_ident . ';'   (rule 40)
+
+    ';' 	shift, and go to state 63
+
+
+
+state 34
+
+    symbol_ref_decl  ->  SYMBOLREF CONSTANT . IDENTIFIER ';'   (rule 39)
+
+    IDENTIFIER	shift, and go to state 64
+
+
+
+state 35
+
+    exp  ->  CONSTANT .   (rule 24)
+
+    $default	reduce using rule 24 (exp)
+
+
+
+state 36
+
+    exp  ->  REGOF . CONSTANT ']'   (rule 20)
+
+    CONSTANT	shift, and go to state 65
+
+
+
+state 37
+
+    exp  ->  MEMOF . exp ']'   (rule 21)
+
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+
+    exp 	go to state 66
+
+
+
+state 38
+
+    custom_options  ->  WITHSTACK . CONSTANT ')'   (rule 46)
+
+    CONSTANT	shift, and go to state 67
+
+
+
+state 39
+
+    exp  ->  exp . '+' exp   (rule 22)
+    exp  ->  exp . '-' exp   (rule 23)
+    custom_options  ->  exp . ':'   (rule 45)
+
+    ':' 	shift, and go to state 68
+    '+' 	shift, and go to state 69
+    '-' 	shift, and go to state 70
+
+
+
+state 40
+
+    signature  ->  CUSTOM custom_options . type_ident '(' param_list ')'   (rule 38)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 71
+    type	go to state 28
+
+
+
+state 41
+
+    type_decl  ->  TYPEDEF type_ident . ';'   (rule 30)
+    type_decl  ->  TYPEDEF type_ident . '(' param_list ')' ';'   (rule 32)
+
+    '(' 	shift, and go to state 72
+    ';' 	shift, and go to state 73
+
+
+
+state 42
+
+    type_decl  ->  TYPEDEF type . '(' '*' IDENTIFIER ')' '(' param_list ')' ';'   (rule 31)
+    type_ident  ->  type . IDENTIFIER   (rule 52)
+    type_ident  ->  type . IDENTIFIER array_modifier   (rule 53)
+    type  ->  type . '*'   (rule 70)
+    type  ->  type . '[' CONSTANT ']'   (rule 71)
+    type  ->  type . '[' ']'   (rule 72)
+
+    IDENTIFIER	shift, and go to state 56
+    '(' 	shift, and go to state 74
+    '*' 	shift, and go to state 57
+    '[' 	shift, and go to state 58
+
+
+
+state 43
+
+    type  ->  LONG LONG .   (rule 65)
+
+    $default	reduce using rule 65 (type)
+
+
+
+state 44
+
+    type  ->  UNSIGNED CHAR .   (rule 59)
+
+    $default	reduce using rule 59 (type)
+
+
+
+state 45
+
+    type  ->  UNSIGNED SHORT .   (rule 60)
+
+    $default	reduce using rule 60 (type)
+
+
+
+state 46
+
+    type  ->  UNSIGNED INT .   (rule 61)
+
+    $default	reduce using rule 61 (type)
+
+
+
+state 47
+
+    type  ->  UNSIGNED LONG .   (rule 62)
+    type  ->  UNSIGNED LONG . LONG   (rule 66)
+
+    LONG	shift, and go to state 75
+
+    $default	reduce using rule 62 (type)
+
+
+
+state 48
+
+    type  ->  type . '*'   (rule 70)
+    type  ->  type . '[' CONSTANT ']'   (rule 71)
+    type  ->  type . '[' ']'   (rule 72)
+    type  ->  CONST type .   (rule 74)
+
+    '*' 	shift, and go to state 57
+    '[' 	shift, and go to state 58
+
+    '*' 	[reduce using rule 74 (type)]
+    '[' 	[reduce using rule 74 (type)]
+    $default	reduce using rule 74 (type)
+
+
+
+state 49
+
+    type_decl  ->  STRUCT IDENTIFIER . '{' type_ident_list '}' ';'   (rule 33)
+    type  ->  STRUCT IDENTIFIER .   (rule 75)
+
+    '{' 	shift, and go to state 76
+
+    $default	reduce using rule 75 (type)
+
+
+
+state 50
+
+    type  ->  STRUCT '{' . type_ident_list '}'   (rule 76)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 77
+    type_ident_list	go to state 78
+    type	go to state 28
+
+
+
+state 51
+
+    decls  ->  decl decls .   (rule 2)
+
+    $default	reduce using rule 2 (decls)
+
+
+
+state 52
+
+    signature  ->  convention type_ident . '(' param_list ')'   (rule 37)
+
+    '(' 	shift, and go to state 79
+
+
+
+state 53
+
+    func_decl  ->  signature PREFER . type_ident '(' num_list ')' ';'   (rule 35)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 80
+    type	go to state 28
+
+
+
+state 54
+
+    func_decl  ->  signature ';' .   (rule 34)
+
+    $default	reduce using rule 34 (func_decl)
+
+
+
+state 55
+
+    signature  ->  type_ident '(' . param_list ')'   (rule 36)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 83
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 56
+
+    type_ident  ->  type IDENTIFIER .   (rule 52)
+    type_ident  ->  type IDENTIFIER . array_modifier   (rule 53)
+
+    '[' 	shift, and go to state 89
+
+    $default	reduce using rule 52 (type_ident)
+
+    array_modifier	go to state 90
+
+
+
+state 57
+
+    type  ->  type '*' .   (rule 70)
+
+    $default	reduce using rule 70 (type)
+
+
+
+state 58
+
+    type  ->  type '[' . CONSTANT ']'   (rule 71)
+    type  ->  type '[' . ']'   (rule 72)
+
+    CONSTANT	shift, and go to state 91
+    ']' 	shift, and go to state 92
+
+
+
+state 59
+
+    symbol_mods  ->  NODECODE symbol_mods .   (rule 42)
+
+    $default	reduce using rule 42 (symbol_mods)
+
+
+
+state 60
+
+    symbol_mods  ->  INCOMPLETE symbol_mods .   (rule 43)
+
+    $default	reduce using rule 43 (symbol_mods)
+
+
+
+state 61
+
+    type  ->  STRUCT IDENTIFIER .   (rule 75)
+
+    $default	reduce using rule 75 (type)
+
+
+
+state 62
+
+    symbol_decl  ->  CONSTANT symbol_mods signature . ';'   (rule 41)
+
+    ';' 	shift, and go to state 93
+
+
+
+state 63
+
+    symbol_decl  ->  CONSTANT type_ident ';' .   (rule 40)
+
+    $default	reduce using rule 40 (symbol_decl)
+
+
+
+state 64
+
+    symbol_ref_decl  ->  SYMBOLREF CONSTANT IDENTIFIER . ';'   (rule 39)
+
+    ';' 	shift, and go to state 94
+
+
+
+state 65
+
+    exp  ->  REGOF CONSTANT . ']'   (rule 20)
+
+    ']' 	shift, and go to state 95
+
+
+
+state 66
+
+    exp  ->  MEMOF exp . ']'   (rule 21)
+    exp  ->  exp . '+' exp   (rule 22)
+    exp  ->  exp . '-' exp   (rule 23)
+
+    ']' 	shift, and go to state 96
+    '+' 	shift, and go to state 69
+    '-' 	shift, and go to state 70
+
+
+
+state 67
+
+    custom_options  ->  WITHSTACK CONSTANT . ')'   (rule 46)
+
+    ')' 	shift, and go to state 97
+
+
+
+state 68
+
+    custom_options  ->  exp ':' .   (rule 45)
+
+    $default	reduce using rule 45 (custom_options)
+
+
+
+state 69
+
+    exp  ->  exp '+' . exp   (rule 22)
+
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+
+    exp 	go to state 98
+
+
+
+state 70
+
+    exp  ->  exp '-' . exp   (rule 23)
+
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+
+    exp 	go to state 99
+
+
+
+state 71
+
+    signature  ->  CUSTOM custom_options type_ident . '(' param_list ')'   (rule 38)
+
+    '(' 	shift, and go to state 100
+
+
+
+state 72
+
+    type_decl  ->  TYPEDEF type_ident '(' . param_list ')' ';'   (rule 32)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 101
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 73
+
+    type_decl  ->  TYPEDEF type_ident ';' .   (rule 30)
+
+    $default	reduce using rule 30 (type_decl)
+
+
+
+state 74
+
+    type_decl  ->  TYPEDEF type '(' . '*' IDENTIFIER ')' '(' param_list ')' ';'   (rule 31)
+
+    '*' 	shift, and go to state 102
+
+
+
+state 75
+
+    type  ->  UNSIGNED LONG LONG .   (rule 66)
+
+    $default	reduce using rule 66 (type)
+
+
+
+state 76
+
+    type_decl  ->  STRUCT IDENTIFIER '{' . type_ident_list '}' ';'   (rule 33)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    type_ident	go to state 77
+    type_ident_list	go to state 103
+    type	go to state 28
+
+
+
+state 77
+
+    type_ident_list  ->  type_ident . ';' type_ident_list   (rule 54)
+    type_ident_list  ->  type_ident . ';'   (rule 55)
+
+    ';' 	shift, and go to state 104
+
+
+
+state 78
+
+    type  ->  STRUCT '{' type_ident_list . '}'   (rule 76)
+
+    '}' 	shift, and go to state 105
+
+
+
+state 79
+
+    signature  ->  convention type_ident '(' . param_list ')'   (rule 37)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 106
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 80
+
+    func_decl  ->  signature PREFER type_ident . '(' num_list ')' ';'   (rule 35)
+
+    '(' 	shift, and go to state 107
+
+
+
+state 81
+
+    param_list  ->  VOID .   (rule 16)
+    type  ->  VOID .   (rule 69)
+
+    $default	reduce using rule 69 (type)
+
+
+
+state 82
+
+    param  ->  ELLIPSIS .   (rule 29)
+
+    $default	reduce using rule 29 (param)
+
+
+
+state 83
+
+    signature  ->  type_ident '(' param_list . ')'   (rule 36)
+
+    ')' 	shift, and go to state 108
+
+
+
+state 84
+
+    param_list  ->  param_exp . ',' param_list   (rule 14)
+    param_list  ->  param_exp .   (rule 15)
+
+    ',' 	shift, and go to state 109
+
+    $default	reduce using rule 15 (param_list)
+
+
+
+state 85
+
+    param_exp  ->  exp . ':' param   (rule 18)
+    exp  ->  exp . '+' exp   (rule 22)
+    exp  ->  exp . '-' exp   (rule 23)
+
+    ':' 	shift, and go to state 110
+    '+' 	shift, and go to state 69
+    '-' 	shift, and go to state 70
+
+
+
+state 86
+
+    param_exp  ->  param .   (rule 19)
+
+    $default	reduce using rule 19 (param_exp)
+
+
+
+state 87
+
+    param  ->  type_ident . optional_bound   (rule 27)
+
+    MAXBOUND	shift, and go to state 111
+
+    $default	reduce using rule 26 (optional_bound)
+
+    optional_bound	go to state 112
+
+
+
+state 88
+
+    param  ->  type . '(' '*' IDENTIFIER ')' '(' param_list ')'   (rule 28)
+    type_ident  ->  type . IDENTIFIER   (rule 52)
+    type_ident  ->  type . IDENTIFIER array_modifier   (rule 53)
+    type  ->  type . '*'   (rule 70)
+    type  ->  type . '[' CONSTANT ']'   (rule 71)
+    type  ->  type . '[' ']'   (rule 72)
+
+    IDENTIFIER	shift, and go to state 56
+    '(' 	shift, and go to state 113
+    '*' 	shift, and go to state 57
+    '[' 	shift, and go to state 58
+
+
+
+state 89
+
+    array_modifier  ->  '[' . CONSTANT ']'   (rule 48)
+    array_modifier  ->  '[' . ']'   (rule 49)
+
+    CONSTANT	shift, and go to state 114
+    ']' 	shift, and go to state 115
+
+
+
+state 90
+
+    array_modifier  ->  array_modifier . '[' CONSTANT ']'   (rule 50)
+    array_modifier  ->  array_modifier . '[' ']'   (rule 51)
+    type_ident  ->  type IDENTIFIER array_modifier .   (rule 53)
+
+    '[' 	shift, and go to state 116
+
+    $default	reduce using rule 53 (type_ident)
+
+
+
+state 91
+
+    type  ->  type '[' CONSTANT . ']'   (rule 71)
+
+    ']' 	shift, and go to state 117
+
+
+
+state 92
+
+    type  ->  type '[' ']' .   (rule 72)
+
+    $default	reduce using rule 72 (type)
+
+
+
+state 93
+
+    symbol_decl  ->  CONSTANT symbol_mods signature ';' .   (rule 41)
+
+    $default	reduce using rule 41 (symbol_decl)
+
+
+
+state 94
+
+    symbol_ref_decl  ->  SYMBOLREF CONSTANT IDENTIFIER ';' .   (rule 39)
+
+    $default	reduce using rule 39 (symbol_ref_decl)
+
+
+
+state 95
+
+    exp  ->  REGOF CONSTANT ']' .   (rule 20)
+
+    $default	reduce using rule 20 (exp)
+
+
+
+state 96
+
+    exp  ->  MEMOF exp ']' .   (rule 21)
+
+    $default	reduce using rule 21 (exp)
+
+
+
+state 97
+
+    custom_options  ->  WITHSTACK CONSTANT ')' .   (rule 46)
+
+    $default	reduce using rule 46 (custom_options)
+
+
+
+state 98
+
+    exp  ->  exp . '+' exp   (rule 22)
+    exp  ->  exp '+' exp .   (rule 22)
+    exp  ->  exp . '-' exp   (rule 23)
+
+    '+' 	shift, and go to state 69
+    '-' 	shift, and go to state 70
+
+    '+' 	[reduce using rule 22 (exp)]
+    '-' 	[reduce using rule 22 (exp)]
+    $default	reduce using rule 22 (exp)
+
+
+
+state 99
+
+    exp  ->  exp . '+' exp   (rule 22)
+    exp  ->  exp . '-' exp   (rule 23)
+    exp  ->  exp '-' exp .   (rule 23)
+
+    '+' 	shift, and go to state 69
+    '-' 	shift, and go to state 70
+
+    '+' 	[reduce using rule 23 (exp)]
+    '-' 	[reduce using rule 23 (exp)]
+    $default	reduce using rule 23 (exp)
+
+
+
+state 100
+
+    signature  ->  CUSTOM custom_options type_ident '(' . param_list ')'   (rule 38)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 118
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 101
+
+    type_decl  ->  TYPEDEF type_ident '(' param_list . ')' ';'   (rule 32)
+
+    ')' 	shift, and go to state 119
+
+
+
+state 102
+
+    type_decl  ->  TYPEDEF type '(' '*' . IDENTIFIER ')' '(' param_list ')' ';'   (rule 31)
+
+    IDENTIFIER	shift, and go to state 120
+
+
+
+state 103
+
+    type_decl  ->  STRUCT IDENTIFIER '{' type_ident_list . '}' ';'   (rule 33)
+
+    '}' 	shift, and go to state 121
+
+
+
+state 104
+
+    type_ident_list  ->  type_ident ';' . type_ident_list   (rule 54)
+    type_ident_list  ->  type_ident ';' .   (rule 55)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+
+    $default	reduce using rule 55 (type_ident_list)
+
+    type_ident	go to state 77
+    type_ident_list	go to state 122
+    type	go to state 28
+
+
+
+state 105
+
+    type  ->  STRUCT '{' type_ident_list '}' .   (rule 76)
+
+    $default	reduce using rule 76 (type)
+
+
+
+state 106
+
+    signature  ->  convention type_ident '(' param_list . ')'   (rule 37)
+
+    ')' 	shift, and go to state 123
+
+
+
+state 107
+
+    func_decl  ->  signature PREFER type_ident '(' . num_list ')' ';'   (rule 35)
+
+    CONSTANT	shift, and go to state 124
+
+    $default	reduce using rule 13 (num_list)
+
+    num_list	go to state 125
+
+
+
+state 108
+
+    signature  ->  type_ident '(' param_list ')' .   (rule 36)
+
+    $default	reduce using rule 36 (signature)
+
+
+
+state 109
+
+    param_list  ->  param_exp ',' . param_list   (rule 14)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 126
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 110
+
+    param_exp  ->  exp ':' . param   (rule 18)
+
+    IDENTIFIER	shift, and go to state 1
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 17
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    param	go to state 127
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 111
+
+    optional_bound  ->  MAXBOUND . IDENTIFIER ')'   (rule 25)
+
+    IDENTIFIER	shift, and go to state 128
+
+
+
+state 112
+
+    param  ->  type_ident optional_bound .   (rule 27)
+
+    $default	reduce using rule 27 (param)
+
+
+
+state 113
+
+    param  ->  type '(' . '*' IDENTIFIER ')' '(' param_list ')'   (rule 28)
+
+    '*' 	shift, and go to state 129
+
+
+
+state 114
+
+    array_modifier  ->  '[' CONSTANT . ']'   (rule 48)
+
+    ']' 	shift, and go to state 130
+
+
+
+state 115
+
+    array_modifier  ->  '[' ']' .   (rule 49)
+
+    $default	reduce using rule 49 (array_modifier)
+
+
+
+state 116
+
+    array_modifier  ->  array_modifier '[' . CONSTANT ']'   (rule 50)
+    array_modifier  ->  array_modifier '[' . ']'   (rule 51)
+
+    CONSTANT	shift, and go to state 131
+    ']' 	shift, and go to state 132
+
+
+
+state 117
+
+    type  ->  type '[' CONSTANT ']' .   (rule 71)
+
+    $default	reduce using rule 71 (type)
+
+
+
+state 118
+
+    signature  ->  CUSTOM custom_options type_ident '(' param_list . ')'   (rule 38)
+
+    ')' 	shift, and go to state 133
+
+
+
+state 119
+
+    type_decl  ->  TYPEDEF type_ident '(' param_list ')' . ';'   (rule 32)
+
+    ';' 	shift, and go to state 134
+
+
+
+state 120
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER . ')' '(' param_list ')' ';'   (rule 31)
+
+    ')' 	shift, and go to state 135
+
+
+
+state 121
+
+    type_decl  ->  STRUCT IDENTIFIER '{' type_ident_list '}' . ';'   (rule 33)
+
+    ';' 	shift, and go to state 136
+
+
+
+state 122
+
+    type_ident_list  ->  type_ident ';' type_ident_list .   (rule 54)
+
+    $default	reduce using rule 54 (type_ident_list)
+
+
+
+state 123
+
+    signature  ->  convention type_ident '(' param_list ')' .   (rule 37)
+
+    $default	reduce using rule 37 (signature)
+
+
+
+state 124
+
+    num_list  ->  CONSTANT . ',' num_list   (rule 11)
+    num_list  ->  CONSTANT .   (rule 12)
+
+    ',' 	shift, and go to state 137
+
+    $default	reduce using rule 12 (num_list)
+
+
+
+state 125
+
+    func_decl  ->  signature PREFER type_ident '(' num_list . ')' ';'   (rule 35)
+
+    ')' 	shift, and go to state 138
+
+
+
+state 126
+
+    param_list  ->  param_exp ',' param_list .   (rule 14)
+
+    $default	reduce using rule 14 (param_list)
+
+
+
+state 127
+
+    param_exp  ->  exp ':' param .   (rule 18)
+
+    $default	reduce using rule 18 (param_exp)
+
+
+
+state 128
+
+    optional_bound  ->  MAXBOUND IDENTIFIER . ')'   (rule 25)
+
+    ')' 	shift, and go to state 139
+
+
+
+state 129
+
+    param  ->  type '(' '*' . IDENTIFIER ')' '(' param_list ')'   (rule 28)
+
+    IDENTIFIER	shift, and go to state 140
+
+
+
+state 130
+
+    array_modifier  ->  '[' CONSTANT ']' .   (rule 48)
+
+    $default	reduce using rule 48 (array_modifier)
+
+
+
+state 131
+
+    array_modifier  ->  array_modifier '[' CONSTANT . ']'   (rule 50)
+
+    ']' 	shift, and go to state 141
+
+
+
+state 132
+
+    array_modifier  ->  array_modifier '[' ']' .   (rule 51)
+
+    $default	reduce using rule 51 (array_modifier)
+
+
+
+state 133
+
+    signature  ->  CUSTOM custom_options type_ident '(' param_list ')' .   (rule 38)
+
+    $default	reduce using rule 38 (signature)
+
+
+
+state 134
+
+    type_decl  ->  TYPEDEF type_ident '(' param_list ')' ';' .   (rule 32)
+
+    $default	reduce using rule 32 (type_decl)
+
+
+
+state 135
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER ')' . '(' param_list ')' ';'   (rule 31)
+
+    '(' 	shift, and go to state 142
+
+
+
+state 136
+
+    type_decl  ->  STRUCT IDENTIFIER '{' type_ident_list '}' ';' .   (rule 33)
+
+    $default	reduce using rule 33 (type_decl)
+
+
+
+state 137
+
+    num_list  ->  CONSTANT ',' . num_list   (rule 11)
+
+    CONSTANT	shift, and go to state 124
+
+    $default	reduce using rule 13 (num_list)
+
+    num_list	go to state 143
+
+
+
+state 138
+
+    func_decl  ->  signature PREFER type_ident '(' num_list ')' . ';'   (rule 35)
+
+    ';' 	shift, and go to state 144
+
+
+
+state 139
+
+    optional_bound  ->  MAXBOUND IDENTIFIER ')' .   (rule 25)
+
+    $default	reduce using rule 25 (optional_bound)
+
+
+
+state 140
+
+    param  ->  type '(' '*' IDENTIFIER . ')' '(' param_list ')'   (rule 28)
+
+    ')' 	shift, and go to state 145
+
+
+
+state 141
+
+    array_modifier  ->  array_modifier '[' CONSTANT ']' .   (rule 50)
+
+    $default	reduce using rule 50 (array_modifier)
+
+
+
+state 142
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER ')' '(' . param_list ')' ';'   (rule 31)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 146
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 143
+
+    num_list  ->  CONSTANT ',' num_list .   (rule 11)
+
+    $default	reduce using rule 11 (num_list)
+
+
+
+state 144
+
+    func_decl  ->  signature PREFER type_ident '(' num_list ')' ';' .   (rule 35)
+
+    $default	reduce using rule 35 (func_decl)
+
+
+
+state 145
+
+    param  ->  type '(' '*' IDENTIFIER ')' . '(' param_list ')'   (rule 28)
+
+    '(' 	shift, and go to state 147
+
+
+
+state 146
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER ')' '(' param_list . ')' ';'   (rule 31)
+
+    ')' 	shift, and go to state 148
+
+
+
+state 147
+
+    param  ->  type '(' '*' IDENTIFIER ')' '(' . param_list ')'   (rule 28)
+
+    IDENTIFIER	shift, and go to state 1
+    CONSTANT	shift, and go to state 35
+    REGOF	shift, and go to state 36
+    MEMOF	shift, and go to state 37
+    CHAR	shift, and go to state 9
+    SHORT	shift, and go to state 10
+    INT 	shift, and go to state 11
+    LONG	shift, and go to state 12
+    UNSIGNED	shift, and go to state 13
+    FLOAT	shift, and go to state 14
+    DOUBLE	shift, and go to state 15
+    CONST	shift, and go to state 16
+    VOID	shift, and go to state 81
+    STRUCT	shift, and go to state 31
+    ELLIPSIS	shift, and go to state 82
+
+    $default	reduce using rule 17 (param_list)
+
+    param_list	go to state 149
+    param_exp	go to state 84
+    exp 	go to state 85
+    param	go to state 86
+    type_ident	go to state 87
+    type	go to state 88
+
+
+
+state 148
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER ')' '(' param_list ')' . ';'   (rule 31)
+
+    ';' 	shift, and go to state 150
+
+
+
+state 149
+
+    param  ->  type '(' '*' IDENTIFIER ')' '(' param_list . ')'   (rule 28)
+
+    ')' 	shift, and go to state 151
+
+
+
+state 150
+
+    type_decl  ->  TYPEDEF type '(' '*' IDENTIFIER ')' '(' param_list ')' ';' .   (rule 31)
+
+    $default	reduce using rule 31 (type_decl)
+
+
+
+state 151
+
+    param  ->  type '(' '*' IDENTIFIER ')' '(' param_list ')' .   (rule 28)
+
+    $default	reduce using rule 28 (param)
+
+
+
+state 152
+
+    $   	go to state 153
+
+
+
+state 153
+
+    $   	go to state 154
+
+
+
+state 154
+
+    $default	accept

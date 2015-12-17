@@ -1,23 +1,17 @@
 #ifndef YY_SSLParser_h_included
 #define YY_SSLParser_h_included
+#define YY_USE_CLASS
 
-#line 1 "/usr/local/lib/bison.h"
+#line 1 "/usr/share/bison++/bison.h"
 /* before anything */
 #ifdef c_plusplus
-#ifndef __cplusplus
-#define __cplusplus
+ #ifndef __cplusplus
+  #define __cplusplus
+ #endif
 #endif
-#endif
-#ifdef __cplusplus
-#ifndef YY_USE_CLASS
-#define YY_USE_CLASS
-#endif
-#else
-#endif
-#include <stdio.h>
 
-/* #line 14 "/usr/local/lib/bison.h" */
-#line 21 "sslparser.h"
+
+ #line 8 "/usr/share/bison++/bison.h"
 #line 41 "sslparser.y"
 
 #include "gc.h"
@@ -34,7 +28,7 @@
 #include "util.h"			// E.g. str()
 #include "statement.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <malloc.h>
 #endif
 
@@ -123,88 +117,85 @@ protected: \
 	 */ \
 	bool bFloat;
 
-#line 14 "/usr/local/lib/bison.h"
+#line 21 "/usr/share/bison++/bison.h"
  /* %{ and %header{ and %union, during decl */
 #ifndef YY_SSLParser_COMPATIBILITY
-#ifndef YY_USE_CLASS
-#define  YY_SSLParser_COMPATIBILITY 1
-#else
-#define  YY_SSLParser_COMPATIBILITY 0
-#endif
+ #ifndef YY_USE_CLASS
+  #define  YY_SSLParser_COMPATIBILITY 1
+ #else
+  #define  YY_SSLParser_COMPATIBILITY 0
+ #endif
 #endif
 
 #if YY_SSLParser_COMPATIBILITY != 0
 /* backward compatibility */
-#ifdef YYLTYPE
-#ifndef YY_SSLParser_LTYPE
-#define YY_SSLParser_LTYPE YYLTYPE
+ #ifdef YYLTYPE
+  #ifndef YY_SSLParser_LTYPE
+   #define YY_SSLParser_LTYPE YYLTYPE
 /* WARNING obsolete !!! user defined YYLTYPE not reported into generated header */
 /* use %define LTYPE */
-#endif
-#endif
-#ifdef YYSTYPE
-#ifndef YY_SSLParser_STYPE 
-#define YY_SSLParser_STYPE YYSTYPE
-/* WARNING obsolete !!! user defined YYSTYPE not reported into generated header */
-/* use %define STYPE */
-#endif
-#endif
-#ifdef YYDEBUG
-#ifndef YY_SSLParser_DEBUG
-#define  YY_SSLParser_DEBUG YYDEBUG
-/* WARNING obsolete !!! user defined YYDEBUG not reported into generated header */
-/* use %define DEBUG */
-#endif
-#endif
-#ifdef YY_SSLParser_STYPE
-#ifndef yystype
-#define yystype YY_SSLParser_STYPE
-#endif
-#endif
-/* use goto to be compatible */
-#ifndef YY_SSLParser_USE_GOTO
-#define YY_SSLParser_USE_GOTO 1
-#endif
+  #endif
+ #endif
+/*#ifdef YYSTYPE*/
+  #ifndef YY_SSLParser_STYPE
+   #define YY_SSLParser_STYPE YYSTYPE
+  /* WARNING obsolete !!! user defined YYSTYPE not reported into generated header */
+   /* use %define STYPE */
+  #endif
+/*#endif*/
+ #ifdef YYDEBUG
+  #ifndef YY_SSLParser_DEBUG
+   #define  YY_SSLParser_DEBUG YYDEBUG
+   /* WARNING obsolete !!! user defined YYDEBUG not reported into generated header */
+   /* use %define DEBUG */
+  #endif
+ #endif 
+ /* use goto to be compatible */
+ #ifndef YY_SSLParser_USE_GOTO
+  #define YY_SSLParser_USE_GOTO 1
+ #endif
 #endif
 
 /* use no goto to be clean in C++ */
 #ifndef YY_SSLParser_USE_GOTO
-#define YY_SSLParser_USE_GOTO 0
+ #define YY_SSLParser_USE_GOTO 0
 #endif
 
 #ifndef YY_SSLParser_PURE
 
-/* #line 63 "/usr/local/lib/bison.h" */
-#line 179 "sslparser.h"
+ #line 65 "/usr/share/bison++/bison.h"
 
-#line 63 "/usr/local/lib/bison.h"
+#line 65 "/usr/share/bison++/bison.h"
 /* YY_SSLParser_PURE */
 #endif
 
-/* #line 65 "/usr/local/lib/bison.h" */
-#line 186 "sslparser.h"
 
-#line 65 "/usr/local/lib/bison.h"
+ #line 68 "/usr/share/bison++/bison.h"
+
+#line 68 "/usr/share/bison++/bison.h"
 /* prefix */
+
 #ifndef YY_SSLParser_DEBUG
 
-/* #line 67 "/usr/local/lib/bison.h" */
-#line 193 "sslparser.h"
+ #line 71 "/usr/share/bison++/bison.h"
 
-#line 67 "/usr/local/lib/bison.h"
+#line 71 "/usr/share/bison++/bison.h"
 /* YY_SSLParser_DEBUG */
 #endif
+
 #ifndef YY_SSLParser_LSP_NEEDED
 
-/* #line 70 "/usr/local/lib/bison.h" */
-#line 201 "sslparser.h"
+ #line 75 "/usr/share/bison++/bison.h"
 
-#line 70 "/usr/local/lib/bison.h"
+#line 75 "/usr/share/bison++/bison.h"
  /* YY_SSLParser_LSP_NEEDED*/
 #endif
+
 /* DEFAULT LTYPE*/
 #ifdef YY_SSLParser_LSP_NEEDED
-#ifndef YY_SSLParser_LTYPE
+ #ifndef YY_SSLParser_LTYPE
+  #ifndef BISON_YYLTYPE_ISDECLARED
+   #define BISON_YYLTYPE_ISDECLARED
 typedef
   struct yyltype
     {
@@ -216,66 +207,83 @@ typedef
       char *text;
    }
   yyltype;
+  #endif
 
-#define YY_SSLParser_LTYPE yyltype
+  #define YY_SSLParser_LTYPE yyltype
+ #endif
 #endif
-#endif
+
 /* DEFAULT STYPE*/
 #ifndef YY_SSLParser_STYPE
-#define YY_SSLParser_STYPE int
+ #define YY_SSLParser_STYPE int
 #endif
+
 /* DEFAULT MISCELANEOUS */
 #ifndef YY_SSLParser_PARSE
-#define YY_SSLParser_PARSE yyparse
+ #define YY_SSLParser_PARSE yyparse
 #endif
+
 #ifndef YY_SSLParser_LEX
-#define YY_SSLParser_LEX yylex
+ #define YY_SSLParser_LEX yylex
 #endif
+
 #ifndef YY_SSLParser_LVAL
-#define YY_SSLParser_LVAL yylval
+ #define YY_SSLParser_LVAL yylval
 #endif
+
 #ifndef YY_SSLParser_LLOC
-#define YY_SSLParser_LLOC yylloc
+ #define YY_SSLParser_LLOC yylloc
 #endif
+
 #ifndef YY_SSLParser_CHAR
-#define YY_SSLParser_CHAR yychar
+ #define YY_SSLParser_CHAR yychar
 #endif
+
 #ifndef YY_SSLParser_NERRS
-#define YY_SSLParser_NERRS yynerrs
+ #define YY_SSLParser_NERRS yynerrs
 #endif
+
 #ifndef YY_SSLParser_DEBUG_FLAG
-#define YY_SSLParser_DEBUG_FLAG yydebug
+ #define YY_SSLParser_DEBUG_FLAG yydebug
 #endif
+
 #ifndef YY_SSLParser_ERROR
-#define YY_SSLParser_ERROR yyerror
+ #define YY_SSLParser_ERROR yyerror
 #endif
 
 #ifndef YY_SSLParser_PARSE_PARAM
-#ifndef __STDC__
-#ifndef __cplusplus
-#ifndef YY_USE_CLASS
-#define YY_SSLParser_PARSE_PARAM
-#ifndef YY_SSLParser_PARSE_PARAM_DEF
-#define YY_SSLParser_PARSE_PARAM_DEF
-#endif
-#endif
-#endif
-#endif
-#ifndef YY_SSLParser_PARSE_PARAM
-#define YY_SSLParser_PARSE_PARAM void
-#endif
+ #ifndef __STDC__
+  #ifndef __cplusplus
+   #ifndef YY_USE_CLASS
+    #define YY_SSLParser_PARSE_PARAM
+    #ifndef YY_SSLParser_PARSE_PARAM_DEF
+     #define YY_SSLParser_PARSE_PARAM_DEF
+    #endif
+   #endif
+  #endif
+ #endif
+ #ifndef YY_SSLParser_PARSE_PARAM
+  #define YY_SSLParser_PARSE_PARAM void
+ #endif
 #endif
 
 /* TOKEN C */
 #ifndef YY_USE_CLASS
 
-#ifndef YY_SSLParser_PURE
-extern YY_SSLParser_STYPE YY_SSLParser_LVAL;
-#endif
+ #ifndef YY_SSLParser_PURE
+  #ifndef yylval
+   extern YY_SSLParser_STYPE YY_SSLParser_LVAL;
+  #else
+   #if yylval != YY_SSLParser_LVAL
+    extern YY_SSLParser_STYPE YY_SSLParser_LVAL;
+   #else
+    #warning "Namespace conflict, disabling some functionality (bison++ only)"
+   #endif
+  #endif
+ #endif
 
 
-/* #line 143 "/usr/local/lib/bison.h" */
-#line 279 "sslparser.h"
+ #line 169 "/usr/share/bison++/bison.h"
 #define	COND_OP	258
 #define	BIT_OP	259
 #define	ARITH_OP	260
@@ -330,49 +338,52 @@ extern YY_SSLParser_STYPE YY_SSLParser_LVAL;
 #define	FCHS	309
 
 
-#line 143 "/usr/local/lib/bison.h"
+#line 169 "/usr/share/bison++/bison.h"
  /* #defines token */
 /* after #define tokens, before const tokens S5*/
 #else
-#ifndef YY_SSLParser_CLASS
-#define YY_SSLParser_CLASS SSLParser
-#endif
+ #ifndef YY_SSLParser_CLASS
+  #define YY_SSLParser_CLASS SSLParser
+ #endif
 
-#ifndef YY_SSLParser_INHERIT
-#define YY_SSLParser_INHERIT
-#endif
-#ifndef YY_SSLParser_MEMBERS
-#define YY_SSLParser_MEMBERS 
-#endif
-#ifndef YY_SSLParser_LEX_BODY
-#define YY_SSLParser_LEX_BODY  
-#endif
-#ifndef YY_SSLParser_ERROR_BODY
-#define YY_SSLParser_ERROR_BODY  
-#endif
-#ifndef YY_SSLParser_CONSTRUCTOR_PARAM
-#define YY_SSLParser_CONSTRUCTOR_PARAM
-#endif
-/* choose between enum and const */
-#ifndef YY_SSLParser_USE_CONST_TOKEN
-#define YY_SSLParser_USE_CONST_TOKEN 0
-/* yes enum is more compatible with flex,  */
-/* so by default we use it */ 
-#endif
-#if YY_SSLParser_USE_CONST_TOKEN != 0
-#ifndef YY_SSLParser_ENUM_TOKEN
-#define YY_SSLParser_ENUM_TOKEN yy_SSLParser_enum_token
-#endif
-#endif
+ #ifndef YY_SSLParser_INHERIT
+  #define YY_SSLParser_INHERIT
+ #endif
+
+ #ifndef YY_SSLParser_MEMBERS
+  #define YY_SSLParser_MEMBERS 
+ #endif
+
+ #ifndef YY_SSLParser_LEX_BODY
+  #define YY_SSLParser_LEX_BODY  
+ #endif
+
+ #ifndef YY_SSLParser_ERROR_BODY
+  #define YY_SSLParser_ERROR_BODY  
+ #endif
+
+ #ifndef YY_SSLParser_CONSTRUCTOR_PARAM
+  #define YY_SSLParser_CONSTRUCTOR_PARAM
+ #endif
+ /* choose between enum and const */
+ #ifndef YY_SSLParser_USE_CONST_TOKEN
+  #define YY_SSLParser_USE_CONST_TOKEN 0
+  /* yes enum is more compatible with flex,  */
+  /* so by default we use it */ 
+ #endif
+ #if YY_SSLParser_USE_CONST_TOKEN != 0
+  #ifndef YY_SSLParser_ENUM_TOKEN
+   #define YY_SSLParser_ENUM_TOKEN yy_SSLParser_enum_token
+  #endif
+ #endif
 
 class YY_SSLParser_CLASS YY_SSLParser_INHERIT
 {
 public: 
-#if YY_SSLParser_USE_CONST_TOKEN != 0
-/* static const int token ... */
-
-/* #line 182 "/usr/local/lib/bison.h" */
-#line 376 "sslparser.h"
+ #if YY_SSLParser_USE_CONST_TOKEN != 0
+  /* static const int token ... */
+  
+ #line 212 "/usr/share/bison++/bison.h"
 static const int COND_OP;
 static const int BIT_OP;
 static const int ARITH_OP;
@@ -427,13 +438,12 @@ static const int FLOATNUM;
 static const int FCHS;
 
 
-#line 182 "/usr/local/lib/bison.h"
+#line 212 "/usr/share/bison++/bison.h"
  /* decl const */
-#else
-enum YY_SSLParser_ENUM_TOKEN { YY_SSLParser_NULL_TOKEN=0
-
-/* #line 185 "/usr/local/lib/bison.h" */
-#line 437 "sslparser.h"
+ #else
+  enum YY_SSLParser_ENUM_TOKEN { YY_SSLParser_NULL_TOKEN=0
+  
+ #line 215 "/usr/share/bison++/bison.h"
 	,COND_OP=258
 	,BIT_OP=259
 	,ARITH_OP=260
@@ -488,32 +498,32 @@ enum YY_SSLParser_ENUM_TOKEN { YY_SSLParser_NULL_TOKEN=0
 	,FCHS=309
 
 
-#line 185 "/usr/local/lib/bison.h"
+#line 215 "/usr/share/bison++/bison.h"
  /* enum token */
      }; /* end of enum declaration */
-#endif
+ #endif
 public:
  int YY_SSLParser_PARSE(YY_SSLParser_PARSE_PARAM);
  virtual void YY_SSLParser_ERROR(char *msg) YY_SSLParser_ERROR_BODY;
-#ifdef YY_SSLParser_PURE
-#ifdef YY_SSLParser_LSP_NEEDED
- virtual int  YY_SSLParser_LEX(YY_SSLParser_STYPE *YY_SSLParser_LVAL,YY_SSLParser_LTYPE *YY_SSLParser_LLOC) YY_SSLParser_LEX_BODY;
-#else
- virtual int  YY_SSLParser_LEX(YY_SSLParser_STYPE *YY_SSLParser_LVAL) YY_SSLParser_LEX_BODY;
-#endif
-#else
- virtual int YY_SSLParser_LEX() YY_SSLParser_LEX_BODY;
- YY_SSLParser_STYPE YY_SSLParser_LVAL;
-#ifdef YY_SSLParser_LSP_NEEDED
- YY_SSLParser_LTYPE YY_SSLParser_LLOC;
-#endif
- int YY_SSLParser_NERRS;
- int YY_SSLParser_CHAR;
-#endif
-#if YY_SSLParser_DEBUG != 0
-public:
- int YY_SSLParser_DEBUG_FLAG;	/*  nonzero means print parse trace	*/
-#endif
+ #ifdef YY_SSLParser_PURE
+  #ifdef YY_SSLParser_LSP_NEEDED
+   virtual int  YY_SSLParser_LEX(YY_SSLParser_STYPE *YY_SSLParser_LVAL,YY_SSLParser_LTYPE *YY_SSLParser_LLOC) YY_SSLParser_LEX_BODY;
+  #else
+   virtual int  YY_SSLParser_LEX(YY_SSLParser_STYPE *YY_SSLParser_LVAL) YY_SSLParser_LEX_BODY;
+  #endif
+ #else
+  virtual int YY_SSLParser_LEX() YY_SSLParser_LEX_BODY;
+  YY_SSLParser_STYPE YY_SSLParser_LVAL;
+  #ifdef YY_SSLParser_LSP_NEEDED
+   YY_SSLParser_LTYPE YY_SSLParser_LLOC;
+  #endif
+  int YY_SSLParser_NERRS;
+  int YY_SSLParser_CHAR;
+ #endif
+ #if YY_SSLParser_DEBUG != 0
+  public:
+   int YY_SSLParser_DEBUG_FLAG;	/*  nonzero means print parse trace	*/
+ #endif
 public:
  YY_SSLParser_CLASS(YY_SSLParser_CONSTRUCTOR_PARAM);
 public:
@@ -524,23 +534,23 @@ public:
 
 
 #if YY_SSLParser_COMPATIBILITY != 0
-/* backward compatibility */
-#ifndef YYSTYPE
-#define YYSTYPE YY_SSLParser_STYPE
-#endif
+ /* backward compatibility */
+ /* Removed due to bison problems
+ /#ifndef YYSTYPE
+ / #define YYSTYPE YY_SSLParser_STYPE
+ /#endif*/
 
-#ifndef YYLTYPE
-#define YYLTYPE YY_SSLParser_LTYPE
-#endif
-#ifndef YYDEBUG
-#ifdef YY_SSLParser_DEBUG 
-#define YYDEBUG YY_SSLParser_DEBUG
-#endif
-#endif
+ #ifndef YYLTYPE
+  #define YYLTYPE YY_SSLParser_LTYPE
+ #endif
+ #ifndef YYDEBUG
+  #ifdef YY_SSLParser_DEBUG 
+   #define YYDEBUG YY_SSLParser_DEBUG
+  #endif
+ #endif
 
 #endif
 /* END */
 
-/* #line 236 "/usr/local/lib/bison.h" */
-#line 546 "sslparser.h"
+ #line 267 "/usr/share/bison++/bison.h"
 #endif

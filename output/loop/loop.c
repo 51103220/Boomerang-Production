@@ -1,6 +1,6 @@
-// address: 0x10000418
+// address: 0x10684
 int main(int argc, char *argv[], char *envp[]) {
-    int local0; 		// m[g1 - 24]
+    int local0; 		// m[o6 - 20]
 
     local0 = 0;
     while (local0 <= 9) {

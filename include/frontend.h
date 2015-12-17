@@ -59,8 +59,7 @@ enum INSTTYPE {
 	I_COMPJUMP,				 // computed jump
 	I_COMPCALL				 // computed call
 };
-static std::map<ADDRESS,char*> namesList;
-static std::map<ADDRESS,bool> funcsType;
+
 // Put the target queue logic into this small class
 class TargetQueue {
 		std::queue<ADDRESS> targets;

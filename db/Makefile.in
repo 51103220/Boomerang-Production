@@ -125,7 +125,7 @@ sslparser.cpp sslparser.h: sslparser.y sslscanner.l
 
 sslscanner.cpp sslscanner.h: sslscanner.l sslparser.y
 	$(FLEXPP) -osslscanner.cpp -hsslscanner.h $<
-
+	
 clean:
 	rm -f testDbase *.o $(DB_LIB)
 

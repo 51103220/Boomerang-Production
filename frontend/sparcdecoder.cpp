@@ -1,34 +1,7 @@
-#include <algorithm>
-#include <iostream>
-#include <sstream>
-#include <iterator>
-#include <vector>
-#include <sstream>
-#include <string>
+#define sign_extend(N,SIZE) (((int)((N) << (sizeof(unsigned)*8-(SIZE)))) >> (sizeof(unsigned)*8-(SIZE)))
 #include <assert.h>
-#include <cstring>
-#include <vector>
 
-inline bool isInteger(const std::string & s) {
-  if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
-  char * p ;
-  strtol(s.c_str(), &p, 10) ;
-  return (*p == 0) ;
-}
-
-bool if_str(std::string name){
-  if (name.find("\"") != std::string::npos) {
-    return true;
-  }
-  return false;
-}
-char* process_str(std::string name){
-  name.erase(0,1);
-  name.erase(name.size()-1,1);
-  char *str =  new char[name.length() + 1];
-  strcpy(str, name.c_str());
-  return str;
-}
+#line 1 "../frontend/machine/sparc/decoder.m"
 /*
  * Copyright (C) 1996-2001, The University of Queensland
  *
@@ -44,7 +17,7 @@ char* process_str(std::string name){
  *         SparcDecoder class.
  *============================================================================*/
 
-/* $Revision: 1.24 $  
+/* $Revision: 1.24 $  // 1.20.2.2
  *
  * 26 Apr 02 - Mike: Mods for boomerang
  * 19 May 02 - Mike: Added many (int) casts: variables from toolkit are unsgnd
@@ -66,15 +39,15 @@ char* process_str(std::string name){
 #include "signature.h"
 #endif
 
-
 #include "decoder.h"
-#include "sparcdecoder.h"
 #include "exp.h"
 #include "prog.h"
 #include "proc.h"
+#include "sparcdecoder.h"
 #include "rtl.h"
-#include "BinaryFile.h"   
+#include "BinaryFile.h"   // For SymbolByAddress()
 #include "boomerang.h"
+#include "sparcassemblydecoder.cpp"
 
 #define DIS_ROI   (dis_RegImm(roi))
 #define DIS_ADDR  (dis_Eaddr(addr))
@@ -83,8 +56,8 @@ char* process_str(std::string name){
 #define DIS_RS1   (dis_RegRhs(rs1))
 #define DIS_FS1S  (dis_RegRhs(fs1s+32))
 #define DIS_FS2S  (dis_RegRhs(fs2s+32))
-
-
+// Note: Sparc V9 has a second set of double precision registers that have an
+// odd index. So far we only support V8
 #define DIS_FDS   (dis_RegLhs(fds+32))
 #define DIS_FS1D  (dis_RegRhs((fs1d>>1)+64))
 #define DIS_FS2D  (dis_RegRhs((fs2d>>1)+64))
@@ -99,184 +72,9 @@ char* process_str(std::string name){
  * PARAMETERS:     x: integer variable to be "used"
  * RETURNS:      Nothing
  *============================================================================*/
-unsigned SparcDecoder::magic_process(std::string name) {
-  std::transform(name.begin(), name.end(),name.begin(), ::tolower);
-  std::string str = name;
-  if (name == "%g0") return 0;
-  else if (name == "%g1") return 1;
-  else if (name == "%g2") return 2;
-  else if (name == "%g3") return 3;
-  else if (name == "%g4") return 4;
-  else if (name == "%g5") return 5;
-  else if (name == "%g6") return 6;
-  else if (name == "%g7") return 7;
-  else if (name == "%o0") return 8;
-  else if (name == "%o1") return 9;
-  else if (name == "%o2") return 10;
-  else if (name == "%o3") return 11;
-  else if (name == "%o4") return 12;
-  else if (name == "%o5") return 13;
-  else if (name == "%sp") return 14;
-  else if (name == "%o7") return 15;
-  else if (name == "%l0") return 16;
-  else if (name == "%l1") return 17;
-  else if (name == "%l2") return 18;
-  else if (name == "%l3") return 19;
-  else if (name == "%l4") return 20;
-  else if (name == "%l5") return 21;
-  else if (name == "%l6") return 22;
-  else if (name == "%l7") return 23;
-  else if (name == "%i0") return 24;
-  else if (name == "%i1") return 25;
-  else if (name == "%i2") return 26;
-  else if (name == "%i3") return 27;
-  else if (name == "%i4") return 28;
-  else if (name == "%i5") return 29;
-  else if (name == "%fp") return 30;
-  else if (name == "%i7") return 31;
-  else if (name == "%f0") return 0;
-  else if (name == "%f1") return 1;
-  else if (name == "%f2") return 2;
-  else if (name == "%f3") return 3;
-  else if (name == "%f4") return 4;
-  else if (name == "%f5") return 5;
-  else if (name == "%f6") return 6;
-  else if (name == "%f7") return 7;
-  else if (name == "%f8") return 8;
-  else if (name == "%f9") return 9;
-  else if (name == "%f10") return 10;
-  else if (name == "%f11") return 11;
-  else if (name == "%f12") return 12;
-  else if (name == "%f13") return 13;
-  else if (name == "%f14") return 14;
-  else if (name == "%f15") return 15;
-  else if (name == "%f16") return 16;
-  else if (name == "%f17") return 17;
-  else if (name == "%f18") return 18;
-  else if (name == "%f19") return 19;
-  else if (name == "%f20") return 20;
-  else if (name == "%f21") return 21;
-  else if (name == "%f22") return 22;
-  else if (name == "%f23") return 23;
-  else if (name == "%f24") return 24;
-  else if (name == "%f25") return 25;
-  else if (name == "%f26") return 26;
-  else if (name == "%f27") return 27;
-  else if (name == "%f28") return 28;
-  else if (name == "%f29") return 29;
-  else if (name == "%f30") return 30;
-  else if (name == "%f31") return 31;
-  else if (name == "%f0to1") return 0;
-  else if (name == "a") return 1;
-  else if (name == "%f2to3") return 2;
-  else if (name == "b") return 3;
-  else if (name == "%f4to5") return 4;
-  else if (name == "c") return 5;
-  else if (name == "%f6to7") return 6;
-  else if (name == "d") return 7;
-  else if (name == "%f8to9") return 8;
-  else if (name == "e") return 9;
-  else if (name == "%f10to11") return 10;
-  else if (name == "f") return 11;
-  else if (name == "%f12to13") return 12;
-  else if (name == "g") return 13;
-  else if (name == "%f14to15") return 14;
-  else if (name == "h") return 15;
-  else if (name == "%f16to17") return 16;
-  else if (name == "i") return 17;
-  else if (name == "%f18to19") return 18;
-  else if (name == "j") return 19;
-  else if (name == "%f20to21") return 20;
-  else if (name == "k") return 21;
-  else if (name == "%f22to23") return 22;
-  else if (name == "l") return 23;
-  else if (name == "%f24to25") return 24;
-  else if (name == "m") return 25;
-  else if (name == "%f26to27") return 26;
-  else if (name == "n") return 27;
-  else if (name == "%f28to29") return 28;
-  else if (name == "o") return 29;
-  else if (name == "%f30to31") return 30;
-  else if (name == "p") return 31;
-  else if (name == "%f0to3") return 0;
-  else if (name == "q") return 1;
-  else if (name == "r") return 2;
-  else if (name == "s") return 3;
-  else if (name == "%f4to7") return 4;
-  else if (name == "t") return 5;
-  else if (name == "u") return 6;
-  else if (name == "v") return 7;
-  else if (name == "%f8to11") return 8;
-  else if (name == "w") return 9;
-  else if (name == "x") return 10;
-  else if (name == "y") return 11;
-  else if (name == "%f12to15") return 12;
-  else if (name == "z") return 13;
-  else if (name == "A") return 14;
-  else if (name == "B") return 15;
-  else if (name == "%f16to19") return 16;
-  else if (name == "C") return 17;
-  else if (name == "D") return 18;
-  else if (name == "E") return 19;
-  else if (name == "%f20to23") return 20;
-  else if (name == "F") return 21;
-  else if (name == "G") return 22;
-  else if (name == "H") return 23;
-  else if (name == "%f24to27") return 24;
-  else if (name == "I") return 25;
-  else if (name == "J") return 26;
-  else if (name == "K") return 27;
-  else if (name == "%f28to31") return 28;
-  else if (name == "L") return 29;
-  else if (name == "M") return 30;
-  else if (name == "N") return 31;
-  else if (name == "%c0") return 0;
-  else if (name == "%c1") return 1;
-  else if (name == "%c2") return 2;
-  else if (name == "%c3") return 3;
-  else if (name == "%c4") return 4;
-  else if (name == "%c5") return 5;
-  else if (name == "%c6") return 6;
-  else if (name == "%c7") return 7;
-  else if (name == "%c8") return 8;
-  else if (name == "%c9") return 9;
-  else if (name == "%c10") return 10;
-  else if (name == "%c11") return 11;
-  else if (name == "%c12") return 12;
-  else if (name == "%c13") return 13;
-  else if (name == "%c14") return 14;
-  else if (name == "%c15") return 15;
-  else if (name == "%c16") return 16;
-  else if (name == "%c17") return 17;
-  else if (name == "%c18") return 18;
-  else if (name == "%c19") return 19;
-  else if (name == "%c20") return 20;
-  else if (name == "%c21") return 21;
-  else if (name == "%c22") return 22;
-  else if (name == "%c23") return 23;
-  else if (name == "%c24") return 24;
-  else if (name == "%c25") return 25;
-  else if (name == "%c26") return 26;
-  else if (name == "%c27") return 27;
-  else if (name == "%c28") return 28;
-  else if (name == "%c29") return 29;
-  else if (name == "%c30") return 30;
-  else if (name == "%c31") return 31;
-  else if (name == "") return 0;
-  else if (name == ",a") return 1;
-  else if (name == "%hi(.lc0)") return 66560;
-  else if (name == "%lo(.lc0)") return 508;
-  else if (name == "puts") return 132808;   
-  else if (isInteger(str)) {
-    int i = std::atoi((str).c_str());
-    if (i < 0) return i;
-    else return 100 + i;
-  }
-
-} 
 void SparcDecoder::unused(int x)
-{
-}
+{}
+
 /*==============================================================================
  * FUNCTION:     createBranchRtl
  * OVERVIEW:     Create an RTL for a Bx instruction
@@ -285,106 +83,115 @@ void SparcDecoder::unused(int x)
  *           name - instruction name (e.g. "BNE,a", or "BPNE")
  * RETURNS:      Pointer to newly created RTL, or NULL if invalid
  *============================================================================*/
-static DecodeResult result;
-RTL* SparcDecoder::createBranchRtl(ADDRESS pc,std::list<Statement*>* stmts,const char* name)
-{
+RTL* SparcDecoder::createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts, const char* name) {
   RTL* res = new RTL(pc, stmts);
   BranchStatement* br = new BranchStatement();
   res->appendStmt(br);
-  if(name[0] == 'F')
-  {
-    if(name[2] == 'U')
-    name++;
-    switch(name[2])
-    {
-      case 'E':
+  if (name[0] == 'F') {
+    // fbranch is any of [ FBN FBNE FBLG FBUL FBL FBUG FBG   FBU
+    //             FBA FBE  FBUE FBGE FBUGE FBLE FBULE FBO ],
+    // fbranches are not the same as ibranches, so need a whole different set of tests
+    if (name[2] == 'U')
+      name++;       // Just ignore unordered (for now)
+    switch (name[2]) {
+    case 'E':             // FBE
       br->setCondType(BRANCH_JE, true);
       break;
-      case 'L':
-      if(name[3] == 'G')
-      br->setCondType(BRANCH_JNE, true);
-      else
-      if(name[3] == 'E')
-      br->setCondType(BRANCH_JSLE, true);
-      else
-      br->setCondType(BRANCH_JSL, true);
+    case 'L':
+      if (name[3] == 'G')       // FBLG
+        br->setCondType(BRANCH_JNE, true);
+      else if (name[3] == 'E')    // FBLE
+        br->setCondType(BRANCH_JSLE, true);
+      else              // FBL
+        br->setCondType(BRANCH_JSL, true);
       break;
-      case 'G':
-      if(name[3] == 'E')
-      br->setCondType(BRANCH_JSGE, true);
-      else
-      br->setCondType(BRANCH_JSG, true);
+    case 'G':
+      if (name[3] == 'E')       // FBGE
+        br->setCondType(BRANCH_JSGE, true);
+      else              // FBG
+        br->setCondType(BRANCH_JSG, true);
       break;
-      case 'N':
-      if(name[3] == 'E')
-      br->setCondType(BRANCH_JNE, true);
+    case 'N':
+      if (name[3] == 'E')       // FBNE
+        br->setCondType(BRANCH_JNE, true);
+      // Else it's FBN!
       break;
-      default:
+    default:
       std::cerr << "unknown float branch " << name << std::endl;
       delete res;
       res = NULL;
     }
     return res;
-  }
-  switch(name[1])
-  {
-    case 'E':
-    br->setCondType(BRANCH_JE);
+  } 
+
+  // ibranch is any of [ BN BE  BLE BL  BLEU BCS BNEG BVS
+  //             BA BNE BG  BGE BGU  BCC BPOS BVC ],
+  // Note: BPN, BPE, etc handled below
+  switch(name[1]) {
+  case 'E':
+    br->setCondType(BRANCH_JE);       // BE
     break;
-    case 'L':
-    if(name[2] == 'E')
-    {
-      if(name[3] == 'U')
-      br->setCondType(BRANCH_JULE);
+  case 'L':
+    if (name[2] == 'E') {
+      if (name[3] == 'U')
+        br->setCondType(BRANCH_JULE); // BLEU
       else
-      br->setCondType(BRANCH_JSLE);
+        br->setCondType(BRANCH_JSLE); // BLE
     }
     else
-    br->setCondType(BRANCH_JSL);
+      br->setCondType(BRANCH_JSL);    // BL
     break;
-    case 'N':
-    if(name[3] == 'G')
-    br->setCondType(BRANCH_JMI);
+  case 'N':
+    // BNE, BNEG (won't see BN)
+    if (name[3] == 'G')
+      br->setCondType(BRANCH_JMI);    // BNEG
     else
-    br->setCondType(BRANCH_JNE);
+      br->setCondType(BRANCH_JNE);    // BNE
     break;
-    case 'C':
-    if(name[2] == 'C')
-    br->setCondType(BRANCH_JUGE);
+  case 'C':
+    // BCC, BCS
+    if (name[2] == 'C')
+      br->setCondType(BRANCH_JUGE);   // BCC
     else
-    br->setCondType(BRANCH_JUL);
+      br->setCondType(BRANCH_JUL);    // BCS
     break;
-    case 'V':
-    if(name[2] == 'C')
-    std::cerr << "Decoded BVC instruction\n";
+  case 'V':
+    // BVC, BVS; should never see these now
+    if (name[2] == 'C')
+      std::cerr << "Decoded BVC instruction\n"; // BVC
     else
-    std::cerr << "Decoded BVS instruction\n";
+      std::cerr << "Decoded BVS instruction\n"; // BVS
     break;
-    case 'G':
-    if(name[2] == 'E')
-    br->setCondType(BRANCH_JSGE);
+  case 'G': 
+    // BGE, BG, BGU
+    if (name[2] == 'E')
+      br->setCondType(BRANCH_JSGE);   // BGE
+    else if (name[2] == 'U')
+      br->setCondType(BRANCH_JUG);    // BGU
     else
-    if(name[2] == 'U')
-    br->setCondType(BRANCH_JUG);
-    else
-    br->setCondType(BRANCH_JSG);
+      br->setCondType(BRANCH_JSG);    // BG
     break;
-    case 'P':
-    if(name[2] == 'O')
-    {
-      br->setCondType(BRANCH_JPOS);
+  case 'P': 
+    if (name[2] == 'O') {
+      br->setCondType(BRANCH_JPOS);     // BPOS
       break;
     }
+    // Else, it's a BPXX; remove the P (for predicted) and try again
+    // (recurse)
+    // B P P O S ...
+    // 0 1 2 3 4 ...
     char temp[8];
     temp[0] = 'B';
     strcpy(temp+1, name+2);
     delete res;
     return createBranchRtl(pc, stmts, temp);
-    default:
+  default:
     std::cerr << "unknown non-float branch " << name << std::endl;
-  }
+  } 
   return res;
 }
+
+
 /*==============================================================================
  * FUNCTION:     SparcDecoder::decodeInstruction
  * OVERVIEW:     Attempt to decode the high level instruction at a given address and return the corresponding HL type
@@ -398,645 +205,2542 @@ RTL* SparcDecoder::createBranchRtl(ADDRESS pc,std::list<Statement*>* stmts,const
  *          interpreter
  * RETURNS:      a DecodeResult structure containing all the information gathered during decoding
  *============================================================================*/
-DecodeResult& SparcDecoder::decodeAssembly (ADDRESS pc, std::string line,AssemblyLine* Line)
-{
-  int delta = 0;
+DecodeResult& SparcDecoder::decodeInstruction (ADDRESS pc, int delta) { 
   static DecodeResult result;
   ADDRESS hostPC = pc+delta;
+
+  // Clear the result structure;
   result.reset();
+
+  // The actual list of instantiated statements
   std::list<Statement*>* stmts = NULL;
+
   ADDRESS nextPC = NO_ADDRESS;
-  //ADDRESS nextPC = NO_ADDRESS;
-  using namespace std;
-  std::string sentence = line;
-  std::transform(sentence.begin(), sentence.end(),sentence.begin(), ::toupper);
-    sentence.erase(std::remove(sentence.begin(), sentence.end(), ','), sentence.end());
-    std::istringstream iss(sentence);
-    std::vector <std::string> tokens;
-    copy(istream_iterator<std::string>(iss),
-         istream_iterator<std::string>(),
-       back_inserter(tokens));
-  dword MATCH_p = hostPC;
-  if (tokens.at(0) == "CALL" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    bool is_lib = false;
-    if (tokens.at(1) == "PRINTF" || tokens.at(1) == "PUTS"){
-      addr = 132912;
-      is_lib = true;
-    }
-    else {
-      addr = 66752;
-    }
-    CallStatement* newCall = new CallStatement;
-    ADDRESS nativeDest = addr - delta;
-    newCall->setDest(nativeDest);
-    Proc* destProc;
-    std::transform(tokens.at(1).begin(), tokens.at(1).end(),tokens.at(1).begin(), ::tolower);
-    char *name =  new char[tokens.at(1).length() + 1];
-    strcpy(name, tokens.at(1).c_str());
-    if (!ASS_FILE){
-      destProc = prog->setNewProc(nativeDest);
-      if (destProc == (Proc*)-1) destProc = NULL;
-    }
-    else {
-      destProc = prog->newProc(name, nativeDest, is_lib);
-    }
-    newCall->setDestProc(destProc);
 
-    result.rtl = new RTL(pc, stmts);
-    result.rtl->appendStmt(newCall);
-    result.type = SD;
 
-    SHOW_ASM("call__ " << std::hex << (nativeDest))
 
-    DEBUG_STMTS
+#line 214 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 214 "../frontend/machine/sparc/decoder.m"
+    hostPC
+    ;
+  char *MATCH_name;
+  char *MATCH_name_cond_0[] = {
+    "BPN", "BPE", "BPLE", "BPL", "BPLEU", "BPCS", "BPNEG", "BPVS", "BPA,a", 
+    "BPNE", "BPG", "BPGE", "BPGU", "BPCC", "BPPOS", "BPVC", 
+  };
+  char *MATCH_name_cond_1[] = {
+    "BPN,a", "BPE,a", "BPLE,a", "BPL,a", "BPLEU,a", "BPCS,a", "BPNEG,a", 
+    "BPVS,a", "BA", "BPNE,a", "BPG,a", "BPGE,a", "BPGU,a", "BPCC,a", 
+    "BPPOS,a", "BPVC,a", 
+  };
+  char *MATCH_name_cond_2[] = {
+    "BN", "BE", "BLE", "BL", "BLEU", "BCS", "BNEG", "BVS", "BA,a", "BNE", 
+    "BG", "BGE", "BGU", "BCC", "BPOS", "BVC", 
+  };
+  char *MATCH_name_cond_3[] = {
+    "BN,a", "BE,a", "BLE,a", "BL,a", "BLEU,a", "BCS,a", "BNEG,a", "BVS,a", 
+    "FBA", "BNE,a", "BG,a", "BGE,a", "BGU,a", "BCC,a", "BPOS,a", "BVC,a", 
+  };
+  char *MATCH_name_cond_5[] = {
+    "FBN", "FBNE", "FBLG", "FBUL", "FBL", "FBUG", "FBG", "FBU", "FBA,a", 
+    "FBE", "FBUE", "FBGE", "FBUGE", "FBLE", "FBULE", "FBO", 
+  };
+  char *MATCH_name_cond_6[] = {
+    "FBN,a", "FBNE,a", "FBLG,a", "FBUL,a", "FBL,a", "FBUG,a", "FBG,a", 
+    "FBU,a", "CBA", "FBE,a", "FBUE,a", "FBGE,a", "FBUGE,a", "FBLE,a", 
+    "FBULE,a", "FBO,a", 
+  };
+  char *MATCH_name_cond_7[] = {
+    "CBN", "CB123", "CB12", "CB13", "CB1", "CB23", "CB2", "CB3", "CBA,a", 
+    "CB0", "CB03", "CB02", "CB023", "CB01", "CB013", "CB012", 
+  };
+  char *MATCH_name_cond_8[] = {
+    "CBN,a", "CB123,a", "CB12,a", "CB13,a", "CB1,a", "CB23,a", "CB2,a", 
+    "CB3,a", "TA", "CB0,a", "CB03,a", "CB02,a", "CB023,a", "CB01,a", 
+    "CB013,a", "CB012,a", 
+  };
+  char *MATCH_name_op3_46[] = {
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, "RDPSR", "RDWIM", 
+    "RDTBR", 
+  };
+  char *MATCH_name_opf_51[] = {
+    (char *)0, "FMOVs", (char *)0, (char *)0, (char *)0, "FNEGs", (char *)0, 
+    (char *)0, (char *)0, "FABSs", (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, "FSQRTs", "FSQRTd", "FSQRTq", 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, "FADDs", "FADDd", "FADDq", (char *)0, 
+    "FSUBs", "FSUBd", "FSUBq", (char *)0, "FMULs", "FMULd", "FMULq", 
+    (char *)0, "FDIVs", "FDIVd", "FDIVq", (char *)0, "FCMPs", "FCMPd", 
+    "FCMPq", (char *)0, "FCMPEs", "FCMPEd", "FCMPEq", (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, (char *)0, 
+    (char *)0, (char *)0, (char *)0, (char *)0, "FiTOs", (char *)0, "FdTOs", 
+    "FqTOs", "FiTOd", "FsTOd", (char *)0, "FqTOd", "FiTOq", "FsTOq", "FdTOq", 
+    (char *)0, (char *)0, "FsTOi", "FdTOi", "FqTOi", 
+  };
+  char *MATCH_name_cond_53[] = {
+    "TN", "TE", "TLE", "TL", "TLEU", "TCS", "TNEG", "TVS", (char *)0, "TNE", 
+    "TG", "TGE", "TGU", "TCC", "TPOS", "TVC", 
+  };
+  char *MATCH_name_i_66[] = {"LDA", "LDF", };
+  char *MATCH_name_i_67[] = {"LDUBA", "LDFSR", };
+  char *MATCH_name_i_68[] = {"LDUHA", "LDDF", };
+  char *MATCH_name_i_69[] = {"LDDA", "STF", };
+  char *MATCH_name_i_70[] = {"STA", "STFSR", };
+  char *MATCH_name_i_71[] = {"STBA", "STDFQ", };
+  char *MATCH_name_i_72[] = {"STHA", "STDF", };
+  char *MATCH_name_i_73[] = {"STDA", "LDCSR", };
+  char *MATCH_name_i_74[] = {"LDSBA", "STCSR", };
+  char *MATCH_name_i_75[] = {"LDSHA", "STDCQ", };
+  unsigned MATCH_w_32_0;
+  { 
+    MATCH_w_32_0 = getDword(MATCH_p); 
+    
+      switch((MATCH_w_32_0 >> 30 & 0x3) /* op at 0 */) {
+        case 0: 
+          
+            switch((MATCH_w_32_0 >> 22 & 0x7) /* op2 at 0 */) {
+              case 0: 
+                { 
+                  unsigned n = (MATCH_w_32_0 & 0x3fffff) /* imm22 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 631 "../frontend/machine/sparc/decoder.m"
+                   
 
-  }
-  if (tokens.at(0) == "BN,a" || tokens.at(0) == "BE,a" || tokens.at(0) == "BLE,a" || tokens.at(0) == "BL,a" || tokens.at(0) == "BLEU,a" || tokens.at(0) == "BCS,a" || tokens.at(0) == "BNEG,a" || tokens.at(0) == "BVS,a" || tokens.at(0) == "BA,a" || tokens.at(0) == "BNE,a" || tokens.at(0) == "BG,a" || tokens.at(0) == "BGE,a" || tokens.at(0) == "BGU,a" || tokens.at(0) == "BCC,a" || tokens.at(0) == "BPOS,a" || tokens.at(0) == "BVC,a" || tokens.at(0) == "FBN,a" || tokens.at(0) == "FBNE,a" || tokens.at(0) == "FBLG,a" || tokens.at(0) == "FBUL,a" || tokens.at(0) == "FBL,a" || tokens.at(0) == "FBUG,a" || tokens.at(0) == "FBG,a" || tokens.at(0) == "FBU,a" || tokens.at(0) == "FBA,a" || tokens.at(0) == "FBE,a" || tokens.at(0) == "FBUE,a" || tokens.at(0) == "FBGE,a" || tokens.at(0) == "FBUGE,a" || tokens.at(0) == "FBLE,a" || tokens.at(0) == "FBULE,a" || tokens.at(0) == "FBO,a" || tokens.at(0) == "CBN,a" || tokens.at(0) == "CB123,a" || tokens.at(0) == "CB12,a" || tokens.at(0) == "CB13,a" || tokens.at(0) == "CB1,a" || tokens.at(0) == "CB23,a" || tokens.at(0) == "CB2,a" || tokens.at(0) == "CB3,a" || tokens.at(0) == "CBA,a" || tokens.at(0) == "CB0,a" || tokens.at(0) == "CB03,a" || tokens.at(0) == "CB02,a" || tokens.at(0) == "CB023,a" || tokens.at(0) == "CB01,a" || tokens.at(0) == "CB013,a" || tokens.at(0) == "CB012,a") {
-    unsigned tgt = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    if(name[0] == 'C')
-    {
-      result.valid = false;
-      result.rtl = new RTL;
-      result.numBytes = 4;
-      return result;
-    }
-    GotoStatement* jump = 0;
-    RTL* rtl = NULL;
-    if(strcmp(name,"BA,a") == 0 || strcmp(name,"BN,a") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    if(strcmp(name,"BVS,a") == 0 || strcmp(name,"BVC,a") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    {
-      rtl = createBranchRtl(pc, stmts, name);
-      jump = (GotoStatement*) rtl->getList().back();
-    }
-    result.type = SCDAN;
-    if((strcmp(name,"BA,a") == 0) || (strcmp(name, "BVC,a") == 0))
-    {
-      result.type = SU;
-    }
-    else
-    {
-      result.type = SKIP;
-    }
-    result.rtl = rtl;
-    jump->setDest(tgt - delta);
-  }
-  if (tokens.at(0) == "BPN,a" || tokens.at(0) == "BPE,a" || tokens.at(0) == "BPLE,a" || tokens.at(0) == "BPL,a" || tokens.at(0) == "BPLEU,a" || tokens.at(0) == "BPCS,a" || tokens.at(0) == "BPNEG,a" || tokens.at(0) == "BPVS,a" || tokens.at(0) == "BPA,a" || tokens.at(0) == "BPNE,a" || tokens.at(0) == "BPG,a" || tokens.at(0) == "BPGE,a" || tokens.at(0) == "BPGU,a" || tokens.at(0) == "BPCC,a" || tokens.at(0) == "BPPOS,a" || tokens.at(0) == "BPVC,a") {
-    unsigned cc01 = magic_process(tokens.at(1));
-    unsigned tgt = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    if(cc01 != 0)
-    {
-      result.valid = false;
-      result.rtl = new RTL;
-      result.numBytes = 4;
-      return result;
-    }
-    GotoStatement* jump = 0;
-    RTL* rtl = NULL;
-    if(strcmp(name,"BPA,a") == 0 || strcmp(name,"BPN,a") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    if(strcmp(name,"BPVS,a") == 0 || strcmp(name,"BPVC,a") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    {
-      rtl = createBranchRtl(pc, stmts, name);
-      jump = (GotoStatement*) rtl->getList().back();
-    }
-    result.type = SCDAN;
-    if((strcmp(name,"BPA,a") == 0) || (strcmp(name, "BPVC,a") == 0))
-    {
-      result.type = SU;
-    }
-    else
-    {
-      result.type = SKIP;
-    }
-    result.rtl = rtl;
-    jump->setDest(tgt - delta);
-  }
-  if (tokens.at(0) == "BN" || tokens.at(0) == "BE" || tokens.at(0) == "BLE" || tokens.at(0) == "BL" || tokens.at(0) == "BLEU" || tokens.at(0) == "BCS" || tokens.at(0) == "BNEG" || tokens.at(0) == "BVS" || tokens.at(0) == "BA" || tokens.at(0) == "BNE" || tokens.at(0) == "BG" || tokens.at(0) == "BGE" || tokens.at(0) == "BGU" || tokens.at(0) == "BCC" || tokens.at(0) == "BPOS" || tokens.at(0) == "BVC" || tokens.at(0) == "FBN" || tokens.at(0) == "FBNE" || tokens.at(0) == "FBLG" || tokens.at(0) == "FBUL" || tokens.at(0) == "FBL" || tokens.at(0) == "FBUG" || tokens.at(0) == "FBG" || tokens.at(0) == "FBU" || tokens.at(0) == "FBA" || tokens.at(0) == "FBE" || tokens.at(0) == "FBUE" || tokens.at(0) == "FBGE" || tokens.at(0) == "FBUGE" || tokens.at(0) == "FBLE" || tokens.at(0) == "FBULE" || tokens.at(0) == "FBO" || tokens.at(0) == "CBN" || tokens.at(0) == "CB123" || tokens.at(0) == "CB12" || tokens.at(0) == "CB13" || tokens.at(0) == "CB1" || tokens.at(0) == "CB23" || tokens.at(0) == "CB2" || tokens.at(0) == "CB3" || tokens.at(0) == "CBA" || tokens.at(0) == "CB0" || tokens.at(0) == "CB03" || tokens.at(0) == "CB02" || tokens.at(0) == "CB023" || tokens.at(0) == "CB01" || tokens.at(0) == "CB013" || tokens.at(0) == "CB012") {
-    unsigned tgt = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    if(name[0] == 'C')
-    {
-      result.valid = false;
-      result.rtl = new RTL;
-      result.numBytes = 4;
-      return result;
-    }
-    GotoStatement* jump = 0;
-    RTL* rtl = NULL;
-    if(strcmp(name,"BA") == 0 || strcmp(name,"BN") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    if(strcmp(name,"BVS") == 0 || strcmp(name,"BVC") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    {
-      rtl = createBranchRtl(pc, stmts, name);
-      jump = (BranchStatement*) rtl->getList().back();
-    }
-    result.type = SCD;
-    if((strcmp(name,"BA") == 0) || (strcmp(name, "BVC") == 0))
-    result.type = SD;
-    if((strcmp(name,"BN") == 0) || (strcmp(name, "BVS") == 0))
-    result.type = NCT;
-    result.rtl = rtl;
-    jump->setDest(tgt - delta);
-  }
-  if (tokens.at(0) == "BPA" ) {
-    unsigned cc01 = magic_process(tokens.at(1));
-    unsigned tgt = magic_process(tokens.at(2));
-    unused(cc01);
-    GotoStatement* jump = new GotoStatement;
-    result.type = SD;
-    result.rtl = new RTL(pc, stmts);
-    result.rtl->appendStmt(jump);
-    jump->setDest(tgt - delta);
-  }
-  if (tokens.at(0) == "BPN" || tokens.at(0) == "BPE" || tokens.at(0) == "BPLE" || tokens.at(0) == "BPL" || tokens.at(0) == "BPLEU" || tokens.at(0) == "BPCS" || tokens.at(0) == "BPNEG" || tokens.at(0) == "BPVS" || tokens.at(0) == "BPA" || tokens.at(0) == "BPNE" || tokens.at(0) == "BPG" || tokens.at(0) == "BPGE" || tokens.at(0) == "BPGU" || tokens.at(0) == "BPCC" || tokens.at(0) == "BPPOS" || tokens.at(0) == "BPVC") {
-    unsigned cc01 = magic_process(tokens.at(1));
-    unsigned tgt = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    if(cc01 != 0)
-    {
-      result.valid = false;
-      result.rtl = new RTL;
-      result.numBytes = 4;
-      return result;
-    }
-    GotoStatement* jump = 0;
-    RTL* rtl = NULL;
-    if(strcmp(name,"BPN") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    if(strcmp(name,"BPVS") == 0 || strcmp(name,"BPVC") == 0)
-    {
-      jump = new GotoStatement;
-      rtl = new RTL(pc, stmts);
-      rtl->appendStmt(jump);
-    }
-    else
-    {
-      rtl = createBranchRtl(pc, stmts, name);
-      jump = (GotoStatement*)rtl->getList().back();
-    }
-    result.type = SCD;
-    if(strcmp(name, "BPVC") == 0)
-    result.type = SD;
-    if((strcmp(name,"BPN") == 0) || (strcmp(name, "BPVS") == 0))
-    result.type = NCT;
-    result.rtl = rtl;
-    jump->setDest(tgt - delta);
-  }
-  if (tokens.at(0) == "JMPL" || tokens.at(0) == "JMP" ) {
-    if (tokens.at(0) == "JMP"){
+                      unused(n);
 
-      result.rtl = new RTL(pc, stmts);
+                      stmts = NULL;
 
-      result.rtl->appendStmt(new ReturnStatement);
+                      result.valid = false;
 
-      result.type = DD;
-      SHOW_ASM("retl_");
-      DEBUG_STMTS
-    }
-    else{
-      unsigned addr = magic_process(tokens.at(1));
-      unsigned rd = magic_process(tokens.at(2));
-      CaseStatement* jump = new CaseStatement;
-      jump->setIsComputed();
-      result.rtl = new RTL(pc, stmts);
-      result.rtl->appendStmt(jump);
-      result.type = DD;
-      jump->setDest(dis_Eaddr(addr));
-      unused(rd);
-    }
-  }
-  if (tokens.at(0) == "SAVE" ) {
-    unsigned rs1 = magic_process(tokens.at(1));
-    unsigned roi = magic_process(tokens.at(2));
-    unsigned rd = magic_process(tokens.at(3));
-    stmts = instantiate(pc, "SAVE", DIS_RS1, DIS_ROI, DIS_RD);
-  }
-  if (tokens.at(0) == "RESTORE" ) {
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 1: 
+                if ((MATCH_w_32_0 >> 29 & 0x1) /* a at 0 */ == 1) 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_0[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d0; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_1[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d0; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                else 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    unsigned cc01 = 
+                      (MATCH_w_32_0 >> 20 & 0x3) /* cc01 at 0 */;
+                    unsigned tgt = 
+                      4 * sign_extend((MATCH_w_32_0 & 0x7ffff) 
+                                        /* disp19 at 0 */, 19) + 
+                      addressToPC(MATCH_p);
+                    nextPC = 4 + MATCH_p; 
+                    
+#line 402 "../frontend/machine/sparc/decoder.m"
+                          /* Can see bpa xcc,tgt in 32 bit code */
+
+                        unused(cc01);       // Does not matter because is unconditional
+
+                        GotoStatement* jump = new GotoStatement;
+
+                    
+
+                        result.type = SD;
+
+                        result.rtl = new RTL(pc, stmts);
+
+                        result.rtl->appendStmt(jump);
+
+                        jump->setDest(tgt - delta);
+
+                        SHOW_ASM("BPA " << std::hex << tgt-delta)
+
+                        DEBUG_STMTS
+
+                    
+
+                    
+                    
+                    
+                  } /*opt-block*//*opt-block+*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_0[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    { 
+                      char *name = MATCH_name;
+                      unsigned cc01 = 
+                        (MATCH_w_32_0 >> 20 & 0x3) /* cc01 at 0 */;
+                      unsigned tgt = 
+                        4 * sign_extend((MATCH_w_32_0 & 0x7ffff) 
+                                          /* disp19 at 0 */, 19) + 
+                        addressToPC(MATCH_p);
+                      nextPC = 4 + MATCH_p; 
+                      
+#line 413 "../frontend/machine/sparc/decoder.m"
+                      
+
+                          if (cc01 != 0) {    /* If 64 bit cc used, can't handle */
+
+                            result.valid = false;
+
+                            result.rtl = new RTL;
+
+                            result.numBytes = 4;
+
+                            return result;
+
+                          }
+
+                          GotoStatement* jump = 0;
+
+                          RTL* rtl = NULL;
+
+                          if (strcmp(name,"BPN") == 0) {
+
+                            jump = new GotoStatement;
+
+                            rtl = new RTL(pc, stmts);
+
+                            rtl->appendStmt(jump);
+
+                          } else if (strcmp(name,"BPVS") == 0 || strcmp(name,"BPVC") == 0) {
+
+                            jump = new GotoStatement;
+
+                            rtl = new RTL(pc, stmts);
+
+                            rtl->appendStmt(jump);
+
+                          } else {
+
+                            rtl = createBranchRtl(pc, stmts, name);
+
+                            // The BranchStatement will be the last Stmt of the rtl
+
+                            jump = (GotoStatement*)rtl->getList().back();
+
+                          }
+
+                      
+
+                          // The class of this instruction depends on whether or not
+
+                          // it is one of the 'unconditional' conditional branches
+
+                          // "BPN" (or the pseudo unconditionals BPVx)
+
+                          result.type = SCD;
+
+                          if (strcmp(name, "BPVC") == 0)
+
+                            result.type = SD;
+
+                          if ((strcmp(name,"BPN") == 0) || (strcmp(name, "BPVS") == 0))
+
+                            result.type = NCT;
+
+                      
+
+                          result.rtl = rtl;
+
+                          jump->setDest(tgt - delta);
+
+                          SHOW_ASM(name << " " << std::hex << tgt-delta)
+
+                          DEBUG_STMTS
+
+                      
+
+                      
+                      
+                      
+                    }
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                break;
+              case 2: 
+                if ((MATCH_w_32_0 >> 29 & 0x1) /* a at 0 */ == 1) 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_2[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_3[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                else 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_1[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_2[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                break;
+              case 3: case 5: 
+                goto MATCH_label_d3; break;
+              case 4: 
+                if ((MATCH_w_32_0 & 0x3fffff) /* imm22 at 0 */ == 0 && 
+                  (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */ == 0) { 
+                  MATCH_name = "NOP"; 
+                  { 
+                    char *name = MATCH_name;
+                    nextPC = 4 + MATCH_p; 
+                    
+#line 483 "../frontend/machine/sparc/decoder.m"
+                    
+
+                        result.type = NOP;
+
+                        stmts = instantiate(pc,  name);
+
+                    
+
+                    
+                    
+                    
+                  }
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d4;  /*opt-block+*/
+                
+                break;
+              case 6: 
+                if ((MATCH_w_32_0 >> 29 & 0x1) /* a at 0 */ == 1) 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_5[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_6[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                else 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_3[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_5[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                break;
+              case 7: 
+                if ((MATCH_w_32_0 >> 29 & 0x1) /* a at 0 */ == 1) 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_7[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_8[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d2; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                else 
+                  if ((MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                    MATCH_name = MATCH_name_cond_6[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/
+                  else { 
+                    MATCH_name = MATCH_name_cond_7[(MATCH_w_32_0 >> 25 & 0xf) 
+                          /* cond at 0 */]; 
+                    goto MATCH_label_d1; 
+                    
+                  } /*opt-block*/ /*opt-block+*/
+                break;
+              default: assert(0);
+            } /* (MATCH_w_32_0 >> 22 & 0x7) -- op2 at 0 --*/ 
+          break;
+        case 1: 
+          { 
+            unsigned addr = 
+              4 * sign_extend((MATCH_w_32_0 & 0x3fffffff) /* disp30 at 0 */, 
+                          30) + addressToPC(MATCH_p);
+
+            nextPC = 4 + MATCH_p; 
+            
+#line 217 "../frontend/machine/sparc/decoder.m"
+            
+
+                /*
+
+                 * A standard call 
+
+                 */
+
+                CallStatement* newCall = new CallStatement;
+
+            
+
+                // Set the destination
+
+                ADDRESS nativeDest = addr - delta;
+                
+                std::cout<< std::hex << nativeDest << "\n";
+
+                newCall->setDest(nativeDest);
+
+                Proc* destProc = prog->setNewProc(nativeDest);
+
+                if (destProc == (Proc*)-1) destProc = NULL;
+
+                newCall->setDestProc(destProc);
+
+                result.rtl = new RTL(pc, stmts);
+
+                result.rtl->appendStmt(newCall);
+
+                result.type = SD;
+             
+                SHOW_ASM("call__ " << std::hex << (nativeDest))
+
+                DEBUG_STMTS
+
+            
+
+            
+            
+            
+          }
+          
+          break;
+        case 2: 
+          
+            switch((MATCH_w_32_0 >> 19 & 0x3f) /* op3 at 0 */) {
+              case 0: 
+                MATCH_name = "ADD"; goto MATCH_label_d5; break;
+              case 1: 
+                MATCH_name = "AND"; goto MATCH_label_d5; break;
+              case 2: 
+                MATCH_name = "OR"; goto MATCH_label_d5; break;
+              case 3: 
+                MATCH_name = "XOR"; goto MATCH_label_d5; break;
+              case 4: 
+                MATCH_name = "SUB"; goto MATCH_label_d5; break;
+              case 5: 
+                MATCH_name = "ANDN"; goto MATCH_label_d5; break;
+              case 6: 
+                MATCH_name = "ORN"; goto MATCH_label_d5; break;
+              case 7: 
+                MATCH_name = "XNOR"; goto MATCH_label_d5; break;
+              case 8: 
+                MATCH_name = "ADDX"; goto MATCH_label_d5; break;
+              case 9: case 13: case 25: case 29: case 44: case 45: case 46: 
+              case 47: case 54: case 55: case 59: case 62: case 63: 
+                goto MATCH_label_d3; break;
+              case 10: 
+                MATCH_name = "UMUL"; goto MATCH_label_d5; break;
+              case 11: 
+                MATCH_name = "SMUL"; goto MATCH_label_d5; break;
+              case 12: 
+                MATCH_name = "SUBX"; goto MATCH_label_d5; break;
+              case 14: 
+                MATCH_name = "UDIV"; goto MATCH_label_d5; break;
+              case 15: 
+                MATCH_name = "SDIV"; goto MATCH_label_d5; break;
+              case 16: 
+                MATCH_name = "ADDcc"; goto MATCH_label_d5; break;
+              case 17: 
+                MATCH_name = "ANDcc"; goto MATCH_label_d5; break;
+              case 18: 
+                MATCH_name = "ORcc"; goto MATCH_label_d5; break;
+              case 19: 
+                MATCH_name = "XORcc"; goto MATCH_label_d5; break;
+              case 20: 
+                MATCH_name = "SUBcc"; goto MATCH_label_d5; break;
+              case 21: 
+                MATCH_name = "ANDNcc"; goto MATCH_label_d5; break;
+              case 22: 
+                MATCH_name = "ORNcc"; goto MATCH_label_d5; break;
+              case 23: 
+                MATCH_name = "XNORcc"; goto MATCH_label_d5; break;
+              case 24: 
+                MATCH_name = "ADDXcc"; goto MATCH_label_d5; break;
+              case 26: 
+                MATCH_name = "UMULcc"; goto MATCH_label_d5; break;
+              case 27: 
+                MATCH_name = "SMULcc"; goto MATCH_label_d5; break;
+              case 28: 
+                MATCH_name = "SUBXcc"; goto MATCH_label_d5; break;
+              case 30: 
+                MATCH_name = "UDIVcc"; goto MATCH_label_d5; break;
+              case 31: 
+                MATCH_name = "SDIVcc"; goto MATCH_label_d5; break;
+              case 32: 
+                MATCH_name = "TADDcc"; goto MATCH_label_d5; break;
+              case 33: 
+                MATCH_name = "TSUBcc"; goto MATCH_label_d5; break;
+              case 34: 
+                MATCH_name = "TADDccTV"; goto MATCH_label_d5; break;
+              case 35: 
+                MATCH_name = "TSUBccTV"; goto MATCH_label_d5; break;
+              case 36: 
+                MATCH_name = "MULScc"; goto MATCH_label_d5; break;
+              case 37: 
+                MATCH_name = "SLL"; goto MATCH_label_d5; break;
+              case 38: 
+                MATCH_name = "SRL"; goto MATCH_label_d5; break;
+              case 39: 
+                MATCH_name = "SRA"; goto MATCH_label_d5; break;
+              case 40: 
+                if ((MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */ == 0) { 
+                  MATCH_name = "RDY"; 
+                  { 
+                    char *name = MATCH_name;
+                    unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                    nextPC = 4 + MATCH_p; 
+                    
+#line 535 "../frontend/machine/sparc/decoder.m"
+                     
+
+                        stmts = instantiate(pc,  name, DIS_RD);
+
+                    
+
+                    
+                    
+                    
+                  }
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 41: 
+                MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
+                      /* op3 at 0 */]; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 538 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RD);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 42: 
+                MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
+                      /* op3 at 0 */]; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 541 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RD);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 43: 
+                MATCH_name = MATCH_name_op3_46[(MATCH_w_32_0 >> 19 & 0x3f) 
+                      /* op3 at 0 */]; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 544 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RD);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 48: 
+                if (1 <= (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */ && 
+                  (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */ < 32) 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                else { 
+                  MATCH_name = "WRY"; 
+                  { 
+                    char *name = MATCH_name;
+                    unsigned roi = addressToPC(MATCH_p);
+                    unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                    nextPC = 4 + MATCH_p; 
+                    
+#line 547 "../frontend/machine/sparc/decoder.m"
+                     
+
+                        stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
+
+                    
+
+                    
+                    
+                    
+                  }
+                  
+                } /*opt-block*/
+                
+                break;
+              case 49: 
+                MATCH_name = "WRPSR"; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned roi = addressToPC(MATCH_p);
+                  unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 550 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 50: 
+                MATCH_name = "WRWIM"; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned roi = addressToPC(MATCH_p);
+                  unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 553 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 51: 
+                MATCH_name = "WRTBR"; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned roi = addressToPC(MATCH_p);
+                  unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 556 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 52: 
+                if (80 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 196 || 
+                  212 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 512) 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                else 
+                  switch((MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */) {
+                    case 0: case 2: case 3: case 4: case 6: case 7: case 8: 
+                    case 10: case 11: case 12: case 13: case 14: case 15: 
+                    case 16: case 17: case 18: case 19: case 20: case 21: 
+                    case 22: case 23: case 24: case 25: case 26: case 27: 
+                    case 28: case 29: case 30: case 31: case 32: case 33: 
+                    case 34: case 35: case 36: case 37: case 38: case 39: 
+                    case 40: case 44: case 45: case 46: case 47: case 48: 
+                    case 49: case 50: case 51: case 52: case 53: case 54: 
+                    case 55: case 56: case 57: case 58: case 59: case 60: 
+                    case 61: case 62: case 63: case 64: case 68: case 72: 
+                    case 76: case 197: case 202: case 207: case 208: 
+                      goto MATCH_label_d3; break;
+                    case 1: case 5: case 9: case 41: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 562 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS2S, DIS_FDS);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 42: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdd = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 613 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2D, DIS_FDD);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 43: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdq = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 616 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDQ);
+
+                        
+
+                        
+
+                          // In V9, the privileged RETT becomes user-mode RETURN
+
+                          // It has the semantics of "ret restore" without the add part of the restore
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 65: case 69: case 73: case 77: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs1s = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1s at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 565 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1S, DIS_FS2S, DIS_FDS);
+
+                         
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 66: case 70: case 74: case 78: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdd = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+                        unsigned fs1d = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1d at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 568 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1D, DIS_FS2D, DIS_FDD);
+
+                         
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 67: case 71: case 75: case 79: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdq = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
+                        unsigned fs1q = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1q at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 571 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1Q, DIS_FS2Q, DIS_FDQ);
+
+                         
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 196: case 209: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 583 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2S, DIS_FDS);
+
+                        
+
+                          // Note: itod and dtoi have different sized registers
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 198: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 599 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 199: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 604 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 200: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdd = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 586 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 201: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdd = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 596 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 203: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdd = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 609 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDD);
+
+                        
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 204: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdq = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 591 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 205: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdq = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 601 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 206: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fdq = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fdq at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 606 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2D, DIS_FDQ);
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 210: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 589 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 211: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fds = 
+                          (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 594 "../frontend/machine/sparc/decoder.m"
+                        
+
+                            stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    default: assert(0);
+                  } /* (MATCH_w_32_0 >> 5 & 0x1ff) -- opf at 0 --*/ 
+                break;
+              case 53: 
+                if (0 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 81 || 
+                  88 <= (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ && 
+                  (MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */ < 512) 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                else 
+                  switch((MATCH_w_32_0 >> 5 & 0x1ff) /* opf at 0 */) {
+                    case 84: 
+                      goto MATCH_label_d3; break;
+                    case 81: case 85: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fs1s = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1s at 0 */;
+                        unsigned fs2s = (MATCH_w_32_0 & 0x1f) /* fs2s at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 574 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1S, DIS_FS2S);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 82: case 86: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fs1d = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1d at 0 */;
+                        unsigned fs2d = (MATCH_w_32_0 & 0x1f) /* fs2d at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 577 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1D, DIS_FS2D);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    case 83: case 87: 
+                      MATCH_name = 
+                        MATCH_name_opf_51[(MATCH_w_32_0 >> 5 & 0x1ff) 
+                            /* opf at 0 */]; 
+                      { 
+                        char *name = MATCH_name;
+                        unsigned fs1q = 
+                          (MATCH_w_32_0 >> 14 & 0x1f) /* fs1q at 0 */;
+                        unsigned fs2q = (MATCH_w_32_0 & 0x1f) /* fs2q at 0 */;
+                        nextPC = 4 + MATCH_p; 
+                        
+#line 580 "../frontend/machine/sparc/decoder.m"
+                         
+
+                            stmts = instantiate(pc,  name, DIS_FS1Q, DIS_FS2Q);
+
+                        
+
+                        
+                        
+                        
+                      }
+                      
+                      break;
+                    default: assert(0);
+                  } /* (MATCH_w_32_0 >> 5 & 0x1ff) -- opf at 0 --*/ 
+                break;
+              case 56: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) 
+                  
+                    switch((MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */) {
+                      case 0: 
+                        
+                          switch((MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */) {
+                            case 0: case 1: case 2: case 3: case 4: case 5: 
+                            case 6: case 7: case 8: case 9: case 10: case 11: 
+                            case 12: case 13: case 14: case 16: case 17: 
+                            case 18: case 19: case 20: case 21: case 22: 
+                            case 23: case 24: case 25: case 26: case 27: 
+                            case 28: case 29: case 30: 
+                              goto MATCH_label_d6; break;
+                            case 15: 
+                              if ((MATCH_w_32_0 & 0x1fff) 
+                                      /* simm13 at 0 */ == 8) { 
+                                nextPC = 4 + MATCH_p; 
+                                
+#line 264 "../frontend/machine/sparc/decoder.m"
+                                
+
+                                    /*
+
+                                     * Just a ret (leaf; uses %o7 instead of %i7)
+
+                                     */
+
+                                    result.rtl = new RTL(pc, stmts);
+
+                                    result.rtl->appendStmt(new ReturnStatement);
+
+                                    result.type = DD;
+
+                                    SHOW_ASM("retl_")
+
+                                    DEBUG_STMTS
+
+                                
+
+                                
+                                
+                                
+                              } /*opt-block*//*opt-block+*/
+                              else 
+                                goto MATCH_label_d6;  /*opt-block+*/
+                              
+                              break;
+                            case 31: 
+                              if ((MATCH_w_32_0 & 0x1fff) 
+                                      /* simm13 at 0 */ == 8) { 
+                                nextPC = 4 + MATCH_p; 
+                                
+#line 254 "../frontend/machine/sparc/decoder.m"
+                                
+
+                                    /*
+
+                                     * Just a ret (non leaf)
+
+                                     */
+
+                                    result.rtl = new RTL(pc, stmts);
+
+                                    result.rtl->appendStmt(new ReturnStatement);
+
+                                    result.type = DD;
+
+                                    SHOW_ASM("ret_")
+
+                                    DEBUG_STMTS
+
+                                
+
+                                
+                                
+                                
+                              } /*opt-block*//*opt-block+*/
+                              else 
+                                goto MATCH_label_d6;  /*opt-block+*/
+                              
+                              break;
+                            default: assert(0);
+                          } /* (MATCH_w_32_0 >> 14 & 0x1f) -- rs1 at 0 --*/ 
+                        break;
+                      case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
+                      case 8: case 9: case 10: case 11: case 12: case 13: 
+                      case 14: case 16: case 17: case 18: case 19: case 20: 
+                      case 21: case 22: case 23: case 24: case 25: case 26: 
+                      case 27: case 28: case 29: case 30: case 31: 
+                        goto MATCH_label_d6; break;
+                      case 15: 
+                        goto MATCH_label_d7; break;
+                      default: assert(0);
+                    } /* (MATCH_w_32_0 >> 25 & 0x1f) -- rd at 0 --*/  
+                else 
+                  if ((MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */ == 15) 
+                    goto MATCH_label_d7;  /*opt-block+*/
+                  else 
+                    goto MATCH_label_d6;  /*opt-block+*/ /*opt-block+*/
+                break;
+              case 57: 
+                MATCH_name = "RETURN"; 
+                { 
+                  char *name = MATCH_name;
+                  unsigned addr = addressToPC(MATCH_p);
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 622 "../frontend/machine/sparc/decoder.m"
+                   
+
+                      stmts = instantiate(pc, name, DIS_ADDR);
+
+                      result.rtl = new RTL(pc, stmts);
+
+                      result.rtl->appendStmt(new ReturnStatement);
+
+                      result.type = DD;
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 58: 
+                if (0 <= (MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ && 
+                  (MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ < 2 && 
+                  (MATCH_w_32_0 >> 25 & 0xf) /* cond at 0 */ == 8) { 
+                  MATCH_name = MATCH_name_cond_8[(MATCH_w_32_0 >> 25 & 0xf) 
+                        /* cond at 0 */]; 
+                  goto MATCH_label_d8; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = MATCH_name_cond_53[(MATCH_w_32_0 >> 25 & 0xf) 
+                        /* cond at 0 */]; 
+                  goto MATCH_label_d8; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 60: 
+                { 
+                  unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                  unsigned roi = addressToPC(MATCH_p);
+                  unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 473 "../frontend/machine/sparc/decoder.m"
+                  
+
+                      // Decided to treat SAVE as an ordinary instruction
+
+                      // That is, use the large list of effects from the SSL file, and
+
+                      // hope that optimisation will vastly help the common cases
+
+                      stmts = instantiate(pc, "SAVE", DIS_RS1, DIS_ROI, DIS_RD);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              case 61: 
+                { 
+                  unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+                  unsigned roi = addressToPC(MATCH_p);
+                  unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+                  nextPC = 4 + MATCH_p; 
+                  
+#line 479 "../frontend/machine/sparc/decoder.m"
+                  
+
+                      // Decided to treat RESTORE as an ordinary instruction
+
+                      stmts = instantiate(pc, "RESTORE", DIS_RS1, DIS_ROI, DIS_RD);
+
+                  
+
+                  
+                  
+                  
+                }
+                
+                break;
+              default: assert(0);
+            } /* (MATCH_w_32_0 >> 19 & 0x3f) -- op3 at 0 --*/ 
+          break;
+        case 3: 
+          
+            switch((MATCH_w_32_0 >> 19 & 0x3f) /* op3 at 0 */) {
+              case 0: 
+                MATCH_name = "LD"; goto MATCH_label_d9; break;
+              case 1: 
+                MATCH_name = "LDUB"; goto MATCH_label_d9; break;
+              case 2: 
+                MATCH_name = "LDUH"; goto MATCH_label_d9; break;
+              case 3: 
+                MATCH_name = "LDD"; goto MATCH_label_d9; break;
+              case 4: 
+                MATCH_name = "ST"; goto MATCH_label_d10; break;
+              case 5: 
+                MATCH_name = "STB"; goto MATCH_label_d10; break;
+              case 6: 
+                MATCH_name = "STH"; goto MATCH_label_d10; break;
+              case 7: 
+                MATCH_name = "STD"; goto MATCH_label_d10; break;
+              case 8: case 11: case 12: case 14: case 24: case 27: case 28: 
+              case 30: case 34: case 40: case 41: case 42: case 43: case 44: 
+              case 45: case 46: case 47: case 48: case 50: case 51: case 52: 
+              case 55: case 56: case 57: case 58: case 59: case 60: case 61: 
+              case 62: case 63: 
+                goto MATCH_label_d3; break;
+              case 9: 
+                MATCH_name = "LDSB"; goto MATCH_label_d9; break;
+              case 10: 
+                MATCH_name = "LDSH"; goto MATCH_label_d9; break;
+              case 13: 
+                MATCH_name = "LDSTUB"; goto MATCH_label_d9; break;
+              case 15: 
+                MATCH_name = "SWAP."; goto MATCH_label_d9; break;
+              case 16: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_66[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 17: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_67[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 18: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_68[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 19: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_69[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 20: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_70[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d12; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 21: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_71[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d12; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 22: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_72[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d12; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 23: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_73[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d12; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 25: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_74[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 26: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = 
+                    MATCH_name_i_75[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 29: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = "LDSTUBA"; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 31: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 0) { 
+                  MATCH_name = "SWAPA"; 
+                  goto MATCH_label_d11; 
+                  
+                } /*opt-block*/
+                else 
+                  goto MATCH_label_d3;  /*opt-block+*/
+                
+                break;
+              case 32: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_66[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d13; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "LDF"; 
+                  goto MATCH_label_d13; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 33: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_67[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d14; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "LDFSR"; 
+                  goto MATCH_label_d14; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 35: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_68[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d15; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "LDDF"; 
+                  goto MATCH_label_d15; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 36: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_69[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d16; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STF"; 
+                  goto MATCH_label_d16; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 37: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_70[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d17; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STFSR"; 
+                  goto MATCH_label_d17; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 38: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_71[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d18; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STDFQ"; 
+                  goto MATCH_label_d18; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 39: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_72[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d19; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STDF"; 
+                  goto MATCH_label_d19; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 49: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_73[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d20; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "LDCSR"; 
+                  goto MATCH_label_d20; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 53: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_74[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d21; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STCSR"; 
+                  goto MATCH_label_d21; 
+                  
+                } /*opt-block*/
+                
+                break;
+              case 54: 
+                if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+                  MATCH_name = 
+                    MATCH_name_i_75[(MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */]; 
+                  goto MATCH_label_d22; 
+                  
+                } /*opt-block*/
+                else { 
+                  MATCH_name = "STDCQ"; 
+                  goto MATCH_label_d22; 
+                  
+                } /*opt-block*/
+                
+                break;
+              default: assert(0);
+            } /* (MATCH_w_32_0 >> 19 & 0x3f) -- op3 at 0 --*/ 
+          break;
+        default: assert(0);
+      } /* (MATCH_w_32_0 >> 30 & 0x3) -- op at 0 --*/ 
+    
+  }goto MATCH_finished_d; 
   
-    stmts = instantiate(pc, "RESTORE", new Const(0), new Const(0), Location::regOf(0));
-  
-  }
-  if (tokens.at(0) == "NOP" ) {
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    result.type = NOP;
-    stmts = instantiate(pc,  name);
-  }
-  if (tokens.at(0) == "SETHI" ) {
-    
-    if (if_str(tokens.at(1))){   
-      unsigned rd = magic_process(tokens.at(2));
-      char *para = process_str(tokens.at(1));
-      stmts = instantiate(pc,  "sethi", new Const(para), DIS_RD);
-    }
-    else
-    {
-      unsigned imm22 = magic_process(tokens.at(1));
-      unsigned rd = magic_process(tokens.at(2));
-      stmts = instantiate(pc,  "sethi", dis_Num(imm22), DIS_RD);
-    }
-    
-  }
-  if (tokens.at(0) == "LDSB" || tokens.at(0) == "LDSH" || tokens.at(0) == "LDUB" || tokens.at(0) == "LDUH" || tokens.at(0) == "LD" || tokens.at(0) == "LDSTUB" || tokens.at(0) == "SWAP." || tokens.at(0) == "LDD") {
-    if (tokens.at(0) == "LD"){
-      unsigned rd = magic_process(tokens.at(2));
-      char *name =  new char[tokens.at(0).length() + 1];
-      Exp* expr = new Binary(opPlus, Location::regOf(magic_process(tokens.at(1).substr(1,3))),new Const(std::atoi((tokens.at(1).substr(4,tokens.at(2).length()-5)).c_str())));
-      strcpy(name, tokens.at(0).c_str());
-      stmts = instantiate(pc,  name, expr, DIS_RD);
-    }
-    else {
-    unsigned addr = magic_process(tokens.at(1));
-    unsigned rd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR, DIS_RD);
-    }
-  }
-  if (tokens.at(0) == "LDF" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR, DIS_FDS);
-  }
-  if (tokens.at(0) == "LDDF" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    unsigned fdd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR, DIS_FDD);
-  }
-  if (tokens.at(0) == "LDSBA" || tokens.at(0) == "LDSHA" || tokens.at(0) == "LDUBA" || tokens.at(0) == "LDUHA" || tokens.at(0) == "LDA" || tokens.at(0) == "LDSTUBA" || tokens.at(0) == "SWAPA" || tokens.at(0) == "LDDA") {
-    unsigned addr = magic_process(tokens.at(1));
-    unsigned asi = magic_process(tokens.at(2));
-    unsigned rd = magic_process(tokens.at(3));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    unused(asi);
-    stmts = instantiate(pc,  name, DIS_RD, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STB" || tokens.at(0) == "STH" || tokens.at(0) == "ST" || tokens.at(0) == "STD") {
-    if (tokens.at(0) == "ST"){
-      unsigned rd = magic_process(tokens.at(1));
-      Exp* expr = new Binary(opPlus, Location::regOf(magic_process(tokens.at(2).substr(1,3))),new Const(std::atoi((tokens.at(2).substr(4,tokens.at(2).length()-5)).c_str())));
-    
-      char *name =  new char[tokens.at(0).length() + 1];
-      strcpy(name, tokens.at(0).c_str());
-      stmts = instantiate(pc,  name, DIS_RDR, expr);
-    }
-    else
-    {
-    unsigned rd = magic_process(tokens.at(1));
-    unsigned addr = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RDR, DIS_ADDR);
-    }
-  }
-  if (tokens.at(0) == "STF" ) {
-    unsigned fds = magic_process(tokens.at(1));
-    unsigned addr = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FDS, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STDF" ) {
-    unsigned fdd = magic_process(tokens.at(1));
-    unsigned addr = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FDD, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STBA" || tokens.at(0) == "STHA" || tokens.at(0) == "STA" || tokens.at(0) == "STDA") {
-    unsigned rd = magic_process(tokens.at(1));
-    unsigned addr = magic_process(tokens.at(2));
-    unsigned asi = magic_process(tokens.at(3));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    unused(asi);
-    stmts = instantiate(pc,  name, DIS_RDR, DIS_ADDR);
-  }
-  if (tokens.at(0) == "LDFSR" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "LDCSR" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STFSR" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STCSR" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STDFQ" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "STDCQ" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "RDY" ) {
-    unsigned rd = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RD);
-  }
-  if (tokens.at(0) == "RDPSR" ) {
-    unsigned rd = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RD);
-  }
-  if (tokens.at(0) == "RDWIM" ) {
-    unsigned rd = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RD);
-  }
-  if (tokens.at(0) == "RDTBR" ) {
-    unsigned rd = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RD);
-  }
-  if (tokens.at(0) == "WRY" ) {
-    unsigned rs1 = magic_process(tokens.at(1));
-    unsigned roi = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
-  }
-  if (tokens.at(0) == "WRPSR" ) {
-    unsigned rs1 = magic_process(tokens.at(1));
-    unsigned roi = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
-  }
-  if (tokens.at(0) == "WRWIM" ) {
-    unsigned rs1 = magic_process(tokens.at(1));
-    unsigned roi = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
-  }
-  if (tokens.at(0) == "WRTBR" ) {
-    unsigned rs1 = magic_process(tokens.at(1));
-    unsigned roi = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI);
-  }
-  if (tokens.at(0) == "AND" || tokens.at(0) == "MOV" || tokens.at(0) == "ANDcc" || tokens.at(0) == "ANDN" || tokens.at(0) == "ANDNcc" || tokens.at(0) == "OR" || tokens.at(0) == "ORcc" || tokens.at(0) == "ORN" || tokens.at(0) == "ORNcc" || tokens.at(0) == "XOR" || tokens.at(0) == "XORcc" || tokens.at(0) == "XNOR" || tokens.at(0) == "XNORcc" || tokens.at(0) == "SLL" || tokens.at(0) == "SRL" || tokens.at(0) == "SRA" || tokens.at(0) == "ADD" || tokens.at(0) == "ADDcc" || tokens.at(0) == "ADDX" || tokens.at(0) == "ADDXcc" || tokens.at(0) == "TADDcc" || tokens.at(0) == "TADDccTV" || tokens.at(0) == "SUB" || tokens.at(0) == "SUBcc" || tokens.at(0) == "SUBX" || tokens.at(0) == "SUBXcc" || tokens.at(0) == "TSUBcc" || tokens.at(0) == "TSUBccTV" || tokens.at(0) == "MULScc" || tokens.at(0) == "UMUL" || tokens.at(0) == "SMUL" || tokens.at(0) == "UMULcc" || tokens.at(0) == "SMULcc" || tokens.at(0) == "UDIV" || tokens.at(0) == "SDIV" || tokens.at(0) == "UDIVcc" || tokens.at(0) == "SDIVcc") {
-    if (tokens.at(0) == "MOV"){
-      unsigned roi = magic_process(tokens.at(1));
-      unsigned rd = magic_process(tokens.at(2));
-      char *name =  new char[tokens.at(0).length() + 1];
-      strcpy(name, tokens.at(0).c_str());
-      stmts = instantiate(pc,  "OR", new Const(0), DIS_ROI, DIS_RD);
+  MATCH_label_d0: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned cc01 = (MATCH_w_32_0 >> 20 & 0x3) /* cc01 at 0 */;
+      unsigned tgt = 
+        4 * sign_extend((MATCH_w_32_0 & 0x7ffff) /* disp19 at 0 */, 19) + 
+        addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 318 "../frontend/machine/sparc/decoder.m"
+       
+
+          /*
+
+           * Anulled , predicted branch (treat as for non predicted)
+
+           */
+
+      
+
+          // Instantiate a GotoStatement for the unconditional branches, HLJconds for the rest.
+
+          // NOTE: NJMC toolkit cannot handle embedded else statements!
+
+          if (cc01 != 0) {    /* If 64 bit cc used, can't handle */
+
+            result.valid = false;
+
+            result.rtl = new RTL;
+
+            result.numBytes = 4;
+
+            return result;
+
+          }
+
+          GotoStatement* jump = 0;
+
+          RTL* rtl = NULL;          // Init to NULL to suppress a warning
+
+          if (strcmp(name,"BPA,a") == 0 || strcmp(name,"BPN,a") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else if (strcmp(name,"BPVS,a") == 0 || strcmp(name,"BPVC,a") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else {
+
+            rtl = createBranchRtl(pc, stmts, name);
+
+            jump = (GotoStatement*) rtl->getList().back();
+
+          }
+
+      
+
+          // The class of this instruction depends on whether or not it is one of the 'unconditional' conditional branches
+
+          // "BPA,A" or "BPN,A"
+
+          result.type = SCDAN;
+
+          if ((strcmp(name,"BPA,a") == 0) || (strcmp(name, "BPVC,a") == 0)) {
+
+            result.type = SU;
+
+          } else {
+
+            result.type = SKIP;
+
+          }
+
+      
+
+          result.rtl = rtl;
+
+          jump->setDest(tgt - delta);
+
+          SHOW_ASM(name << " " << std::hex << tgt-delta)
+
+          DEBUG_STMTS
+
+          
+
+      
+      
+      
     } 
-    else{
-      unsigned rs1 = magic_process(tokens.at(1));
-      unsigned roi = magic_process(tokens.at(2));
-      unsigned rd = magic_process(tokens.at(3));
-      char *name =  new char[tokens.at(0).length() + 1];
-      strcpy(name, tokens.at(0).c_str());
-      stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI, DIS_RD);
-    }
-  }
-  if (tokens.at(0) == "FMOVs" || tokens.at(0) == "FNEGs" || tokens.at(0) == "FABSs" || tokens.at(0) == "FSQRTs") {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS2S, DIS_FDS);
-  }
-  if (tokens.at(0) == "FADDs" || tokens.at(0) == "FSUBs" || tokens.at(0) == "FMULs" || tokens.at(0) == "FDIVs") {
-    unsigned fs1s = magic_process(tokens.at(1));
-    unsigned fs2s = magic_process(tokens.at(2));
-    unsigned fds = magic_process(tokens.at(3));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1S, DIS_FS2S, DIS_FDS);
-  }
-  if (tokens.at(0) == "FADDd" || tokens.at(0) == "FSUBd" || tokens.at(0) == "FMULd" || tokens.at(0) == "FDIVd") {
-    unsigned fs1d = magic_process(tokens.at(1));
-    unsigned fs2d = magic_process(tokens.at(2));
-    unsigned fdd = magic_process(tokens.at(3));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1D, DIS_FS2D, DIS_FDD);
-  }
-  if (tokens.at(0) == "FADDq" || tokens.at(0) == "FSUBq" || tokens.at(0) == "FMULq" || tokens.at(0) == "FDIVq") {
-    unsigned fs1q = magic_process(tokens.at(1));
-    unsigned fs2q = magic_process(tokens.at(2));
-    unsigned fdq = magic_process(tokens.at(3));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1Q, DIS_FS2Q, DIS_FDQ);
-  }
-  if (tokens.at(0) == "FCMPs" || tokens.at(0) == "FCMPEs") {
-    unsigned fs1s = magic_process(tokens.at(1));
-    unsigned fs2s = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1S, DIS_FS2S);
-  }
-  if (tokens.at(0) == "FCMPd" || tokens.at(0) == "FCMPEd") {
-    unsigned fs1d = magic_process(tokens.at(1));
-    unsigned fs2d = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1D, DIS_FS2D);
-  }
-  if (tokens.at(0) == "FCMPq" || tokens.at(0) == "FCMPEq") {
-    unsigned fs1q = magic_process(tokens.at(1));
-    unsigned fs2q = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_FS1Q, DIS_FS2Q);
-  }
-  if (tokens.at(0) == "FiTOs" || tokens.at(0) == "FsTOi") {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2S, DIS_FDS);
-  }
-  if (tokens.at(0) == "FiTOd" ) {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fdd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
-  }
-  if (tokens.at(0) == "FdTOi" ) {
-    unsigned fs2d = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
-  }
-  if (tokens.at(0) == "FiTOq" ) {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fdq = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
-  }
-  if (tokens.at(0) == "FqTOi" ) {
-    unsigned fs2q = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
-  }
-  if (tokens.at(0) == "FsTOd" ) {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fdd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2S, DIS_FDD);
-  }
-  if (tokens.at(0) == "FdTOs" ) {
-    unsigned fs2d = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2D, DIS_FDS);
-  }
-  if (tokens.at(0) == "FsTOq" ) {
-    unsigned fs2s = magic_process(tokens.at(1));
-    unsigned fdq = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2S, DIS_FDQ);
-  }
-  if (tokens.at(0) == "FqTOs" ) {
-    unsigned fs2q = magic_process(tokens.at(1));
-    unsigned fds = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDS);
-  }
-  if (tokens.at(0) == "FdTOq" ) {
-    unsigned fs2d = magic_process(tokens.at(1));
-    unsigned fdq = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2D, DIS_FDQ);
-  }
-  if (tokens.at(0) == "FqTOd" ) {
-    unsigned fs2q = magic_process(tokens.at(1));
-    unsigned fdd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDD);
-  }
-  if (tokens.at(0) == "FSQRTd" ) {
-    unsigned fs2d = magic_process(tokens.at(1));
-    unsigned fdd = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2D, DIS_FDD);
-  }
-  if (tokens.at(0) == "FSQRTq" ) {
-    unsigned fs2q = magic_process(tokens.at(1));
-    unsigned fdq = magic_process(tokens.at(2));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_FS2Q, DIS_FDQ);
-  }
-  if (tokens.at(0) == "RETURN" ) {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc, name, DIS_ADDR);
-    result.rtl = new RTL(pc, stmts);
-    result.rtl->appendStmt(new ReturnStatement);
-    result.type = DD;
-  }
-  if (tokens.at(0) == "TN" || tokens.at(0) == "TE" || tokens.at(0) == "TLE" || tokens.at(0) == "TL" || tokens.at(0) == "TLEU" || tokens.at(0) == "TCS" || tokens.at(0) == "TNEG" || tokens.at(0) == "TVS" || tokens.at(0) == "TA" || tokens.at(0) == "TNE" || tokens.at(0) == "TG" || tokens.at(0) == "TGE" || tokens.at(0) == "TGU" || tokens.at(0) == "TCC" || tokens.at(0) == "TPOS" || tokens.at(0) == "TVC") {
-    unsigned addr = magic_process(tokens.at(1));
-    char *name =  new char[tokens.at(0).length() + 1];
-    strcpy(name, tokens.at(0).c_str());
-    stmts = instantiate(pc,  name, DIS_ADDR);
-  }
-  if (tokens.at(0) == "UNIMP" ) {
-    unsigned n = magic_process(tokens.at(1));
-    unused(n);
-    stmts = NULL;
-    result.valid = false;
-  }
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d1: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned tgt = 
+        4 * sign_extend((MATCH_w_32_0 & 0x3fffff) /* disp22 at 0 */, 22) + 
+        addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 360 "../frontend/machine/sparc/decoder.m"
+       
+
+          /*
+
+           * Non anulled branch
+
+           */
+
+          // First, check for CBxxx branches (branches that depend on co-processor instructions). These are invalid,
+
+          // as far as we are concerned
+
+          if (name[0] == 'C') {
+
+            result.valid = false;
+
+            result.rtl = new RTL;
+
+            result.numBytes = 4;
+
+            return result;
+
+          }
+
+          // Instantiate a GotoStatement for the unconditional branches, BranchStatement for the rest
+
+          // NOTE: NJMC toolkit cannot handle embedded plain else statements! (But OK with curly bracket before the else)
+
+          GotoStatement* jump = 0;
+
+          RTL* rtl = NULL;
+
+          if (strcmp(name,"BA") == 0 || strcmp(name,"BN") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else if (strcmp(name,"BVS") == 0 || strcmp(name,"BVC") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else {
+
+            rtl = createBranchRtl(pc, stmts, name);
+
+            jump = (BranchStatement*) rtl->getList().back();
+
+          }
+
+      
+
+          // The class of this instruction depends on whether or not it is one of the 'unconditional' conditional branches
+
+          // "BA" or "BN" (or the pseudo unconditionals BVx)
+
+          result.type = SCD;
+
+          if ((strcmp(name,"BA") == 0) || (strcmp(name, "BVC") == 0))
+
+            result.type = SD;
+
+          if ((strcmp(name,"BN") == 0) || (strcmp(name, "BVS") == 0))
+
+            result.type = NCT;
+
+      
+
+          result.rtl = rtl;
+
+          jump->setDest(tgt - delta);
+
+          SHOW_ASM(name << " " << std::hex << tgt-delta)
+
+          DEBUG_STMTS
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d2: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned tgt = 
+        4 * sign_extend((MATCH_w_32_0 & 0x3fffff) /* disp22 at 0 */, 22) + 
+        addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 274 "../frontend/machine/sparc/decoder.m"
+       
+
+          /*
+
+           * Anulled branch
+
+           */
+
+      
+
+          // First, check for CBxxx branches (branches that depend on co-processor instructions). These are invalid,
+
+          // as far as we are concerned
+
+          if (name[0] == 'C') {
+
+            result.valid = false;
+
+            result.rtl = new RTL;
+
+            result.numBytes = 4;
+
+            return result;
+
+          }
+
+          // Instantiate a GotoStatement for the unconditional branches, HLJconds for the rest.
+
+          // NOTE: NJMC toolkit cannot handle embedded else statements!
+
+          GotoStatement* jump = 0;
+
+          RTL* rtl = NULL;          // Init to NULL to suppress a warning
+
+          if (strcmp(name,"BA,a") == 0 || strcmp(name,"BN,a") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else if (strcmp(name,"BVS,a") == 0 || strcmp(name,"BVC,a") == 0) {
+
+            jump = new GotoStatement;
+
+            rtl = new RTL(pc, stmts);
+
+            rtl->appendStmt(jump);
+
+          } else {
+
+            rtl = createBranchRtl(pc, stmts, name);
+
+            jump = (GotoStatement*) rtl->getList().back();
+
+          }
+
+      
+
+          // The class of this instruction depends on whether or not it is one of the 'unconditional' conditional branches
+
+          // "BA,A" or "BN,A"
+
+          result.type = SCDAN;
+
+          if ((strcmp(name,"BA,a") == 0) || (strcmp(name, "BVC,a") == 0)) {
+
+            result.type = SU;
+
+          } else {
+
+            result.type = SKIP;
+
+          }
+
+      
+
+          result.rtl = rtl;
+
+          jump->setDest(tgt - delta);
+
+          SHOW_ASM(name << " " << std::hex << tgt-delta)
+
+          DEBUG_STMTS
+
+          
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d3: (void)0; /*placeholder for label*/ 
+    { 
+      unsigned n = MATCH_w_32_0 /* inst at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 636 "../frontend/machine/sparc/decoder.m"
+       
+
+          // What does this mean?
+
+          unused(n);
+
+          result.valid = false;
+
+          stmts = NULL;
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d4: (void)0; /*placeholder for label*/ 
+    { 
+      unsigned imm22 = (MATCH_w_32_0 & 0x3fffff) /* imm22 at 0 */ << 10;
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 487 "../frontend/machine/sparc/decoder.m"
+       
+          std::cout << imm22 << std::endl;
+          stmts = instantiate(pc,  "sethi", dis_Num(imm22), DIS_RD);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d5: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      unsigned roi = addressToPC(MATCH_p);
+      unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 559 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_RS1, DIS_ROI, DIS_RD);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d6: (void)0; /*placeholder for label*/ 
+    { 
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 450 "../frontend/machine/sparc/decoder.m"
+      
+
+          /*
+
+           * JMPL, with rd != %o7, i.e. register jump
+
+           * Note: if rd==%o7, then would be handled with the call_ arm
+
+           */
+
+          CaseStatement* jump = new CaseStatement;
+
+          // Record the fact that it is a computed jump
+
+          jump->setIsComputed();
+
+          result.rtl = new RTL(pc, stmts);
+
+          result.rtl->appendStmt(jump);
+
+          result.type = DD;
+
+          jump->setDest(dis_Eaddr(addr));
+
+          unused(rd);
+
+          SHOW_ASM("JMPL ")
+
+          DEBUG_STMTS
+
+      
+
+      
+
+        //  //  //  //  //  //  //  //
+
+        //              //
+
+        //   Ordinary instructions  //
+
+        //              //
+
+        //  //  //  //  //  //  //  //
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d7: (void)0; /*placeholder for label*/ 
+    { 
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 235 "../frontend/machine/sparc/decoder.m"
+      
+
+          /*
+
+           * A JMPL with rd == %o7, i.e. a register call
+
+           */
+
+          CallStatement* newCall = new CallStatement;
+
+      
+
+          // Record the fact that this is a computed call
+
+          newCall->setIsComputed();
+
+      
+
+          // Set the destination expression
+
+          newCall->setDest(dis_Eaddr(addr));
+
+          result.rtl = new RTL(pc, stmts);
+
+          result.rtl->appendStmt(newCall);
+
+          result.type = DD;
+
+      
+
+          SHOW_ASM("call_ " << dis_Eaddr(addr))
+
+          DEBUG_STMTS
+
+      
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d8: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 628 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d9: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 490 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR, DIS_RD);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d10: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 503 "../frontend/machine/sparc/decoder.m"
+       
+
+          // Note: RD is on the "right hand side" only for stores
+
+          stmts = instantiate(pc,  name, DIS_RDR, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d11: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned asi = (MATCH_w_32_0 >> 5 & 0xff) /* asi at 0 */;
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 499 "../frontend/machine/sparc/decoder.m"
+       
+
+          unused(asi);      // Note: this could be serious!
+
+          stmts = instantiate(pc,  name, DIS_RD, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d12: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned asi = (MATCH_w_32_0 >> 5 & 0xff) /* asi at 0 */;
+      unsigned rd = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 513 "../frontend/machine/sparc/decoder.m"
+       
+
+          unused(asi);      // Note: this could be serious!
+
+          stmts = instantiate(pc,  name, DIS_RDR, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d13: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 493 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR, DIS_FDS);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d14: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 517 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d15: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 496 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR, DIS_FDD);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d16: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned fds = (MATCH_w_32_0 >> 25 & 0x1f) /* fds at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 507 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_FDS, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d17: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 523 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d18: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 529 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d19: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      unsigned fdd = (MATCH_w_32_0 >> 25 & 0x1f) /* fdd at 0 */;
+      nextPC = 4 + MATCH_p; 
+      
+#line 510 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_FDD, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d20: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 520 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d21: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 526 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_label_d22: (void)0; /*placeholder for label*/ 
+    { 
+      char *name = MATCH_name;
+      unsigned addr = addressToPC(MATCH_p);
+      nextPC = 4 + MATCH_p; 
+      
+#line 532 "../frontend/machine/sparc/decoder.m"
+       
+
+          stmts = instantiate(pc,  name, DIS_ADDR);
+
+      
+
+      
+      
+      
+    } 
+    goto MATCH_finished_d; 
+    
+  MATCH_finished_d: (void)0; /*placeholder for label*/
+  
+}
+
+#line 647 "../frontend/machine/sparc/decoder.m"
+
   result.numBytes = nextPC - hostPC;
-  if(result.valid && result.rtl == 0)
+  if (result.valid && result.rtl == 0)  // Don't override higher level res
     result.rtl = new RTL(pc, stmts);
+
   return result;
 }
+
+
 /***********************************************************************
  * These are functions used to decode instruction operands into
  * expressions (Exp*s).
@@ -1052,6 +2756,7 @@ Exp* SparcDecoder::dis_RegLhs(unsigned r)
 {
   return Location::regOf(r);
 }
+
 /*==============================================================================
  * FUNCTION:    SparcDecoder::dis_RegRhs
  * OVERVIEW:    Decode the register on the RHS
@@ -1062,10 +2767,11 @@ Exp* SparcDecoder::dis_RegLhs(unsigned r)
  *============================================================================*/
 Exp* SparcDecoder::dis_RegRhs(unsigned r)
 {
-  if(r == 0)
-  return new Const(0);
+  if (r == 0)
+    return new Const(0);
   return Location::regOf(r);
 }
+
 /*==============================================================================
  * FUNCTION:    SparcDecoder::dis_RegImm
  * OVERVIEW:    Decode the register or immediate at the given address.
@@ -1075,18 +2781,56 @@ Exp* SparcDecoder::dis_RegRhs(unsigned r)
  *============================================================================*/
 Exp* SparcDecoder::dis_RegImm(unsigned pc)
 {
-  if(pc >=100)
+
+
+
+#line 696 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 696 "../frontend/machine/sparc/decoder.m"
+    pc
+    ;
+  unsigned MATCH_w_32_0;
   { 
-    int i = 0;
-    if (pc < 4196)
-      i = pc-100;
-    if(pc >= (4294967296 - 4096))
-      i = pc - 4294967296;
-    Exp* expr = new Const(i);
-    return expr;
-  }
-  else return dis_RegRhs(pc);
+    MATCH_w_32_0 = getDword(MATCH_p); 
+    if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) { 
+      int /* [~4096..4095] */ i = 
+        sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
+      
+#line 698 "../frontend/machine/sparc/decoder.m"
+      
+
+          Exp* expr = new Const(i);
+
+          return expr;
+
+      
+      
+      
+    } /*opt-block*//*opt-block+*/
+    else { 
+      unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
+      
+#line 700 "../frontend/machine/sparc/decoder.m"
+      
+
+          return dis_RegRhs(rs2);
+
+      
+      
+      
+    } /*opt-block*//*opt-block+*/
+    
+  }goto MATCH_finished_c; 
+  
+  MATCH_finished_c: (void)0; /*placeholder for label*/
+  
 }
+
+#line 704 "../frontend/machine/sparc/decoder.m"
+}
+
 /*==============================================================================
  * FUNCTION:    SparcDecoder::dis_Eaddr
  * OVERVIEW:    Converts a dynamic address to a Exp* expression.
@@ -1095,11 +2839,96 @@ Exp* SparcDecoder::dis_RegImm(unsigned pc)
  *          ignore - redundant parameter on SPARC
  * RETURNS:     the Exp* representation of the given address
  *============================================================================*/
-Exp* SparcDecoder::dis_Eaddr(ADDRESS pc,int ignore)
+Exp* SparcDecoder::dis_Eaddr(ADDRESS pc, int ignore /* = 0 */)
 {
-  Exp* expr = NULL;
+  Exp* expr;
+
+
+
+#line 717 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 717 "../frontend/machine/sparc/decoder.m"
+    pc
+    ;
+  unsigned MATCH_w_32_0;
+  { 
+    MATCH_w_32_0 = getDword(MATCH_p); 
+    if ((MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ == 1) 
+      if ((MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */ == 0) { 
+        int /* [~4096..4095] */ i = 
+          sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
+        
+#line 724 "../frontend/machine/sparc/decoder.m"
+        
+
+            expr = new Const((int)i);
+
+        
+        
+        
+      } /*opt-block*//*opt-block+*/
+      else { 
+        int /* [~4096..4095] */ i = 
+          sign_extend((MATCH_w_32_0 & 0x1fff) /* simm13 at 0 */, 13);
+        unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+        
+#line 727 "../frontend/machine/sparc/decoder.m"
+        
+
+            expr = new Binary(opPlus,
+
+              Location::regOf(rs1),
+
+              new Const((int)i));
+
+        
+        
+        
+      } /*opt-block*//*opt-block+*/ /*opt-block+*/
+    else 
+      if ((MATCH_w_32_0 & 0x1f) /* rs2 at 0 */ == 0) { 
+        unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+        
+#line 718 "../frontend/machine/sparc/decoder.m"
+        
+
+            expr = Location::regOf(rs1);
+
+        
+        
+        
+      } /*opt-block*//*opt-block+*/
+      else { 
+        unsigned rs1 = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+        unsigned rs2 = (MATCH_w_32_0 & 0x1f) /* rs2 at 0 */;
+        
+#line 721 "../frontend/machine/sparc/decoder.m"
+        
+
+            expr = new Binary(opPlus,
+
+              Location::regOf(rs1),
+
+              Location::regOf(rs2));
+
+        
+        
+        
+      } /*opt-block*//*opt-block+*/ /*opt-block+*/
+    
+  }goto MATCH_finished_b; 
+  
+  MATCH_finished_b: (void)0; /*placeholder for label*/
+  
+}
+
+#line 732 "../frontend/machine/sparc/decoder.m"
+
   return expr;
 }
+
 /*==============================================================================
  * FUNCTION:    isFuncPrologue()
  * OVERVIEW:    Check to see if the instructions at the given offset match any callee prologue, i.e. does it look
@@ -1109,19 +2938,89 @@ Exp* SparcDecoder::dis_Eaddr(ADDRESS pc,int ignore)
  *============================================================================*/
 bool SparcDecoder::isFuncPrologue(ADDRESS hostPC)
 {
+#if 0   // Can't do this without patterns. It was a bit of a hack anyway
+  int hiVal, loVal, reg, locals;
+  if ((InstructionPatterns::new_reg_win(prog.csrSrc,hostPC, locals)) != NULL)
+      return true;
+  if ((InstructionPatterns::new_reg_win_large(prog.csrSrc, hostPC,
+    hiVal, loVal, reg)) != NULL)
+      return true;
+  if ((InstructionPatterns::same_reg_win(prog.csrSrc, hostPC, locals))
+    != NULL)
+      return true;
+  if ((InstructionPatterns::same_reg_win_large(prog.csrSrc, hostPC,
+    hiVal, loVal, reg)) != NULL)
+      return true;
+#endif
+
   return false;
 }
+
 /*==============================================================================
  * FUNCTION:    isRestore()
  * OVERVIEW:    Check to see if the instruction at the given offset is a restore instruction
  * PARAMETERS:    hostPC - pointer to the code in question (host address)
  * RETURNS:     True if a match found
  *============================================================================*/
-bool SparcDecoder::isRestore(ADDRESS hostPC)
-{
-  return false;
+bool SparcDecoder::isRestore(ADDRESS hostPC) {
+
+
+#line 769 "../frontend/machine/sparc/decoder.m"
+{ 
+  dword MATCH_p = 
+    
+#line 769 "../frontend/machine/sparc/decoder.m"
+    hostPC
+    ;
+  unsigned MATCH_w_32_0;
+  { 
+    MATCH_w_32_0 = getDword(MATCH_p); 
+    if ((MATCH_w_32_0 >> 30 & 0x3) /* op at 0 */ == 2 && 
+      (MATCH_w_32_0 >> 19 & 0x3f) /* op3 at 0 */ == 61 && 
+      (0 <= (MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ && 
+      (MATCH_w_32_0 >> 13 & 0x1) /* i at 0 */ < 2)) { 
+      unsigned a = (MATCH_w_32_0 >> 14 & 0x1f) /* rs1 at 0 */;
+      unsigned b = addressToPC(MATCH_p);
+      unsigned c = (MATCH_w_32_0 >> 25 & 0x1f) /* rd at 0 */;
+      
+#line 771 "../frontend/machine/sparc/decoder.m"
+      
+
+            unused(a);    // Suppress warning messages
+
+            unused(b);
+
+            unused(c);
+
+            return true;
+
+      
+      
+      
+    } /*opt-block*//*opt-block+*/
+    else 
+      goto MATCH_label_a0;  /*opt-block+*/
+    
+  }goto MATCH_finished_a; 
+  
+  MATCH_label_a0: (void)0; /*placeholder for label*/ 
+    
+#line 775 "../frontend/machine/sparc/decoder.m"
+    
+          return false;
+
+    
+     
+    goto MATCH_finished_a; 
+    
+  MATCH_finished_a: (void)0; /*placeholder for label*/
+  
 }
-/**********************************
+
+#line 779 "../frontend/machine/sparc/decoder.m"
+}
+
+ /**********************************
  * These are the fetch routines.
  **********************************/
 
@@ -1136,21 +3035,22 @@ DWord SparcDecoder::getDword(ADDRESS lc)
   Byte* p = (Byte*)lc;
   return (p[0] << 24) + (p[1] << 16) + (p[2] << 8) + p[3];
 }
+
 /*==============================================================================
  * FUNCTION:     SparcDecoder::SparcDecoder
  * OVERVIEW:     
  * PARAMETERS:     None
  * RETURNS:      N/A
  *============================================================================*/
-SparcDecoder::SparcDecoder(Prog* prog): NJMCDecoder(prog)
+SparcDecoder::SparcDecoder(Prog* prog) : NJMCDecoder(prog)
 {
   std::string file = Boomerang::get()->getProgPath() + "frontend/machine/sparc/sparc.ssl";
   RTLDict.readSSLFile(file.c_str());
 }
-int SparcDecoder::decodeAssemblyInstruction(unsigned,int)
-{
-  return 0;
-}
-DecodeResult&  SparcDecoder::decodeInstruction (ADDRESS pc, int delta){
-  return result;
-}
+
+// For now...
+int SparcDecoder::decodeAssemblyInstruction(unsigned, int)
+{ return 0; }
+
+
+

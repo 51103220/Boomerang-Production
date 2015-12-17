@@ -4717,6 +4717,10 @@ bool ArgSourceProvider::exists(Exp* e) {
 }
 
 void CallStatement::updateArguments() {
+	Proc* procDest = this->getDestProc();
+	if(ASS_FILE)
+		if(procDest->isLib())
+			return;
 	/* If this is a library call, source = signature
 		else if there is a callee return, source = callee parameters
 		else

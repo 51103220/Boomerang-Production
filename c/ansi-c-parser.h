@@ -1,23 +1,17 @@
 #ifndef YY_AnsiCParser_h_included
 #define YY_AnsiCParser_h_included
+#define YY_USE_CLASS
 
-#line 1 "/usr/local/lib/bison.h"
+#line 1 "/usr/share/bison++/bison.h"
 /* before anything */
 #ifdef c_plusplus
-#ifndef __cplusplus
-#define __cplusplus
+ #ifndef __cplusplus
+  #define __cplusplus
+ #endif
 #endif
-#endif
-#ifdef __cplusplus
-#ifndef YY_USE_CLASS
-#define YY_USE_CLASS
-#endif
-#else
-#endif
-#include <stdio.h>
 
-/* #line 14 "/usr/local/lib/bison.h" */
-#line 21 "ansi-c-parser.h"
+
+ #line 8 "/usr/share/bison++/bison.h"
 #define YY_AnsiCParser_DEBUG  1
 #define YY_AnsiCParser_PARSE_PARAM  \
 	platform plat, callconv cc
@@ -123,88 +117,85 @@ typedef union {
 } yy_AnsiCParser_stype;
 #define YY_AnsiCParser_STYPE yy_AnsiCParser_stype
 
-#line 14 "/usr/local/lib/bison.h"
+#line 21 "/usr/share/bison++/bison.h"
  /* %{ and %header{ and %union, during decl */
 #ifndef YY_AnsiCParser_COMPATIBILITY
-#ifndef YY_USE_CLASS
-#define  YY_AnsiCParser_COMPATIBILITY 1
-#else
-#define  YY_AnsiCParser_COMPATIBILITY 0
-#endif
+ #ifndef YY_USE_CLASS
+  #define  YY_AnsiCParser_COMPATIBILITY 1
+ #else
+  #define  YY_AnsiCParser_COMPATIBILITY 0
+ #endif
 #endif
 
 #if YY_AnsiCParser_COMPATIBILITY != 0
 /* backward compatibility */
-#ifdef YYLTYPE
-#ifndef YY_AnsiCParser_LTYPE
-#define YY_AnsiCParser_LTYPE YYLTYPE
+ #ifdef YYLTYPE
+  #ifndef YY_AnsiCParser_LTYPE
+   #define YY_AnsiCParser_LTYPE YYLTYPE
 /* WARNING obsolete !!! user defined YYLTYPE not reported into generated header */
 /* use %define LTYPE */
-#endif
-#endif
-#ifdef YYSTYPE
-#ifndef YY_AnsiCParser_STYPE 
-#define YY_AnsiCParser_STYPE YYSTYPE
-/* WARNING obsolete !!! user defined YYSTYPE not reported into generated header */
-/* use %define STYPE */
-#endif
-#endif
-#ifdef YYDEBUG
-#ifndef YY_AnsiCParser_DEBUG
-#define  YY_AnsiCParser_DEBUG YYDEBUG
-/* WARNING obsolete !!! user defined YYDEBUG not reported into generated header */
-/* use %define DEBUG */
-#endif
-#endif
-#ifdef YY_AnsiCParser_STYPE
-#ifndef yystype
-#define yystype YY_AnsiCParser_STYPE
-#endif
-#endif
-/* use goto to be compatible */
-#ifndef YY_AnsiCParser_USE_GOTO
-#define YY_AnsiCParser_USE_GOTO 1
-#endif
+  #endif
+ #endif
+/*#ifdef YYSTYPE*/
+  #ifndef YY_AnsiCParser_STYPE
+   #define YY_AnsiCParser_STYPE YYSTYPE
+  /* WARNING obsolete !!! user defined YYSTYPE not reported into generated header */
+   /* use %define STYPE */
+  #endif
+/*#endif*/
+ #ifdef YYDEBUG
+  #ifndef YY_AnsiCParser_DEBUG
+   #define  YY_AnsiCParser_DEBUG YYDEBUG
+   /* WARNING obsolete !!! user defined YYDEBUG not reported into generated header */
+   /* use %define DEBUG */
+  #endif
+ #endif 
+ /* use goto to be compatible */
+ #ifndef YY_AnsiCParser_USE_GOTO
+  #define YY_AnsiCParser_USE_GOTO 1
+ #endif
 #endif
 
 /* use no goto to be clean in C++ */
 #ifndef YY_AnsiCParser_USE_GOTO
-#define YY_AnsiCParser_USE_GOTO 0
+ #define YY_AnsiCParser_USE_GOTO 0
 #endif
 
 #ifndef YY_AnsiCParser_PURE
 
-/* #line 63 "/usr/local/lib/bison.h" */
-#line 179 "ansi-c-parser.h"
+ #line 65 "/usr/share/bison++/bison.h"
 
-#line 63 "/usr/local/lib/bison.h"
+#line 65 "/usr/share/bison++/bison.h"
 /* YY_AnsiCParser_PURE */
 #endif
 
-/* #line 65 "/usr/local/lib/bison.h" */
-#line 186 "ansi-c-parser.h"
 
-#line 65 "/usr/local/lib/bison.h"
+ #line 68 "/usr/share/bison++/bison.h"
+
+#line 68 "/usr/share/bison++/bison.h"
 /* prefix */
+
 #ifndef YY_AnsiCParser_DEBUG
 
-/* #line 67 "/usr/local/lib/bison.h" */
-#line 193 "ansi-c-parser.h"
+ #line 71 "/usr/share/bison++/bison.h"
 
-#line 67 "/usr/local/lib/bison.h"
+#line 71 "/usr/share/bison++/bison.h"
 /* YY_AnsiCParser_DEBUG */
 #endif
+
 #ifndef YY_AnsiCParser_LSP_NEEDED
 
-/* #line 70 "/usr/local/lib/bison.h" */
-#line 201 "ansi-c-parser.h"
+ #line 75 "/usr/share/bison++/bison.h"
 
-#line 70 "/usr/local/lib/bison.h"
+#line 75 "/usr/share/bison++/bison.h"
  /* YY_AnsiCParser_LSP_NEEDED*/
 #endif
+
 /* DEFAULT LTYPE*/
 #ifdef YY_AnsiCParser_LSP_NEEDED
-#ifndef YY_AnsiCParser_LTYPE
+ #ifndef YY_AnsiCParser_LTYPE
+  #ifndef BISON_YYLTYPE_ISDECLARED
+   #define BISON_YYLTYPE_ISDECLARED
 typedef
   struct yyltype
     {
@@ -216,66 +207,83 @@ typedef
       char *text;
    }
   yyltype;
+  #endif
 
-#define YY_AnsiCParser_LTYPE yyltype
+  #define YY_AnsiCParser_LTYPE yyltype
+ #endif
 #endif
-#endif
+
 /* DEFAULT STYPE*/
 #ifndef YY_AnsiCParser_STYPE
-#define YY_AnsiCParser_STYPE int
+ #define YY_AnsiCParser_STYPE int
 #endif
+
 /* DEFAULT MISCELANEOUS */
 #ifndef YY_AnsiCParser_PARSE
-#define YY_AnsiCParser_PARSE yyparse
+ #define YY_AnsiCParser_PARSE yyparse
 #endif
+
 #ifndef YY_AnsiCParser_LEX
-#define YY_AnsiCParser_LEX yylex
+ #define YY_AnsiCParser_LEX yylex
 #endif
+
 #ifndef YY_AnsiCParser_LVAL
-#define YY_AnsiCParser_LVAL yylval
+ #define YY_AnsiCParser_LVAL yylval
 #endif
+
 #ifndef YY_AnsiCParser_LLOC
-#define YY_AnsiCParser_LLOC yylloc
+ #define YY_AnsiCParser_LLOC yylloc
 #endif
+
 #ifndef YY_AnsiCParser_CHAR
-#define YY_AnsiCParser_CHAR yychar
+ #define YY_AnsiCParser_CHAR yychar
 #endif
+
 #ifndef YY_AnsiCParser_NERRS
-#define YY_AnsiCParser_NERRS yynerrs
+ #define YY_AnsiCParser_NERRS yynerrs
 #endif
+
 #ifndef YY_AnsiCParser_DEBUG_FLAG
-#define YY_AnsiCParser_DEBUG_FLAG yydebug
+ #define YY_AnsiCParser_DEBUG_FLAG yydebug
 #endif
+
 #ifndef YY_AnsiCParser_ERROR
-#define YY_AnsiCParser_ERROR yyerror
+ #define YY_AnsiCParser_ERROR yyerror
 #endif
 
 #ifndef YY_AnsiCParser_PARSE_PARAM
-#ifndef __STDC__
-#ifndef __cplusplus
-#ifndef YY_USE_CLASS
-#define YY_AnsiCParser_PARSE_PARAM
-#ifndef YY_AnsiCParser_PARSE_PARAM_DEF
-#define YY_AnsiCParser_PARSE_PARAM_DEF
-#endif
-#endif
-#endif
-#endif
-#ifndef YY_AnsiCParser_PARSE_PARAM
-#define YY_AnsiCParser_PARSE_PARAM void
-#endif
+ #ifndef __STDC__
+  #ifndef __cplusplus
+   #ifndef YY_USE_CLASS
+    #define YY_AnsiCParser_PARSE_PARAM
+    #ifndef YY_AnsiCParser_PARSE_PARAM_DEF
+     #define YY_AnsiCParser_PARSE_PARAM_DEF
+    #endif
+   #endif
+  #endif
+ #endif
+ #ifndef YY_AnsiCParser_PARSE_PARAM
+  #define YY_AnsiCParser_PARSE_PARAM void
+ #endif
 #endif
 
 /* TOKEN C */
 #ifndef YY_USE_CLASS
 
-#ifndef YY_AnsiCParser_PURE
-extern YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
-#endif
+ #ifndef YY_AnsiCParser_PURE
+  #ifndef yylval
+   extern YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
+  #else
+   #if yylval != YY_AnsiCParser_LVAL
+    extern YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
+   #else
+    #warning "Namespace conflict, disabling some functionality (bison++ only)"
+   #endif
+  #endif
+ #endif
 
 
-/* #line 143 "/usr/local/lib/bison.h" */
-#line 279 "ansi-c-parser.h"
+ #line 169 "/usr/share/bison++/bison.h"
 #define	PREINCLUDE	258
 #define	PREDEFINE	259
 #define	PREIF	260
@@ -354,49 +362,52 @@ extern YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
 #define	RETURN	333
 
 
-#line 143 "/usr/local/lib/bison.h"
+#line 169 "/usr/share/bison++/bison.h"
  /* #defines token */
 /* after #define tokens, before const tokens S5*/
 #else
-#ifndef YY_AnsiCParser_CLASS
-#define YY_AnsiCParser_CLASS AnsiCParser
-#endif
+ #ifndef YY_AnsiCParser_CLASS
+  #define YY_AnsiCParser_CLASS AnsiCParser
+ #endif
 
-#ifndef YY_AnsiCParser_INHERIT
-#define YY_AnsiCParser_INHERIT
-#endif
-#ifndef YY_AnsiCParser_MEMBERS
-#define YY_AnsiCParser_MEMBERS 
-#endif
-#ifndef YY_AnsiCParser_LEX_BODY
-#define YY_AnsiCParser_LEX_BODY  
-#endif
-#ifndef YY_AnsiCParser_ERROR_BODY
-#define YY_AnsiCParser_ERROR_BODY  
-#endif
-#ifndef YY_AnsiCParser_CONSTRUCTOR_PARAM
-#define YY_AnsiCParser_CONSTRUCTOR_PARAM
-#endif
-/* choose between enum and const */
-#ifndef YY_AnsiCParser_USE_CONST_TOKEN
-#define YY_AnsiCParser_USE_CONST_TOKEN 0
-/* yes enum is more compatible with flex,  */
-/* so by default we use it */ 
-#endif
-#if YY_AnsiCParser_USE_CONST_TOKEN != 0
-#ifndef YY_AnsiCParser_ENUM_TOKEN
-#define YY_AnsiCParser_ENUM_TOKEN yy_AnsiCParser_enum_token
-#endif
-#endif
+ #ifndef YY_AnsiCParser_INHERIT
+  #define YY_AnsiCParser_INHERIT
+ #endif
+
+ #ifndef YY_AnsiCParser_MEMBERS
+  #define YY_AnsiCParser_MEMBERS 
+ #endif
+
+ #ifndef YY_AnsiCParser_LEX_BODY
+  #define YY_AnsiCParser_LEX_BODY  
+ #endif
+
+ #ifndef YY_AnsiCParser_ERROR_BODY
+  #define YY_AnsiCParser_ERROR_BODY  
+ #endif
+
+ #ifndef YY_AnsiCParser_CONSTRUCTOR_PARAM
+  #define YY_AnsiCParser_CONSTRUCTOR_PARAM
+ #endif
+ /* choose between enum and const */
+ #ifndef YY_AnsiCParser_USE_CONST_TOKEN
+  #define YY_AnsiCParser_USE_CONST_TOKEN 0
+  /* yes enum is more compatible with flex,  */
+  /* so by default we use it */ 
+ #endif
+ #if YY_AnsiCParser_USE_CONST_TOKEN != 0
+  #ifndef YY_AnsiCParser_ENUM_TOKEN
+   #define YY_AnsiCParser_ENUM_TOKEN yy_AnsiCParser_enum_token
+  #endif
+ #endif
 
 class YY_AnsiCParser_CLASS YY_AnsiCParser_INHERIT
 {
 public: 
-#if YY_AnsiCParser_USE_CONST_TOKEN != 0
-/* static const int token ... */
-
-/* #line 182 "/usr/local/lib/bison.h" */
-#line 400 "ansi-c-parser.h"
+ #if YY_AnsiCParser_USE_CONST_TOKEN != 0
+  /* static const int token ... */
+  
+ #line 212 "/usr/share/bison++/bison.h"
 static const int PREINCLUDE;
 static const int PREDEFINE;
 static const int PREIF;
@@ -475,13 +486,12 @@ static const int BREAK;
 static const int RETURN;
 
 
-#line 182 "/usr/local/lib/bison.h"
+#line 212 "/usr/share/bison++/bison.h"
  /* decl const */
-#else
-enum YY_AnsiCParser_ENUM_TOKEN { YY_AnsiCParser_NULL_TOKEN=0
-
-/* #line 185 "/usr/local/lib/bison.h" */
-#line 485 "ansi-c-parser.h"
+ #else
+  enum YY_AnsiCParser_ENUM_TOKEN { YY_AnsiCParser_NULL_TOKEN=0
+  
+ #line 215 "/usr/share/bison++/bison.h"
 	,PREINCLUDE=258
 	,PREDEFINE=259
 	,PREIF=260
@@ -560,32 +570,32 @@ enum YY_AnsiCParser_ENUM_TOKEN { YY_AnsiCParser_NULL_TOKEN=0
 	,RETURN=333
 
 
-#line 185 "/usr/local/lib/bison.h"
+#line 215 "/usr/share/bison++/bison.h"
  /* enum token */
      }; /* end of enum declaration */
-#endif
+ #endif
 public:
  int YY_AnsiCParser_PARSE(YY_AnsiCParser_PARSE_PARAM);
  virtual void YY_AnsiCParser_ERROR(char *msg) YY_AnsiCParser_ERROR_BODY;
-#ifdef YY_AnsiCParser_PURE
-#ifdef YY_AnsiCParser_LSP_NEEDED
- virtual int  YY_AnsiCParser_LEX(YY_AnsiCParser_STYPE *YY_AnsiCParser_LVAL,YY_AnsiCParser_LTYPE *YY_AnsiCParser_LLOC) YY_AnsiCParser_LEX_BODY;
-#else
- virtual int  YY_AnsiCParser_LEX(YY_AnsiCParser_STYPE *YY_AnsiCParser_LVAL) YY_AnsiCParser_LEX_BODY;
-#endif
-#else
- virtual int YY_AnsiCParser_LEX() YY_AnsiCParser_LEX_BODY;
- YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
-#ifdef YY_AnsiCParser_LSP_NEEDED
- YY_AnsiCParser_LTYPE YY_AnsiCParser_LLOC;
-#endif
- int YY_AnsiCParser_NERRS;
- int YY_AnsiCParser_CHAR;
-#endif
-#if YY_AnsiCParser_DEBUG != 0
-public:
- int YY_AnsiCParser_DEBUG_FLAG;	/*  nonzero means print parse trace	*/
-#endif
+ #ifdef YY_AnsiCParser_PURE
+  #ifdef YY_AnsiCParser_LSP_NEEDED
+   virtual int  YY_AnsiCParser_LEX(YY_AnsiCParser_STYPE *YY_AnsiCParser_LVAL,YY_AnsiCParser_LTYPE *YY_AnsiCParser_LLOC) YY_AnsiCParser_LEX_BODY;
+  #else
+   virtual int  YY_AnsiCParser_LEX(YY_AnsiCParser_STYPE *YY_AnsiCParser_LVAL) YY_AnsiCParser_LEX_BODY;
+  #endif
+ #else
+  virtual int YY_AnsiCParser_LEX() YY_AnsiCParser_LEX_BODY;
+  YY_AnsiCParser_STYPE YY_AnsiCParser_LVAL;
+  #ifdef YY_AnsiCParser_LSP_NEEDED
+   YY_AnsiCParser_LTYPE YY_AnsiCParser_LLOC;
+  #endif
+  int YY_AnsiCParser_NERRS;
+  int YY_AnsiCParser_CHAR;
+ #endif
+ #if YY_AnsiCParser_DEBUG != 0
+  public:
+   int YY_AnsiCParser_DEBUG_FLAG;	/*  nonzero means print parse trace	*/
+ #endif
 public:
  YY_AnsiCParser_CLASS(YY_AnsiCParser_CONSTRUCTOR_PARAM);
 public:
@@ -596,23 +606,23 @@ public:
 
 
 #if YY_AnsiCParser_COMPATIBILITY != 0
-/* backward compatibility */
-#ifndef YYSTYPE
-#define YYSTYPE YY_AnsiCParser_STYPE
-#endif
+ /* backward compatibility */
+ /* Removed due to bison problems
+ /#ifndef YYSTYPE
+ / #define YYSTYPE YY_AnsiCParser_STYPE
+ /#endif*/
 
-#ifndef YYLTYPE
-#define YYLTYPE YY_AnsiCParser_LTYPE
-#endif
-#ifndef YYDEBUG
-#ifdef YY_AnsiCParser_DEBUG 
-#define YYDEBUG YY_AnsiCParser_DEBUG
-#endif
-#endif
+ #ifndef YYLTYPE
+  #define YYLTYPE YY_AnsiCParser_LTYPE
+ #endif
+ #ifndef YYDEBUG
+  #ifdef YY_AnsiCParser_DEBUG 
+   #define YYDEBUG YY_AnsiCParser_DEBUG
+  #endif
+ #endif
 
 #endif
 /* END */
 
-/* #line 236 "/usr/local/lib/bison.h" */
-#line 618 "ansi-c-parser.h"
+ #line 267 "/usr/share/bison++/bison.h"
 #endif
