@@ -1,0 +1,24 @@
+MAIN
+		MOV
+					 A 
+					 100 
+		MOV
+					 R2 
+					 10 
+		MOV
+					 A 
+					 10 
+		DJNZ
+					 R2 
+					 AGAIN 
+		MOV
+					 A 
+					 R2 
+		RET
+AGAIN
+		MOV
+					 A 
+					 10 
+		DJNZ
+					 R2 
+					 AGAIN 

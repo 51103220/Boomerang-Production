@@ -1,9 +1,13 @@
 // address: 0x10474
 int main(int argc, char *argv[], char *envp[]) {
-    __size32 g1; 		// r1
-    __size32 local0; 		// m[o6 - 4]
+    __size8 r2; 		// r2
+    __size8 r2_1; 		// r2{9}
 
-    g1 = local0 + 679;
-    return g1;
+    r2 = 10;
+    do {
+        r2_1 = r2;
+        r2 = r2_1 - 1;
+    } while (r2_1 - 1 != 0);
+    return r2_1 - 1;
 }
 

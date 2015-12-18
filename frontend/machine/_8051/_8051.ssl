@@ -31,10 +31,10 @@ AJMP_IMM i32
 LJMP_ADDR16 i32
   *32* %pc := i32;
 
-RR_A bt
-  *1* bt := %a@[7:7]
-  *7* %a@[1:7] := %a@[0:6]
-  *1* %a@[0:0] := bt;
+RR_A exp
+  *1* tmpb := exp@[7:7]
+  *7* exp@[1:7] := exp@[0:6]
+  *1* exp@[0:0] := tmpb;
 
 INC_DIR z32
   *8* m[z32] := m[z32]{8} + 1;
@@ -68,6 +68,9 @@ INC_R7
 
 INC_EXP exp
   *8* exp := exp + 1;
+
+INC_EXP_EXP exp1,exp2
+  *8* exp1 := exp2 + 1;
 
 INC_RI0
   *32* tmp1 := zfill(8, 31, %r0)
@@ -103,14 +106,18 @@ LCALL_ADDR16 i32
   *32* m[%sp] := %pc
   *32* %pc := i32;
 
-RRC_A
-  *1* bt := %CF
-  *1* %CF := %a@[7:7]
-  *7* %a@[1:7] := %a@[0:6]
-  *1* %a@[0:0] := bt;
+RRC_A exp
+  *1* tmpb := %c
+  *1* %c := exp@[0:0]
+  *7* exp@[1:7] := exp@[0:6]
+  *1* bt := exp@[7:7]
+  *1* bt := tmpb;
 
 DEC_EXP exp
   *8* exp := exp - 1;
+
+DEC_EXP_EXP exp1, exp2
+  *8* exp1 := exp2 - 1;
 
 DEC_DIR  z32
   *8* m[z32] := m[z32]{8} - 1;
@@ -232,11 +239,12 @@ RETI retaddr
   *32* retaddr := m[%sp]{32}
   *32* %pc := retaddr;
 
-RLC_A
-  *1* bt := %CF
-  *1* %CF := %a@[0:0]
-  *7* %a@[0:6] := %a@[1:7]
-  *1* %a@[7:7] := bt;
+RLC_A exp
+  *1* tmpb := %c
+  *1* %c := exp@[0:0]
+  *7* exp@[0:6] := exp@[1:7]
+  *1* bt := exp@[7:7]
+  *1* bt := tmpb;
 
 ADDC_A_IMM i32
   *8* %a := %a + i32@[0:7];
@@ -582,13 +590,13 @@ DIV_AB exp1, exp2
 MOV_DIR_DIR  z32, rx32
   *8* m[z32] := m[rx32]{8};
 
-MOV_DIR_RI0 exp
+MOV_DIR_RI0 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[tmp1] := exp{8};
+  *8* exp1 := exp2;
 
-MOV_DIR_RI1 exp
+MOV_DIR_RI1 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[tmp1] := exp{8};
+  *8* exp1 := exp2;
 
 MOV_DIR_R0 z32
   *8* m[z32] := %r0;
@@ -692,16 +700,16 @@ INC_DPTR
 MUL_AB exp1, exp2
   *16* m[%ab] := exp1 * exp2;
 
-MOV_RI0_DIR  z32
+MOV_RI0_DIR  exp1, exp2
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[z32] := m[tmp1];
+  *8*  exp1 := exp2;
 
 MOV_REG_IMM z32, i32
   *8* z32 := i32;
 
-MOV_RI1_DIR  z32
+MOV_RI1_DIR  exp1, exp2 
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* m[z32] := m[tmp1];
+  *8* exp1 := exp2;
 
 MOV_R0_DIR  z32
   *8* %r0 := m[z32]{8};
@@ -873,6 +881,11 @@ XCH_EXP exp1, exp2
   *8* exp1 := exp2
   *8* exp2 := tmpb;
 
+XCH_EXP_EXP exp1, exp2, exp3
+  *8* tmpb := exp1
+  *8* exp1 := exp2
+  *8* exp3 := tmpb;  
+
 XCH_A_R1
   *8* tmpb := %a
   *8* %a := %r1
@@ -1013,17 +1026,17 @@ DJNZ_R7_IMM i32
 
 # 0xE0
 
-MOVX_A_DPTRA exp
+MOVX_A_DPTRA exp1, exp2
   *32* tmp1 := zfill(16, 31, %dptr)
-  *8* exp := m[tmp1]{8};
+  *8* exp1 := exp2{8};
 
-MOVX_A_RI0 exp
+MOVX_A_RI0 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* exp := m[tmp1]{8};
+  *8* exp1 := exp2;
 
-MOVX_A_RI1 exp
+MOVX_A_RI1 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* exp := m[tmp1]{8};
+  *8* exp1 := exp2;
 
 CLR_A
   *8* %a := 0;
@@ -1061,13 +1074,13 @@ MOV_A_R6
 MOV_A_R7
   *8* %a := %r7;
 
-MOV_A_RI0 exp
+MOV_A_RI0 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* exp := m[tmp1];
+  *8* exp1 := exp2;
 
-MOV_A_RI1 exp
+MOV_A_RI1 exp1, exp2
   *32* tmp1 := zfill(8, 31, %r1)
-  *8* exp := m[tmp1];
+  *8* exp1 := exp2;
 
 
 # 0xF0
@@ -1080,10 +1093,6 @@ MOVX_DPTRA_A exp
 
 MOVX_RI0_A exp
   *32* tmp1 := zfill(8, 31, %r0)
-  *8* m[tmp1] := exp;
-
-MOVX_RI1_A exp
-  *32* tmp1 := zfill(8, 31, %r1)
   *8* m[tmp1] := exp;
 
 MOVX_RI1_A exp
