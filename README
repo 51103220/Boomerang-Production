@@ -1,4 +1,6 @@
-
+Production Phase added 2 features
+	Assembly Decompilation
+	ABI handler
 
 For build instructions please see 
 
@@ -14,3 +16,25 @@ Note that on a debian system you can usually get away with:
 
 Thanks.
 
+
+HOW TO RUN
+	Binary:
+		./boomerang -o {output} {input}
+	Assembly:
+		Sparc
+		./boomerang -o {output} -as {input}
+		8051
+		./boomerang -o {output} -as8 {input}
+	ABI:
+		./boomerang -o {output} -ab {input}
+
+HOW TO WRITE TESTCASE
+	Sparc: see an example in test/sparc_assembly
+	8051: see an example in test/_8051
+		PUBLIC ID
+		LABEL:
+			INSTRUCTIONS
+			<new line>
+		LABEL:
+			INSTRUCTIONS
+			<new line> 
